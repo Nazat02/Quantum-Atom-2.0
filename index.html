@@ -103,7 +103,8 @@ h1 .g{background:linear-gradient(90deg,var(--cx),var(--cx2),var(--cx3));-webkit-
 
 /* CTA */
 #cta{position:relative;border-top:1px solid var(--border);text-align:center;padding:110px 24px;overflow:hidden;}
-#cta::before{content:'';position:absolute;top:50%;left:50%;width:640px;height:320px;transform:translate(-50%,-50%);background:radial-gradient(ellipse,rgba(255,85,0,.14),transparent 70%);}
+#cta .hero-actions{position:relative;z-index:1;}
+#cta::before{content:'';position:absolute;top:50%;left:50%;width:640px;height:320px;transform:translate(-50%,-50%);background:radial-gradient(ellipse,rgba(255,85,0,.14),transparent 70%);pointer-events:none;z-index:0;}
 #cta h2{position:relative;font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,5vw,3.2rem);text-transform:uppercase;letter-spacing:.04em;margin-bottom:18px;}
 #cta h2 span{background:linear-gradient(90deg,var(--cx),var(--cx2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 #cta p{position:relative;font-size:.72rem;color:var(--lo);max-width:460px;margin:0 auto 36px;line-height:1.85;}
@@ -326,7 +327,7 @@ table.tbl{width:100%;min-width:760px;border-collapse:separate;border-spacing:0;f
     <a href="#elements">ELEMENTS</a>
     <a href="#inside">WHAT'S INSIDE</a>
   </div>
-  <a href="#cta" class="nav-cta">LAUNCH →</a>
+  <a href="simulation.html" class="nav-cta">LAUNCH →</a>
 </nav>
 
 <section id="hero">
@@ -337,7 +338,7 @@ table.tbl{width:100%;min-width:760px;border-collapse:separate;border-spacing:0;f
     <h1>QUANTUM<br><span class="g">ATOM 2.0</span></h1>
     <p class="hero-sub">Not a sphere with rings drawn on it — an actual probability cloud, sampled from the real orbital math. Drag to rotate, scroll to zoom, and switch orbitals below.</p>
     <div class="hero-actions">
-      <a href="#cta" class="btn btn-p">LAUNCH SIMULATOR</a>
+      <a href="simulation.html" class="btn btn-p">LAUNCH SIMULATOR</a>
       <a href="#compare" class="btn btn-s">SEE THE PHYSICS ↓</a>
     </div>
   </div>
