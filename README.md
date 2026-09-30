@@ -5,6 +5,8 @@ Every element, drawn as a true orbital-shaped probability cloud, and a second to
 
 No install. No build step. No accounts. Open a page and rotate an atom.
 
+[![Quantum Atom 2.0 preview](preview.png)](https://nazat02.github.io/Quantum-Atom-2.0/)
+
 - **Live site:** <https://nazat02.github.io/Quantum-Atom-2.0/>
 - **Repository:** <https://github.com/nazat02/Quantum-Atom-2.0>
 - **Author:** Md. Shaikhul Hadis Nazat
@@ -395,6 +397,7 @@ Quantum-Atom-2.0/
 ├── index.html            Landing page: physics, history, element table, FAQ
 ├── simulation.html       Atom Simulator (single file)
 ├── nucleus_explorer.html Nucleus Explorer (single file)
+├── preview.png           Preview image (README and social sharing)
 ├── README.md             This file
 └── LICENSE               Licence terms (see section 21)
 ```
