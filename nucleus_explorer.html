@@ -265,10 +265,10 @@ body.boot *{transition:none!important;}
 <div id="loading-overlay"><div class="load-ring"></div><div class="lt">Loading Nucleus Explorer…</div></div>
 
 <nav>
-  <a class="brand" href="landing.html" aria-label="Quantum Atom home"><span class="brand-dot" id="brand-dot"></span>NUCLEUS EXPLORER <span class="ver-pill">1.0</span></a>
+  <a class="brand" href="index.html" aria-label="Quantum Atom home"><span class="brand-dot" id="brand-dot"></span>NUCLEUS EXPLORER <span class="ver-pill">1.0</span></a>
   <div class="nav-right">
-    <a class="nav-home" href="landing.html">HOME</a>
-    <a class="nav-link-btn nav-cta" id="btn-atom" href="index.html#el=H" aria-label="Atom Explorer"><span class="lbl">ATOM EXPLORER</span><span class="lbl-s">ATOM</span> <span class="arr">↗</span></a>
+    <a class="nav-home" href="index.html">HOME</a>
+    <a class="nav-link-btn nav-cta" id="btn-atom" href="simulation.html#el=H" aria-label="Atom Explorer"><span class="lbl">ATOM EXPLORER</span><span class="lbl-s">ATOM</span> <span class="arr">↗</span></a>
   </div>
 </nav>
 
@@ -1284,7 +1284,7 @@ function selectElement(Z){
   document.querySelectorAll('.etile').forEach(t=>{ const on=+t.dataset.z===Z; t.classList.toggle('active', on); t.setAttribute('aria-pressed', String(on)); if(on) ensureTileVisible(t); });
   rebuild();
   const sym = ELEMENT_BY_Z[Z].symbol;                     // keep URL + Atom link in sync
-  const al = document.getElementById('btn-atom'); if(al) al.href = 'index.html#el='+sym;
+  const al = document.getElementById('btn-atom'); if(al) al.href = 'simulation.html#el='+sym;
   try{ history.replaceState(null,'','#el='+sym); }catch(e){ /* sandboxed preview blocks URL updates */ }
 }
 function ensureTileVisible(t){                   // keep the active tile inside the scrolling grid
@@ -1761,7 +1761,7 @@ function pinchZoom(mult){
 function goToAtom(){
   if(leaving) return; leaving = true; const el = ELEMENT_BY_Z[state.Z];
   $('warp-t').textContent = 'Leaving the nucleus'; $('warp-s').textContent = 'BACK TO THE ' + el.name.toUpperCase() + ' ATOM'; $('warp').classList.add('show');
-  setTimeout(()=>{ location.href = 'index.html?from=nucleus#el=' + el.symbol; }, 750);
+  setTimeout(()=>{ location.href = 'simulation.html?from=nucleus#el=' + el.symbol; }, 750);
 }
 window.addEventListener('pageshow', e=>{ if(e.persisted){ leaving=false; $('warp').classList.remove('show'); } });
 

@@ -511,7 +511,7 @@ table.tbl{width:100%;min-width:760px;border-collapse:separate;border-spacing:0;f
   <div class="el-info glass" aria-live="polite">
     <div class="big" id="ei-sym">H</div>
     <div class="grow"><div class="nm" id="ei-name">Hydrogen</div><div class="meta" id="ei-meta"></div></div>
-    <a class="btn btn-p" id="ei-open" href="index.html#el=H">OPEN IN SIMULATOR ▸</a>
+    <a class="btn btn-p" id="ei-open" href="simulation.html#el=H">OPEN IN SIMULATOR ▸</a>
     <div class="el-detail" id="ei-detail"></div>
   </div>
   <div class="pt-scroll"><div class="pt" id="pt"></div></div>
@@ -540,7 +540,7 @@ table.tbl{width:100%;min-width:760px;border-collapse:separate;border-spacing:0;f
         <li>Shareable links to any element, e.g. <b>#el=Fe</b></li>
         <li><b>Zoom into the core</b> and the very same live nucleus as in the Nucleus Explorer appears right inside the simulator, quarks and gluons included. Keep going, down to the <b>Planck length</b></li>
       </ul>
-      <a class="btn btn-p" href="index.html">OPEN ATOM SIMULATOR ▸</a>
+      <a class="btn btn-p" href="simulation.html">OPEN ATOM SIMULATOR ▸</a>
     </article>
     <article class="pcard glass">
       <div class="tag">TOOL 02 · NUCLEUS EXPLORER</div>
@@ -592,7 +592,7 @@ table.tbl{width:100%;min-width:760px;border-collapse:separate;border-spacing:0;f
     <details class="glass"><summary>What does Antimatter mode show?</summary><p>It swaps the scene to a mirror palette. In the Nucleus Explorer, protons and neutrons are relabelled as antiprotons and antineutrons.</p></details>
     <details class="glass"><summary>Are the electron configurations correct?</summary><p>They are ground-state configurations using the Madelung filling order, with the known exceptions (chromium, copper, palladium, gold and several lanthanides and actinides) applied. For the heaviest elements they are predictions, since those atoms exist for only fractions of a second.</p></details>
     <details class="glass"><summary>Does it run on a phone?</summary><p>Yes. On small screens the panels become a bottom sheet, and the cloud density is lowered by default so it stays smooth. You can raise it in the Cloud &amp; Zoom controls.</p></details>
-    <details class="glass"><summary>Can I share a link to one element?</summary><p>Yes. Add the symbol to the address: <b>index.html#el=Fe</b> opens the simulator on iron, and the Nucleus Explorer accepts the same form.</p></details>
+    <details class="glass"><summary>Can I share a link to one element?</summary><p>Yes. Add the symbol to the address: <b>simulation.html#el=Fe</b> opens the simulator on iron, and the Nucleus Explorer accepts the same form.</p></details>
     <details class="glass"><summary>Is it free?</summary><p>Yes. It runs in the browser with nothing to install.</p></details>
   </div>
 </section>
@@ -601,14 +601,14 @@ table.tbl{width:100%;min-width:760px;border-collapse:separate;border-spacing:0;f
   <h2>Stop reading about<br><span>atoms. Rotate one.</span></h2>
   <p>Free, browser-based, no install. Every element, every orbital, rendered live.</p>
   <div class="hero-actions">
-    <a href="https://nazat02.github.io/Quantum-Atom/simulator_dark.html" class="btn btn-p">LAUNCH SIMULATOR</a>
+    <a href="simulation.html" class="btn btn-p">LAUNCH SIMULATOR</a>
     <a href="nucleus_explorer.html" class="btn btn-s">OPEN NUCLEUS EXPLORER ▸</a>
   </div>
 </section>
 
 <footer>
   <div>QUANTUM ATOM 2.0</div>
-  <div style="display:flex;gap:18px;flex-wrap:wrap"><a href="index.html">Atom Simulator</a><a href="nucleus_explorer.html">Nucleus Explorer</a><a href="index_dark.html">Classic edition ↗</a></div>
+  <div style="display:flex;gap:18px;flex-wrap:wrap"><a href="simulation.html">Atom Simulator</a><a href="nucleus_explorer.html">Nucleus Explorer</a><a href="https://nazat02.github.io/Quantum-Atom/index_dark.html">Classic edition ↗</a></div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1093,7 +1093,7 @@ const ART = {
     pt.querySelectorAll('.el').forEach(b=>b.classList.toggle('sel', +b.dataset.z===z));
     $('ei-sym').textContent = e[1]; $('ei-name').textContent = e[2];
     $('ei-meta').textContent = ('ATOMIC NUMBER '+e[0]+'  ·  '+blockName[block(z)].toUpperCase()+(named.has(z)?'  ·  NAMED AFTER A SCIENTIST':'')).replace(/  ·  /g,' · ');
-    $('ei-open').href = 'index.html#el='+e[1];
+    $('ei-open').href = 'simulation.html#el='+e[1];
     const cfg = config(z), P = pos(z), b = block(z);
     $('ei-detail').innerHTML =
       tile('Atomic mass', e[3].toFixed(e[3]<100?3:0)+' u') + tile('Category', CAT[e[5]]) +
