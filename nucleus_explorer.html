@@ -61,7 +61,6 @@ nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:60;he
 #stage{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:none;}
 #stage:active{cursor:grabbing;}
 
-#hud{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:20;text-align:center;pointer-events:none;}
 #hud .sym{font-family:var(--display);font-weight:700;font-size:2.4rem;letter-spacing:.04em;text-shadow:0 0 30px var(--cx-40),0 2px 14px rgba(0,0,0,.9);}
 #hud .nm{font-size:.62rem;letter-spacing:.28em;color:var(--mid);text-transform:uppercase;margin-top:2px;text-shadow:0 2px 10px rgba(0,0,0,.9);}
 
@@ -119,31 +118,8 @@ nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:60;he
 .dsub{font-size:.68rem;color:var(--lo);letter-spacing:.06em;margin-bottom:14px;}
 
 /* ============ TOOLBAR ============ */
-#toolbar{position:absolute;top:8px;right:8px;z-index:40;display:flex;flex-direction:column;gap:8px;width:238px;max-height:calc(100% - 16px);overflow-y:auto;overflow-x:hidden;padding:8px 8px 14px;scrollbar-width:none;overscroll-behavior:contain;pointer-events:none;transition:gap .25s ease;}
-#toolbar::-webkit-scrollbar{display:none;}
-#toolbar > *{pointer-events:auto;}
-#toolbar.collapsed{overflow:visible;width:auto;padding-bottom:8px;}
-#toolbar.collapsed #ctrl{display:none;}
-#toolbar.collapsed .tbtn:not(.toolbar-toggle){display:none;}
-.toolbar-toggle{justify-content:center !important;}
-.toolbar-toggle .chev{transition:transform .25s ease;}
-#toolbar.collapsed .toolbar-toggle .chev{transform:rotate(-90deg);}
-.tbtn{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:40px;font-size:.66rem;letter-spacing:.08em;padding:10px 13px;flex-shrink:0;border-radius:8px;border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);color:var(--mid);cursor:pointer;text-decoration:none;text-transform:uppercase;transition:all .18s;box-shadow:0 4px 14px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.08);}
-.tbtn:hover{border-color:var(--cx-40);color:var(--hi);}
-.tbtn.on{border-color:var(--cx2);background:linear-gradient(160deg,var(--cx-40),var(--cx-08));color:#fff;box-shadow:0 2px 10px var(--cx-40);}
-.tbtn .dot{width:6px;height:6px;border-radius:50%;background:var(--vlo);flex-shrink:0;}
-.tbtn.on .dot{background:var(--cx2);box-shadow:0 0 6px var(--cx2);}
-.tbtn.disabled{opacity:.35;pointer-events:none;}
-#btn-reset{align-items:center;justify-content:center;margin-top:4px;}
-.tbtn > span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
 /* ============ CLOUD & ZOOM CONTROL PANEL ============ */
-#ctrl{width:100%;flex-shrink:0;display:flex;flex-direction:column;gap:8px;}
-#ctrl .ctrl-head{justify-content:space-between;}
-#ctrl .ctrl-head .chev{transition:transform .25s ease;}
-#ctrl.collapsed .ctrl-head .chev{transform:rotate(-90deg);}
-#ctrl.collapsed #ctrl-body{display:none;}
-#ctrl-body{display:flex;flex-direction:column;gap:12px;padding:12px;border-radius:10px;border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);box-shadow:0 4px 14px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.08);}
 .clabel{display:flex;justify-content:space-between;align-items:baseline;font-size:.62rem;letter-spacing:.14em;color:var(--lo);text-transform:uppercase;margin-bottom:6px;}
 .cval{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em;color:var(--hi);font-weight:600;background:none;border:none;border-bottom:1px dotted var(--vlo);padding:8px 0 3px;margin:-8px 0 0;cursor:pointer;text-align:right;}
 .cval:hover{color:var(--cx3);border-bottom-color:var(--cx2);}
@@ -158,7 +134,6 @@ input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15);}
 #no-results[hidden]{display:none;}
 #hud .nm + .nm{margin-top:1px;color:var(--lo);}
 @media(max-width:900px){#ctrl-body{transition:opacity .2s;} #ctrl-body.adjusting{opacity:.3;}}
-@media(min-width:901px){body.toolbar-collapsed #focus-panel{right:130px;}}
 .cline{display:flex;align-items:center;gap:8px;}
 .cline input[type=range]{flex:1;min-width:0;height:32px;touch-action:pan-y;accent-color:var(--cx2);cursor:pointer;background:transparent;}
 .cbtn{min-width:36px;height:36px;padding:0 8px;border-radius:8px;border:1px solid var(--glass-border);background:rgba(0,0,0,.25);color:var(--mid);font-family:var(--mono);font-size:.9rem;line-height:1;cursor:pointer;transition:all .15s;flex-shrink:0;}
@@ -190,32 +165,16 @@ input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15);}
 @media(max-width:900px){
   :root{--app-h:calc(100vh - 56px - env(safe-area-inset-top,0px));}
   @supports(height:100dvh){:root{--app-h:calc(100dvh - 56px - env(safe-area-inset-top,0px));}}
-  #left-panel{left:0;right:0;bottom:0;top:auto;width:100%;height:48%;border-radius:16px 16px 0 0;border-left:none;border-right:none;border-bottom:none;padding-bottom:var(--sab);}
-  #left-panel.collapsed{transform:translateY(100%);}
-  .panel-toggle{top:auto;bottom:48%;left:50%;right:auto;transform:translateX(-50%);width:64px;height:26px;border:1px solid var(--glass-border);border-bottom:none;border-radius:10px 10px 0 0;transition:bottom .32s cubic-bezier(.4,0,.2,1),color .2s,border-color .2s;}
-  #left-panel.collapsed ~ .panel-toggle{left:50%;bottom:var(--sab);}
-  .panel-toggle .chev{transform:rotate(-90deg);}
-  #left-panel.collapsed ~ .panel-toggle .chev{transform:rotate(90deg);}
   .tile-grid{grid-template-columns:repeat(auto-fill,minmax(58px,1fr));}
   #search{font-size:16px;}
-  #toolbar{top:auto;bottom:calc(48% + 32px);right:0;left:0;width:auto;max-width:none;max-height:none;flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:8px;padding:4px 12px 4px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scroll-padding:0 12px;transition:bottom .32s cubic-bezier(.4,0,.2,1);}
-  #toolbar.collapsed{overflow:visible;width:auto;right:auto;padding:4px 12px;}
-  .tbtn{white-space:nowrap;min-height:44px;padding:0 14px;}
-  #btn-reset{margin-top:0;}
-  #ctrl{width:auto;flex-shrink:0;}
-  #ctrl-body{position:fixed;left:12px;right:12px;bottom:calc(var(--app-h)*.48 + 32px + 56px);max-height:calc(var(--app-h)*.52 - 76px);min-height:120px;overflow-y:auto;z-index:45;background:rgba(14,8,4,.9);}
-  #hud{bottom:calc(48% + 92px);transition:bottom .32s cubic-bezier(.4,0,.2,1);}
   #hint{top:8px;}
   #quark-legend{top:64px;bottom:auto;left:12px;max-width:150px;gap:4px;padding:8px 10px;font-size:.54rem;}
   #quark-legend .dsect{display:none;}
   #lg-quark,#lg-pion{gap:4px;}
   #focus-panel{top:64px;bottom:auto;right:12px;max-width:calc(100% - 190px);}
-  body.panel-collapsed #toolbar{bottom:calc(32px + var(--sab));}
-  body.panel-collapsed #hud{bottom:calc(92px + var(--sab));}
-  body.panel-collapsed #ctrl-body{bottom:calc(32px + 56px + var(--sab));max-height:calc(var(--app-h) - 120px);}
 }
 @media(max-width:900px) and (max-height:520px){
-  #hud .sym{font-size:1.8rem;} #hud{bottom:calc(48% + 84px);}
+  #hud .sym{font-size:1.8rem;}
 }
 #toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 68px);transform:translate(-50%,-8px);z-index:90;max-width:calc(100% - 24px);padding:10px 16px;border-radius:10px;font-size:.7rem;letter-spacing:.04em;line-height:1.4;text-align:center;color:var(--hi);background:rgba(14,8,4,.92);border:1px solid var(--cx-40);box-shadow:0 8px 24px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;}
 #toast.show{opacity:1;transform:translate(-50%,0);}
@@ -257,9 +216,338 @@ a.brand:hover .brand-dot{box-shadow:0 0 18px var(--cx);}
 #warp .wt{font-family:var(--display);font-weight:700;font-size:1.3rem;letter-spacing:.3em;text-transform:uppercase;color:var(--hi);text-shadow:0 0 30px var(--cx);padding:0 24px;}
 #warp .ws{margin-top:10px;font-size:.62rem;letter-spacing:.2em;color:var(--cx2);}
 body.boot *{transition:none!important;}
+
+/* ============ UI v2: tools panel, dock, collision-free layout ============ */
+:root{--dock-h:calc(58px + env(safe-area-inset-bottom,0px));--sheet-h:min(46%,400px);--inset-l:16px;--inset-r:16px;}
+@media(min-width:901px){body{--inset-l:352px;--inset-r:304px;} body.panel-collapsed{--inset-l:60px;} body.toolbar-collapsed{--inset-r:140px;}}
+@media(max-width:900px){body{--inset-l:12px;--inset-r:12px;}}
+.ti{width:20px;height:20px;flex-shrink:0;}
+.badge{min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--cx);color:#fff;font-size:.62rem;line-height:20px;text-align:center;font-weight:700;}
+.badge:empty{display:none;}
+
+/* safe centre column: every top/bottom overlay lives between the side panels */
+#hud{position:absolute;z-index:20;text-align:center;pointer-events:none;left:var(--inset-l);right:var(--inset-r);transform:none;bottom:18px;}
+#hint{top:12px;left:var(--inset-l);right:var(--inset-r);transform:none;margin:0 auto;width:max-content;max-width:min(640px,calc(100% - var(--inset-l) - var(--inset-r)));}
+#scale-hud{top:84px;left:var(--inset-l);right:var(--inset-r);transform:none;margin:0 auto;width:auto;max-width:600px;}
+#quark-legend{left:calc(var(--inset-l) + 8px);}
+#focus-panel{right:calc(var(--inset-r) + 8px);bottom:16px;}
+
+/* left panel handle: labelled so it reads as a control */
+.panel-toggle{width:30px;height:112px;flex-direction:column;gap:8px;}
+.pt-l{writing-mode:vertical-rl;font-size:.58rem;letter-spacing:.22em;}
+
+/* ---- Tools panel ---- */
+#toolbar{position:absolute;top:16px;right:16px;width:272px;max-height:calc(100% - 32px);z-index:40;display:flex;flex-direction:column;gap:6px;padding:0 10px 14px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--cx-40) transparent;background:rgba(14,8,4,.78);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:14px;box-shadow:var(--glass-shadow);}
+.toolbar-toggle{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:10px;flex-shrink:0;min-height:52px;margin:0 -10px 2px;padding:0 14px;border:none;border-bottom:1px solid var(--glass-border);border-radius:14px 14px 0 0;background:rgba(14,8,4,.96);color:var(--hi);cursor:pointer;}
+.toolbar-toggle .tl{flex:1;text-align:left;font-family:var(--display);font-weight:700;font-size:.95rem;letter-spacing:.18em;}
+.toolbar-toggle .ti{color:var(--cx2);}
+.toolbar-toggle .chev{color:var(--mid);transition:transform .25s;}
+@media(min-width:901px){
+  #toolbar.collapsed{width:auto;padding:0;overflow:visible;background:none;border:none;box-shadow:none;}
+  #toolbar.collapsed > :not(.toolbar-toggle){display:none;}
+  #toolbar.collapsed .toolbar-toggle{margin:0;min-height:46px;border:1px solid var(--cx-40);border-radius:12px;background:rgba(14,8,4,.9);box-shadow:var(--glass-shadow);}
+  #toolbar.collapsed .toolbar-toggle .chev{transform:rotate(90deg);}
+}
+.tg-h{display:flex;align-items:center;gap:8px;flex-shrink:0;margin:10px 2px 0;font-size:.58rem;letter-spacing:.22em;color:var(--cx2);text-transform:uppercase;}
+.tg-h::after{content:'';flex:1;height:1px;background:var(--border);}
+.tbtn{position:relative;display:grid;grid-template-columns:32px 1fr auto;grid-template-areas:"ti tl sw" "ti td sw";column-gap:10px;align-items:center;text-align:left;width:100%;min-height:48px;padding:6px 12px 6px 8px;flex-shrink:0;border-radius:10px;border:1px solid var(--glass-border);background:rgba(255,255,255,.04);color:var(--mid);cursor:pointer;text-decoration:none;font-family:var(--mono);transition:background .15s,border-color .15s,transform .1s;}
+.tbtn .ti{grid-area:ti;width:32px;height:32px;padding:6px;border-radius:9px;background:rgba(255,255,255,.07);color:var(--cx2);}
+.tbtn .tl{grid-area:tl;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--hi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
+.tbtn .td{grid-area:td;font-size:.58rem;line-height:1.35;letter-spacing:.02em;color:var(--lo);margin-top:1px;}
+@media(hover:hover){.tbtn:hover{border-color:var(--cx-40);background:rgba(255,255,255,.08);}}
+.tbtn:active{transform:scale(.98);}
+.tbtn.on{border-color:var(--cx2);background:linear-gradient(160deg,var(--cx-18),var(--cx-08));}
+.tbtn.on .ti{background:var(--cx-40);color:#fff;}
+.tbtn.disabled{opacity:.4;pointer-events:none;}
+.tbtn .dot{grid-area:sw;position:relative;width:34px;height:20px;border-radius:10px;background:rgba(255,255,255,.2);transition:background .2s;}
+.tbtn .dot::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s;}
+.tbtn.tg.on .dot{background:var(--cx);}
+.tbtn.tg.on .dot::after{transform:translateX(14px);}
+.tbtn.act:not(.ctrl-head)::after{content:'›';grid-area:sw;font-size:1.3rem;line-height:1;color:var(--cx2);}
+.tbtn.hero{border-color:var(--cx-40);background:linear-gradient(135deg,var(--cx-18),transparent);}
+.tbtn.hero .ti{background:var(--cx);color:#fff;}
+body.m4d .tbtn.only4d{display:grid !important;}
+body.m4d .tg-h.only4d{display:flex !important;}
+.ctrl-head .chev{grid-area:sw;color:var(--mid);transition:transform .25s;}
+#ctrl.collapsed .ctrl-head .chev{transform:rotate(-90deg);}
+#ctrl{display:flex;flex-direction:column;gap:7px;width:100%;flex-shrink:0;}
+#ctrl.collapsed #ctrl-body{display:none;}
+#ctrl-body{display:flex;flex-direction:column;gap:14px;padding:12px;border-radius:10px;border:1px solid var(--glass-border);background:rgba(0,0,0,.28);}
+.cbtn{min-width:38px;height:38px;}
+@media(pointer:coarse){.cbtn{min-width:44px;height:44px;}}
+#toolbar::after{content:'';position:sticky;bottom:-14px;display:block;height:18px;margin:-18px -10px -14px;flex-shrink:0;pointer-events:none;background:linear-gradient(transparent,rgba(14,8,4,.9));}
+
+/* ---- Mobile: bottom dock + one sheet at a time ---- */
+#dock{display:none;}
+@media(max-width:900px){
+  #dock{display:flex;position:absolute;left:0;right:0;bottom:0;height:var(--dock-h);padding:0 8px env(safe-area-inset-bottom,0px);gap:6px;align-items:center;z-index:50;background:rgba(10,6,3,.94);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-top:1px solid var(--glass-border);}
+  .dk{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:48px;border:none;border-radius:10px;background:none;color:var(--lo);font-size:.56rem;letter-spacing:.1em;cursor:pointer;}
+  .dk .ti{width:22px;height:22px;}
+  .dk.on{color:#fff;background:var(--cx-18);}
+  .dk.on .ti{color:var(--cx2);}
+  .dk .badge{position:absolute;top:3px;left:calc(50% + 8px);min-width:16px;height:16px;line-height:16px;padding:0 4px;font-size:.54rem;}
+  .panel-toggle{display:none;}
+  #left-panel,#toolbar{left:0;right:0;top:auto;bottom:var(--dock-h);width:100%;height:var(--sheet-h);max-height:none;z-index:42;border-radius:18px 18px 0 0;border-left:none;border-right:none;border-bottom:1px solid var(--glass-border);background:rgba(14,8,4,.96);padding-bottom:0;transition:transform .32s cubic-bezier(.4,0,.2,1),visibility 0s;}
+  #left-panel.collapsed,#toolbar.collapsed{transform:translateY(calc(100% + var(--dock-h)));visibility:hidden;transition:transform .32s cubic-bezier(.4,0,.2,1),visibility 0s .32s;}
+  #left-panel::before{content:'';position:absolute;top:6px;left:50%;width:38px;height:4px;margin-left:-19px;border-radius:2px;background:rgba(255,255,255,.28);z-index:2;}
+  .ptabs{padding-top:8px;}
+  #toolbar{display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:8px;padding:0 12px 16px;}
+  #toolbar::after{display:none;}
+  .toolbar-toggle{margin:0 -12px 0;padding-top:6px;grid-column:1/-1;border-radius:18px 18px 0 0;}
+  .toolbar-toggle .chev{transform:none;}
+  .tg-h,#ctrl,.ctrl-body-wrap{grid-column:1/-1;}
+  .tbtn{grid-template-columns:1fr auto;grid-template-areas:"ti sw" "tl tl" "td td";row-gap:3px;min-height:92px;align-content:start;padding:10px;}
+  .tbtn .ti{justify-self:start;}
+  .tbtn .tl{white-space:normal;font-size:.66rem;}
+  .tbtn.act:not(.ctrl-head)::after{align-self:start;}
+  #ctrl .ctrl-head{grid-template-columns:34px 1fr auto;grid-template-areas:"ti tl sw" "ti td sw";min-height:56px;row-gap:0;align-content:center;}
+  #ctrl .ctrl-head .tl{white-space:nowrap;}
+  #hud{bottom:calc(var(--dock-h) + 10px);transition:bottom .32s cubic-bezier(.4,0,.2,1);}
+  body:not(.panel-collapsed) #hud,body:not(.toolbar-collapsed) #hud{bottom:calc(var(--dock-h) + var(--sheet-h) + 10px);}
+  #hint{top:10px;font-size:.56rem;}
+  #scale-hud{top:58px;}
+  #focus-panel{right:12px;bottom:auto;}
+  #quark-legend{left:12px;}
+}
+@media(max-width:900px) and (max-height:520px){
+  :root{--dock-h:calc(46px + env(safe-area-inset-bottom,0px));--sheet-h:min(66%,400px);}
+  .dk{flex-direction:row;gap:8px;min-height:38px;} .dk .badge{position:static;}
+  #hud .sym{font-size:1.6rem;} #hint{display:none;}
+}
+
+
+/* =====================================================================
+   UI v3 — Unified glass control system (Tools panel, Elements panel, dock)
+   Overrides earlier panel rules. Pure presentation: no IDs/classes changed,
+   so all existing JS hooks keep working.
+   ===================================================================== */
+:root{
+  --g-surface:linear-gradient(165deg,rgba(255,255,255,.085) 0%,rgba(255,255,255,.025) 42%,rgba(255,255,255,.015) 100%),rgba(18,10,5,.50);
+  --g-surface-solid:rgba(18,10,5,.92);
+  --g-blur:blur(28px) saturate(190%);
+  --g-line:rgba(255,255,255,.13);
+  --g-line-soft:rgba(255,255,255,.075);
+  --g-well:rgba(0,0,0,.26);
+  --g-shadow:0 20px 56px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,85,0,.05);
+  --r-panel:18px;--r-card:13px;--r-ctl:10px;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --fs-title:.88rem;--fs-note:.6rem;--fs-label:.68rem;--fs-hint:.6rem;
+}
+@media(min-width:901px){body{--inset-r:320px;}}
+
+/* ---------- Panel surfaces ---------- */
+#toolbar,#left-panel{
+  background:var(--g-surface);
+  -webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);
+  border:1px solid var(--g-line);border-radius:var(--r-panel);box-shadow:var(--g-shadow);
+}
+#toolbar{width:288px;gap:7px;padding:0 12px 16px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent;}
+#toolbar::-webkit-scrollbar{width:6px;}
+#toolbar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.16);border-radius:6px;}
+#toolbar::-webkit-scrollbar-thumb:hover{background:var(--cx-40);}
+#toolbar::after{background:linear-gradient(transparent,rgba(18,10,5,.55));margin:-18px -12px -16px;}
+
+/* ---------- Header ---------- */
+.toolbar-toggle{
+  min-height:56px;margin:0 -12px 4px;padding:0 16px;gap:12px;
+  border:none;border-bottom:1px solid var(--g-line);border-radius:var(--r-panel) var(--r-panel) 0 0;
+  background:linear-gradient(180deg,rgba(28,15,8,.88),rgba(20,11,6,.72));
+  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  transition:background .2s var(--ease);
+}
+.toolbar-toggle:hover{background:linear-gradient(180deg,rgba(36,19,10,.9),rgba(24,13,7,.76));}
+.toolbar-toggle .ti{width:30px;height:30px;padding:6px;border-radius:9px;color:var(--cx2);
+  background:linear-gradient(145deg,var(--cx-18),rgba(255,255,255,.03));border:1px solid var(--cx-40);box-shadow:0 0 14px var(--cx-18);}
+.toolbar-toggle .tl{font-size:var(--fs-title);letter-spacing:.24em;}
+.toolbar-toggle .chev{font-size:.8rem;opacity:.8;}
+.badge{min-width:22px;height:22px;line-height:22px;padding:0 7px;border-radius:11px;font-family:var(--display);font-size:.72rem;letter-spacing:.02em;
+  background:linear-gradient(135deg,var(--cx),var(--cx2));box-shadow:0 2px 10px var(--cx-40);}
+
+/* ---------- Section headers ---------- */
+.tg-h{margin:14px 4px 1px;gap:10px;font-family:var(--display);font-weight:700;font-size:.66rem;letter-spacing:.26em;color:var(--cx2);}
+.tg-h::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--cx);box-shadow:0 0 8px var(--cx);flex-shrink:0;}
+.tg-h::after{height:1px;background:linear-gradient(90deg,var(--cx-40),transparent);}
+.tg-h:first-of-type{margin-top:8px;}
+
+/* ---------- Tool rows ---------- */
+.tbtn{
+  min-height:54px;padding:8px 14px 8px 8px;column-gap:12px;border-radius:var(--r-card);
+  border:1px solid var(--g-line-soft);
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  transition:background .2s var(--ease),border-color .2s var(--ease),transform .15s var(--ease),box-shadow .2s var(--ease);
+}
+.tbtn .ti{width:36px;height:36px;padding:8px;border-radius:10px;color:var(--cx2);
+  background:rgba(255,255,255,.06);border:1px solid var(--g-line-soft);
+  transition:background .2s var(--ease),color .2s var(--ease),box-shadow .2s var(--ease),border-color .2s var(--ease);}
+.tbtn .tl{font-family:var(--display);font-weight:700;font-size:.84rem;letter-spacing:.1em;line-height:1.15;}
+.tbtn .td{font-size:var(--fs-hint);letter-spacing:.03em;color:var(--lo);margin-top:2px;}
+@media(hover:hover){.tbtn:hover{border-color:var(--cx-40);background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.04));}
+  .tbtn:hover .ti{color:var(--cx3);}}
+.tbtn:active{transform:scale(.985);}
+.tbtn.on{border-color:var(--cx-40);background:linear-gradient(135deg,var(--cx-18),rgba(255,255,255,.03) 70%);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 18px var(--cx-08);}
+.tbtn.on .ti{background:linear-gradient(145deg,var(--cx),var(--cx2));border-color:transparent;color:#fff;box-shadow:0 3px 12px var(--cx-40);}
+.tbtn.hero{border-color:var(--cx-40);background:linear-gradient(135deg,var(--cx-18),rgba(255,255,255,.025) 75%);}
+.tbtn.hero .ti{background:linear-gradient(145deg,var(--cx),var(--cx2));border-color:transparent;color:#fff;box-shadow:0 3px 12px var(--cx-40);}
+.tbtn.disabled{opacity:.38;}
+
+/* switch */
+.tbtn .dot{width:38px;height:22px;border-radius:11px;background:rgba(255,255,255,.12);border:1px solid var(--g-line);box-shadow:inset 0 1px 3px rgba(0,0,0,.35);
+  transition:background .2s var(--ease),border-color .2s var(--ease),box-shadow .2s var(--ease);}
+.tbtn .dot::after{top:2px;left:2px;width:16px;height:16px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.45);transition:transform .22s var(--ease);}
+.tbtn.tg.on .dot{background:linear-gradient(90deg,var(--cx),var(--cx2));border-color:transparent;box-shadow:0 0 12px var(--cx-40);}
+.tbtn.tg.on .dot::after{transform:translateX(16px);}
+.tbtn.act:not(.ctrl-head)::after{font-size:1.4rem;opacity:.85;transition:transform .2s var(--ease);}
+@media(hover:hover){.tbtn.act:not(.ctrl-head):hover::after{transform:translateX(3px);}}
+
+/* ---------- Cloud & Zoom drawer ---------- */
+#ctrl{gap:8px;}
+.ctrl-head .chev{font-size:.8rem;opacity:.8;}
+#ctrl-body{gap:0;padding:14px;border-radius:var(--r-card);background:var(--g-well);border:1px solid var(--g-line-soft);box-shadow:inset 0 2px 10px rgba(0,0,0,.28);}
+#ctrl-body > div:not(.cbtns){padding:14px 0;border-top:1px solid var(--g-line-soft);}
+#ctrl-body > div:first-child{padding-top:0;border-top:none;}
+#ctrl-body > .cbtns{padding-top:14px;border-top:1px solid var(--g-line-soft);}
+
+.clabel{align-items:center;margin-bottom:9px;font-family:var(--display);font-weight:700;font-size:var(--fs-label);letter-spacing:.18em;color:var(--mid);}
+.clabel b{font-family:var(--mono);font-weight:400;}
+#dens-val,#jit-val,#dyn-val,#zoom-val{display:inline-block;margin:0;cursor:pointer;min-width:54px;padding:3px 10px;border-radius:999px;text-align:center;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.04em;color:var(--cx3);background:var(--cx-08);border:1px solid var(--cx-18);transition:background .18s var(--ease),border-color .18s var(--ease),color .18s var(--ease);}
+.cval:hover{color:#fff;background:var(--cx-18);border-color:var(--cx-40);}
+.cval:active{transform:scale(.96);}
+.cline{gap:10px;}
+.cnote{min-height:0;margin-top:8px;font-size:var(--fs-hint);line-height:1.5;letter-spacing:.03em;color:var(--lo);}
+.cnote:empty{display:none;}
+
+/* steppers & buttons */
+.cbtn{min-width:34px;height:34px;padding:0 10px;border-radius:var(--r-ctl);border:1px solid var(--g-line);
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));color:var(--mid);
+  font-size:1rem;display:inline-flex;align-items:center;justify-content:center;
+  transition:background .18s var(--ease),border-color .18s var(--ease),color .18s var(--ease),transform .12s var(--ease),box-shadow .18s var(--ease);}
+@media(hover:hover){.cbtn:hover{border-color:var(--cx-40);color:var(--hi);background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.05));}}
+.cbtn:active{transform:scale(.95);}
+.cbtn.wide{font-family:var(--display);font-weight:700;font-size:.7rem;letter-spacing:.16em;}
+.cbtn.on{border-color:transparent;color:#fff;background:linear-gradient(135deg,var(--cx),var(--cx2));box-shadow:0 3px 12px var(--cx-40);}
+.cbtn:disabled{opacity:.4;}
+@media(pointer:coarse){.cbtn{min-width:44px;height:44px;}}
+
+/* segmented colour presets */
+#rb-btns-unused{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}
+#rb-btns-unused .cbtn.wide{flex:none;height:32px;padding:0 4px;min-width:0;font-size:.62rem;letter-spacing:.1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cbtns{gap:8px;}
+#ctrl-body > .cbtns .cbtn.wide{height:38px;}
+
+/* page-theme inputs */
+.pg-row{gap:12px;}
+.pg-item input[type=number]{width:78px;height:28px;padding:0 8px;border-radius:8px;border:1px solid var(--g-line);background:rgba(0,0,0,.35);color:var(--hi);font-size:.7rem;outline:none;-moz-appearance:textfield;appearance:textfield;}
+.pg-item input[type=number]::-webkit-inner-spin-button,.pg-item input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+.pg-item input[type=number]:focus{border-color:var(--cx2);box-shadow:0 0 0 3px var(--cx-18);}
+#pg-color{width:46px;height:32px;padding:2px;border-radius:9px;border:1px solid var(--g-line);background:rgba(0,0,0,.3);cursor:pointer;}
+
+/* ---------- Sliders (fill driven by the page's own paintRange() --p) ---------- */
+.cline input[type=range]{height:24px;background:transparent;cursor:pointer;outline:none;}
+input[type=range]::-webkit-slider-runnable-track{
+  height:6px;border-radius:999px;
+  background:linear-gradient(90deg,var(--cx),var(--cx2) var(--p),rgba(255,255,255,.14) var(--p));
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.4);
+}
+input[type=range]::-webkit-slider-thumb{
+  width:18px;height:18px;margin-top:-6px;border-radius:50%;
+  background:#fff;border:3px solid var(--cx2);box-shadow:0 0 0 0 var(--cx-18),0 2px 8px rgba(0,0,0,.55);
+  transition:box-shadow .18s var(--ease),transform .15s var(--ease);
+}
+input[type=range]:hover::-webkit-slider-thumb{box-shadow:0 0 0 5px var(--cx-18),0 2px 8px rgba(0,0,0,.55);}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.12);box-shadow:0 0 0 7px var(--cx-18),0 2px 8px rgba(0,0,0,.55);}
+input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 5px var(--cx-40),0 2px 8px rgba(0,0,0,.55);}
+input[type=range]::-moz-range-track{height:6px;border-radius:999px;background:rgba(255,255,255,.14);}
+input[type=range]::-moz-range-progress{height:6px;border-radius:999px;background:linear-gradient(90deg,var(--cx),var(--cx2));}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--cx2);box-shadow:0 2px 8px rgba(0,0,0,.55);}
+input[type=range]:focus-visible{outline:none;}
+
+/* ---------- Elements panel: same language ---------- */
+.ptab{font-family:var(--display);font-weight:700;font-size:.78rem;letter-spacing:.2em;}
+.mode-switch{border-radius:12px;background:var(--g-well);border-color:var(--g-line-soft);box-shadow:inset 0 1px 4px rgba(0,0,0,.3);}
+.mchip{font-family:var(--display);font-weight:700;font-size:.74rem;letter-spacing:.16em;border-radius:9px;transition:background .2s var(--ease),color .2s var(--ease),box-shadow .2s var(--ease);}
+.mchip.active{background:linear-gradient(135deg,var(--cx),var(--cx2));box-shadow:0 3px 12px var(--cx-40);}
+#search{border-radius:11px;background:var(--g-well);border-color:var(--g-line);transition:border-color .18s var(--ease),box-shadow .18s var(--ease);}
+#search:focus{border-color:var(--cx2);box-shadow:0 0 0 3px var(--cx-18);}
+.etile,.mtile,.dstat,.dconfig{border-color:var(--g-line-soft);}
+.etile{border-radius:9px;}
+.etile.active,.mtile.active{border-color:var(--cx-40);background:linear-gradient(135deg,var(--cx-18),rgba(255,255,255,.03));box-shadow:0 3px 14px var(--cx-08);}
+.panel-toggle{background:var(--g-surface);border-color:var(--g-line);}
+
+/* ---------- Mobile sheets & dock ---------- */
+@media(max-width:900px){
+  #left-panel,#toolbar{background:linear-gradient(165deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),rgba(14,8,4,.80);border-radius:22px 22px 0 0;border:1px solid var(--g-line);border-bottom:none;}
+  #toolbar{padding:0 14px 18px;gap:9px;}
+  .toolbar-toggle{margin:0 -14px 0;border-radius:22px 22px 0 0;}
+  .tbtn{min-height:92px;border-radius:14px;}
+  .tbtn .tl{font-size:.8rem;}
+  #ctrl .ctrl-head{min-height:60px;}
+  #dock{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02)),rgba(14,8,4,.74);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);border-top:1px solid var(--g-line);box-shadow:0 -8px 30px rgba(0,0,0,.4);}
+  .dk{font-family:var(--display);font-weight:700;font-size:.64rem;letter-spacing:.16em;transition:background .2s var(--ease),color .2s var(--ease);}
+  .dk.on{background:linear-gradient(135deg,var(--cx-18),var(--cx-08));box-shadow:inset 0 0 0 1px var(--cx-40);}
+}
+
+/* ---------- Fallbacks ---------- */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  #toolbar,#left-panel,#dock{background:var(--g-surface-solid)!important;}
+}
+@media(prefers-reduced-transparency:reduce){
+  #toolbar,#left-panel,#dock,.toolbar-toggle{background:var(--g-surface-solid)!important;-webkit-backdrop-filter:none;backdrop-filter:none;}
+}
+
+/* ---------- Floating overlays: same glass language ---------- */
+#quark-legend,#focus-panel{
+  background:var(--g-surface);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);
+  border:1px solid var(--g-line);border-radius:var(--r-card);box-shadow:var(--g-shadow);
+}
+#quark-legend{padding:12px 14px;gap:7px;font-size:.62rem;color:var(--mid);}
+#quark-legend .dsect{font-family:var(--display);font-weight:700;font-size:.64rem;letter-spacing:.22em;color:var(--cx2);margin:0;}
+#quark-legend .qrow{gap:9px;}
+#focus-panel{border-color:var(--cx-40);padding:14px 36px 14px 16px;font-size:.7rem;color:var(--mid);}
+#focus-panel .fclose{top:8px;right:8px;width:26px;height:26px;padding:0;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  transition:background .18s var(--ease),color .18s var(--ease);}
+#focus-panel .fclose:hover{background:rgba(255,255,255,.1);color:#fff;}
+#toast{background:var(--g-surface-solid);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);border-radius:var(--r-card);box-shadow:var(--g-shadow);}
+#hint{background:var(--g-surface);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);border-color:var(--g-line);}
+@media(max-width:900px){#quark-legend,#focus-panel{background:linear-gradient(165deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),rgba(14,8,4,.80);}}
+@media(prefers-reduced-transparency:reduce){#quark-legend,#focus-panel,#hint,#toast{background:var(--g-surface-solid)!important;-webkit-backdrop-filter:none;backdrop-filter:none;}}
+</style>
+<style>
+/* ===== UI v3.2 — phone fixes (found on-device) =====
+   1. The v3 desktop width (288px) overrode the sheet's width:100%, leaving the Tools sheet 70% wide.
+   2. Card titles had overflow:hidden, which let grid rows collapse so a wrapped title sat on top of its caption.
+   3. The sheet header was translucent, so scrolled cards showed through it. */
+.toolbar-toggle,.toolbar-toggle:hover{background:rgb(22,12,6)}
+@media(max-width:900px){
+  #left-panel,#toolbar{width:100%;max-width:none}
+  .tbtn .tl{overflow:visible;text-overflow:clip;line-height:1.2;overflow-wrap:anywhere}
+  .tbtn .td{line-height:1.4}
+  .tbtn{row-gap:4px}
+  .toolbar-toggle,.toolbar-toggle:hover{background:rgb(16,9,5)}
+}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-tools" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h8M18 6h2M4 12h2M12 12h8M4 18h10M20 18h0"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></symbol>
+<symbol id="i-elements" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+<symbol id="i-reset" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></symbol>
+<symbol id="i-anti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></symbol>
+<symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18"/></symbol>
+<symbol id="i-smooth" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c3-7 5-7 8 0s5 7 8 0c1-2 2-3 4-2"/></symbol>
+<symbol id="i-ultra" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></symbol>
+<symbol id="i-surface" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+<symbol id="i-cube" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12v10M12 12L3 7"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-ff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5l8 7-8 7zM13 5l8 7-8 7z"/></symbol>
+<symbol id="i-dive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M6 11l6 6 6-6M5 21h14"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4zM3 12l9 4 9-4M3 17l9 4 9-4"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3.5 3.5 3.5 14.500 0 18M12 3c-3.500 3.500-3.500 14.500 0 18"/></symbol>
+<symbol id="i-zoom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5M11 8v6M8 11h6"/></symbol>
+</defs></svg>
 
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="loading-overlay"><div class="load-ring"></div><div class="lt">Loading Nucleus Explorer…</div></div>
@@ -279,6 +567,7 @@ body.boot *{transition:none!important;}
   <div id="scale-hud" aria-live="off"><div class="sh-top"><span class="sh-val" id="sh-val"></span><span class="sh-name" id="sh-name"></span></div><div class="sh-cap" id="sh-cap"></div><div class="sh-ladder" id="sh-ladder"></div></div>
   <div id="hint">DRAG TO ROTATE · SCROLL TO ZOOM IN — PAST THE QUARKS, ALL THE WAY TO THE PLANCK LENGTH · ← → CYCLE</div>
   <div id="hud"><div class="sym" id="hud-sym">H</div><div class="nm" id="hud-name">HYDROGEN</div><div class="nm" id="hud-counts">1 PROTON · 0 NEUTRONS</div></div>
+  <div id="ovl">
   <div id="quark-legend">
   <div id="lg-quark">
     <div class="dsect" style="margin:0 0 2px;">Colour Charge</div>
@@ -297,6 +586,7 @@ body.boot *{transition:none!important;}
     </div>
   </div>
   <div id="focus-panel" role="status" aria-live="polite"><button class="fclose" id="focus-close" aria-label="Close">✕</button><div id="focus-body"></div></div>
+  </div>
 
   <div id="left-panel">
     <div class="ptabs">
@@ -316,17 +606,21 @@ body.boot *{transition:none!important;}
       </div>
     </div>
   </div>
-  <button class="panel-toggle" id="panel-toggle" type="button" aria-label="Collapse panel" aria-expanded="true" aria-controls="left-panel"><span class="chev">‹</span></button>
+  <button class="panel-toggle" id="panel-toggle" type="button" aria-label="Collapse panel" aria-expanded="true" aria-controls="left-panel"><span class="chev">‹</span><span class="pt-l">ELEMENTS</span></button>
 
-  <div id="toolbar">
-    <button class="tbtn toolbar-toggle" id="toolbar-toggle" type="button" aria-label="Collapse tools" aria-expanded="true" aria-controls="toolbar"><span>TOOLS</span><span class="chev">▾</span></button>
-    <button class="tbtn" id="btn-antimatter"><span>ANTIMATTER</span><span class="dot"></span></button>
-    <button class="tbtn" id="btn-holo"><span>HOLO MODE</span><span class="dot"></span></button>
-    <button class="tbtn" id="btn-volumetric"><span>VOLUMETRIC MODE</span><span class="dot"></span></button>
-    <button class="tbtn" id="btn-dive"><span id="dive-label">DIVE TO PLANCK</span><span class="dot"></span></button>
-    <button class="tbtn" id="btn-vac3d" title="Switch the vacuum between a flat 2D view and a 3D fly-through"><span>3D VACUUM</span><span class="dot"></span></button>
+  <div id="toolbar" role="region" aria-label="Tools">
+    <button class="toolbar-toggle" id="toolbar-toggle" type="button" aria-label="Collapse tools" aria-expanded="true" aria-controls="toolbar"><svg class="ti" aria-hidden="true"><use href="#i-tools"/></svg><span class="tl">TOOLS</span><b class="badge" id="tool-badge" title="Tools switched on"></b><span class="chev">▾</span></button>
+    <div class="tg-h">Render style</div>
+    <button class="tbtn tg" id="btn-holo" type="button"><svg class="ti" aria-hidden="true"><use href="#i-globe"/></svg><span class="tl">Holo mode</span><small class="td">Holographic look</small><span class="dot"></span></button>
+    <button class="tbtn tg" id="btn-volumetric" type="button"><svg class="ti" aria-hidden="true"><use href="#i-cube"/></svg><span class="tl">Volumetric mode</span><small class="td">Volume-style render</small><span class="dot"></span></button>
+    <div class="tg-h">Scene</div>
+    <button class="tbtn tg" id="btn-antimatter" type="button"><svg class="ti" aria-hidden="true"><use href="#i-anti"/></svg><span class="tl">Antimatter</span><small class="td">Anti-nucleons and quarks</small><span class="dot"></span></button>
+    <div class="tg-h">Scale</div>
+    <button class="tbtn act hero" id="btn-dive" type="button"><svg class="ti" aria-hidden="true"><use href="#i-dive"/></svg><span class="tl" id="dive-label">Dive to Planck</span><small class="td">Fly to 1.6×10⁻³⁵ m</small></button>
+    <button class="tbtn tg" id="btn-vac3d" type="button"><svg class="ti" aria-hidden="true"><use href="#i-layers"/></svg><span class="tl">3D vacuum</span><small class="td">2D view or 3D flight</small><span class="dot"></span></button>
+    <div class="tg-h">View</div>
     <div id="ctrl" role="group" aria-label="Cloud density and zoom controls">
-      <button class="tbtn ctrl-head" id="ctrl-toggle" type="button" aria-expanded="true" aria-controls="ctrl-body"><span>CLOUD &amp; ZOOM</span><span class="chev">▾</span></button>
+      <button class="tbtn act ctrl-head" id="ctrl-toggle" type="button" aria-expanded="true" aria-controls="ctrl-body"><svg class="ti" aria-hidden="true"><use href="#i-zoom"/></svg><span class="tl">CLOUD &amp; ZOOM</span><small class="td">Density, jitter, zoom</small><span class="chev">▾</span></button>
       <div id="ctrl-body">
         <div>
           <div class="clabel"><span>Cloud density</span><button type="button" class="cval" id="dens-val" title="Click to reset">1.00×</button></div>
@@ -369,10 +663,65 @@ body.boot *{transition:none!important;}
         </div>
       </div>
     </div>
-    <button class="tbtn" id="btn-reset">RESET VIEW</button>
+    <button class="tbtn act" id="btn-reset" type="button"><svg class="ti" aria-hidden="true"><use href="#i-reset"/></svg><span class="tl">Reset view</span><small class="td">Re-centre the model</small></button>
+  </div>
+  <div id="dock" role="toolbar" aria-label="Panels">
+    <button class="dk" id="dock-el" type="button" aria-pressed="false"><svg class="ti" aria-hidden="true"><use href="#i-elements"/></svg><span class="dl">ELEMENTS</span></button>
+    <button class="dk" id="dock-tools" type="button" aria-pressed="false"><svg class="ti" aria-hidden="true"><use href="#i-tools"/></svg><span class="dl">TOOLS</span><b class="badge" id="dock-badge"></b></button>
+    <button class="dk" id="dock-reset" type="button"><svg class="ti" aria-hidden="true"><use href="#i-reset"/></svg><span class="dl">RESET VIEW</span></button>
   </div>
 </div>
 
+<style>
+/* ===== Nuclear Atlas (Data panel) ===== */
+#atlas{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.at-card{padding:12px;border-radius:var(--r-card,13px);border:1px solid var(--g-line-soft,rgba(255,255,255,.08));background:var(--g-well,rgba(0,0,0,.26));box-shadow:inset 0 2px 10px rgba(0,0,0,.25)}
+.at-card .dsect{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-family:var(--display);font-weight:700;font-size:.66rem;letter-spacing:.24em}
+.at-card .dsect::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--cx);box-shadow:0 0 8px var(--cx)}
+.at-card .dsect::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--cx-40),transparent)}
+.at-card svg{display:block;width:100%;height:auto;overflow:visible}
+.at-card .dgrid{margin-bottom:0}
+.at-chips{display:flex;flex-wrap:wrap;gap:6px}
+.at-chip{min-height:30px;padding:0 10px;border-radius:8px;border:1px solid var(--g-line,rgba(255,255,255,.13));background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));color:var(--mid);font-family:var(--display);font-weight:700;font-size:.7rem;letter-spacing:.08em;cursor:pointer;transition:all .18s}
+.at-chip:hover{border-color:var(--cx-40);color:#fff}
+.at-chip.on{border-color:transparent;color:#fff;background:linear-gradient(135deg,var(--cx),var(--cx2));box-shadow:0 3px 12px var(--cx-40)}
+.at-read{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:10px 0 6px;min-height:1.6rem;font-size:.66rem;color:var(--lo)}
+.at-read b{font-family:var(--display);font-size:1.05rem;color:var(--cx3);letter-spacing:.03em}
+.at-sub{margin-top:6px;font-size:.58rem;letter-spacing:.04em;color:var(--lo);line-height:1.5}
+.at-t{font:500 6px var(--mono);fill:rgba(255,255,255,.5)}
+.at-c{cursor:pointer}.at-c:hover .at-d{stroke:#fff;stroke-width:1}
+.at-main{cursor:crosshair;touch-action:pan-y}
+.at-leg{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:.58rem;color:var(--lo)}
+.at-leg i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.at-row{display:grid;grid-template-columns:78px 1fr 58px;gap:8px;align-items:center;margin-bottom:7px;font-size:.6rem;color:var(--mid)}
+.at-row .tr{position:relative;height:8px;border-radius:5px;background:rgba(255,255,255,.07)}
+.at-row .tr::after{content:'';position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:rgba(255,255,255,.3)}
+.at-row .bar{position:absolute;top:0;height:100%;border-radius:5px}
+.at-row span:last-child{text-align:right;font-family:var(--display);font-weight:700;color:#fff}
+.at-stack{display:flex;height:10px;border-radius:6px;overflow:hidden;margin:4px 0 12px;background:rgba(255,255,255,.07)}
+.at-stack i{display:block;height:100%}
+</style>
+<style>
+/* ===== UI v3.1 — collision-free overlay layout =====
+   Zones: top-centre = hint · top-left of centre column = legend + focus card (one flex stack,
+   so they can never overlap each other) · bottom-centre = scale readout stacked ABOVE the element HUD. */
+#ovl{position:absolute;z-index:26;top:76px;left:calc(var(--inset-l) + 8px);width:min(250px,calc(100% - var(--inset-l) - var(--inset-r) - 16px));
+  max-height:max(110px,calc(100% - 76px - 270px));display:flex;flex-direction:column;gap:10px;overflow-y:auto;overflow-x:hidden;
+  pointer-events:none;scrollbar-width:none;transition:left .32s cubic-bezier(.4,0,.2,1)}
+#ovl::-webkit-scrollbar{display:none}
+#ovl > *{pointer-events:auto}
+#ovl #quark-legend,#ovl #focus-panel{position:relative;inset:auto;top:auto;left:auto;right:auto;bottom:auto;width:100%;max-width:none;margin:0;flex-shrink:0;transform:none}
+#ovl #quark-legend:not(.show),#ovl #focus-panel:not(.show){position:absolute;visibility:hidden;pointer-events:none}
+#ovl #quark-legend .qrow,#ovl #focus-panel{line-height:1.6}
+#scale-hud{top:auto;bottom:122px;left:var(--inset-l);right:var(--inset-r);margin:0 auto;
+  width:min(560px,calc(100% - var(--inset-l) - var(--inset-r)))}
+#hud{padding:0 8px}
+@media(max-width:900px){
+  #ovl{top:68px;left:12px;width:min(210px,50%);max-height:max(110px,calc(100% - 68px - var(--dock-h) - var(--sheet-h) - 220px))}
+  #scale-hud{bottom:calc(var(--dock-h) + 106px);width:calc(100% - 24px)}
+  body:not(.panel-collapsed) #scale-hud,body:not(.toolbar-collapsed) #scale-hud{bottom:calc(var(--dock-h) + var(--sheet-h) + 106px)}
+}
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function(){
@@ -938,7 +1287,8 @@ let viewW=1, viewH=1, shiftCur=0, shiftTarget=0;      // px the scene is lifted 
 const isMobile = () => window.matchMedia('(max-width:900px)').matches;
 function updateViewShift(){
   const p = document.getElementById('left-panel');
-  shiftTarget = (isMobile() && p && !p.classList.contains('collapsed')) ? p.getBoundingClientRect().height/2 : 0;
+  const tbS=document.getElementById('toolbar'); const sh=(p && !p.classList.contains('collapsed')) ? p : ((tbS && !tbS.classList.contains('collapsed')) ? tbS : null);
+  shiftTarget = (isMobile() && sh) ? sh.getBoundingClientRect().height/2 : 0;
 }
 function applyViewShift(){
   if(Math.abs(shiftCur) < 0.5){ if(camera.view && camera.view.enabled) camera.clearViewOffset(); }
@@ -1513,10 +1863,99 @@ if(isMobile()){ $('ctrl').classList.add('collapsed'); $('ctrl-toggle').setAttrib
 /* Start with every panel folded away so the nucleus gets the whole screen. */
 (function foldAllPanels(){
   document.body.classList.add('boot');
-  setPanelCollapsed(true);
-  if(!$('toolbar').classList.contains('collapsed')) $('toolbar-toggle').click();
+  if(innerWidth<1280){
+    setPanelCollapsed(true);
+    if(!$('toolbar').classList.contains('collapsed')) $('toolbar-toggle').click();
+  }
   $('ctrl').classList.add('collapsed'); $('ctrl-toggle').setAttribute('aria-expanded','false');
   requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.remove('boot')));
+/* ===== Nuclear Atlas: every chart is derived live from this page's own nuclear model (nuclearProps, NUCLEAR, nuclearShape). ===== */
+(function(){
+const SX=NUCLEAR.SEMF,MG=NUCLEAR.MAGIC,KEY='nu',COL={Stable:'#ff9944','Quasi-stable':'#ffcf9e',Radioactive:'#4fb8ff'};
+const f=(v,d=2)=>!isFinite(v)?'—':Math.abs(v)>=1000?v.toFixed(0):Math.abs(v)>=100?v.toFixed(1):v.toFixed(d);
+const sup=n=>String(n).replace(/\d/g,d=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[d]);
+const M=[{k:'bea',n:'Binding/A',u:'MeV',g:p=>p.bindingPerA},{k:'bind',n:'Binding',u:'MeV',g:p=>p.binding},
+ {k:'rad',n:'Radius',u:'fm',g:p=>p.radiusFm},{k:'nz',n:'N/Z',u:'',g:p=>p.ratioNZ},
+ {k:'neu',n:'Neutrons',u:'',g:(p,e)=>e.N},{k:'fis',n:'Fissility',u:'Z²/A',g:(p,e)=>e.Z*e.Z/p.A}];
+let cur='bea',P=null,R={};
+function init(){if(P)return;P=ELEMENTS.map(e=>{const N=e.massNumber-e.Z,p=nuclearProps(e.Z,N),o={Z:e.Z,N,A:e.massNumber,p,e:{Z:e.Z,N},sym:e.symbol,name:e.name};return o});
+ M.forEach(m=>{const v=P.map(o=>m.g(o.p,o.e)).filter(isFinite);R[m.k]=[Math.min(...v),Math.max(...v)]});}
+const cm=()=>M.find(m=>m.k===cur),val=(m,o)=>m.g(o.p,o.e);
+const semf=(Z,A)=>{const V=SX.aV*A,S=-SX.aS*Math.pow(A,2/3),C=-SX.aC*Z*(Z-1)/Math.cbrt(A),As=-SX.aA*(A-2*Z)*(A-2*Z)/A,N=A-Z,
+ Pp=(Z%2===0&&N%2===0)?SX.aP/Math.sqrt(A):(Z%2&&N%2)?-SX.aP/Math.sqrt(A):0;return{V,S,C,As,Pp,tot:V+S+C+As+Pp}};
+const near=v=>MG.reduce((b,m)=>Math.abs(m-v)<Math.abs(b-v)?m:b,MG[0]);
+
+function trend(o){
+ const m=cm(),W=300,H=150,L=8,Rr=8,Tp=10,B=18,[lo,hi]=R[m.k],x=Z=>L+(Z-1)/117*(W-L-Rr),y=v=>Tp+(1-(v-lo)/(hi-lo||1))*(H-Tp-B);
+ let d='',dots='';P.forEach(q=>{const v=val(m,q);if(!isFinite(v))return;d+=(d?'L':'M')+x(q.Z).toFixed(1)+' '+y(v).toFixed(1);dots+=`<circle cx="${x(q.Z).toFixed(1)}" cy="${y(v).toFixed(1)}" r="1.8" fill="${COL[q.p.stability]}"/>`});
+ const g=[2,8,20,28,50,82,118].map(z=>`<line x1="${x(z)}" x2="${x(z)}" y1="${Tp}" y2="${H-B}" stroke="rgba(255,255,255,.07)"/><text class="at-t" x="${x(z)}" y="${H-5}" text-anchor="middle">${z}</text>`).join('');
+ const v=val(m,o),sel=`<line x1="${x(o.Z)}" x2="${x(o.Z)}" y1="${Tp}" y2="${H-B}" stroke="var(--cx2)" stroke-dasharray="2 2"/><circle cx="${x(o.Z)}" cy="${y(v)}" r="5" fill="none" stroke="#fff" stroke-width="1.5"/>`;
+ return `<div class="at-chips">${M.map(q=>`<button type="button" class="at-chip${q.k===cur?' on':''}" data-m="${q.k}">${q.n}</button>`).join('')}</div>
+ <div class="at-read" id="at-read"><span>${o.sym}${sup(o.A)} · ${o.name}</span><b>${f(v)} ${m.u}</b></div>
+ <svg class="at-main" id="at-main" viewBox="0 0 ${W} ${H}" data-w="${W}" data-l="${L}" data-r="${Rr}">${g}<path d="${d}" fill="none" stroke="var(--cx2)" stroke-width="1" opacity=".55"/>${dots}${sel}<g id="at-x"></g></svg>
+ <div class="at-leg"><span><i style="background:${COL.Stable}"></i>Stable</span><span><i style="background:${COL['Quasi-stable']}"></i>Quasi-stable</span><span><i style="background:${COL.Radioactive}"></i>Radioactive</span></div>
+ <div class="at-sub">${m.n} for the most common nuclide of every element, Z = 1–118${m.k==='bea'?' · the curve peaks near iron-56 / nickel-62, the most tightly bound nuclei':''}. Drag to inspect, tap to select.</div>`;}
+
+function valley(o){
+ const W=300,H=214,L=14,B=14,sx=N=>L+N/178*(W-L-4),sy=Z=>H-B-Z/120*(H-B-6);
+ const gl=[...MG.filter(v=>v<=118).map(v=>`<line x1="${L}" x2="${W-4}" y1="${sy(v)}" y2="${sy(v)}" stroke="rgba(255,255,255,.07)"/>`),...MG.map(v=>`<line y1="6" y2="${H-B}" x1="${sx(v)}" x2="${sx(v)}" stroke="rgba(255,255,255,.07)"/>`)].join('');
+ const dots=P.map(q=>`<g class="at-c" data-z="${q.Z}"><circle cx="${sx(q.N)}" cy="${sy(q.Z)}" r="4.5" fill="transparent"/><circle class="at-d" cx="${sx(q.N)}" cy="${sy(q.Z)}" r="2" fill="${COL[q.p.stability]}"/></g>`).join('');
+ return `<svg viewBox="0 0 ${W} ${H}">${gl}<line x1="${sx(0)}" y1="${sy(0)}" x2="${sx(118)}" y2="${sy(118)}" stroke="var(--cx2)" stroke-dasharray="3 3" opacity=".6"/>${dots}
+ <circle cx="${sx(o.N)}" cy="${sy(o.Z)}" r="5.5" fill="none" stroke="#fff" stroke-width="1.5"/><text class="at-t" x="${W-4}" y="${H-3}" text-anchor="end">NEUTRONS N →</text><text class="at-t" x="${L+3}" y="12">PROTONS Z ↑</text><text class="at-t" x="${sx(80)}" y="${sy(86)-4}" style="fill:var(--cx2)">N = Z</text></svg>
+ <div class="at-sub">Chart of the nuclides: heavy nuclei need ever more neutrons per proton (the valley of stability bends away from N = Z). Grid lines mark the magic numbers ${MG.join(' · ')}.</div>`;}
+
+function semfCard(o){
+ const t=semf(o.Z,o.A),mx=Math.max(Math.abs(t.V),1),rows=[['Volume',t.V],['Surface',t.S],['Coulomb',t.C],['Asymmetry',t.As],['Pairing',t.Pp]];
+ const row=(l,v,c)=>`<div class="at-row"><span>${l}</span><div class="tr"><div class="bar" style="${v>=0?'left':'right'}:50%;width:${Math.min(50,Math.abs(v)/mx*50)}%;background:${v>=0?'linear-gradient(90deg,var(--cx),var(--cx2))':'linear-gradient(270deg,#ff2fa8,#b45bff)'}"></div></div><span>${v>=0?'+':'−'}${f(Math.abs(v),1)}</span></div>`;
+ return rows.map(r=>row(...r)).join('')+row('SEMF total',t.tot)+`<div class="at-sub">Bethe–Weizsäcker liquid-drop terms in MeV for ${o.sym}${sup(o.A)}. Volume binding is eaten by surface tension, proton repulsion, N≠Z asymmetry and a ±pairing bonus. Value used on this page: <b style="color:#fff">${f(o.p.binding,1)} MeV</b> (${o.p.bindingSource==='measured'?'measured — SEMF is unreliable for light nuclei':'SEMF'}).</div>`;}
+
+function magic(o){
+ const W=300,x=v=>8+v/130*284,mk=(v,c,y,l)=>`<path d="M${x(v)} ${y} l-4 ${y<30?-8:8} h8z" fill="${c}"/><text class="at-t" x="${x(v)}" y="${y<30?y-12:y+19}" text-anchor="middle" style="fill:${c};font-size:7px">${l}</text>`;
+ const nz=near(o.Z),nn=near(o.N);
+ return `<svg viewBox="0 0 ${W} 58"><line x1="8" x2="292" y1="29" y2="29" stroke="rgba(255,255,255,.18)"/>${MG.map(v=>`<line x1="${x(v)}" x2="${x(v)}" y1="22" y2="36" stroke="var(--cx2)" stroke-width="1.4"/><text class="at-t" x="${x(v)}" y="52" text-anchor="middle" style="fill:var(--cx2)">${v}</text>`).join('')}${mk(o.Z,'#fff',20,'Z='+o.Z)}${o.N===o.Z?'':mk(o.N,'#4fb8ff',38,'N='+o.N)}</svg>
+ <div class="dgrid" style="margin-top:6px">${stat('Nearest proton magic',nz+' (Δ'+Math.abs(o.Z-nz)+')')}${stat('Nearest neutron magic',nn+' (Δ'+Math.abs(o.N-nn)+')')}${stat('Closure',o.p.magic)}${stat('Open shell p / n',(MG.includes(o.Z)?'closed':'open')+' / '+(MG.includes(o.N)?'closed':'open'))}</div>
+ <div class="at-sub">Magic numbers are filled-shell closures from the nuclear spin-orbit force; nuclei at or near them are unusually tightly bound and round.</div>`;}
+
+function shape(o){
+ const s=nuclearShape(o.Z,o.N),b2=s.beta2,b3=s.beta3,W=300,x=v=>150+v/.5*130;
+ return `<svg viewBox="0 0 ${W} 62"><line x1="20" x2="280" y1="22" y2="22" stroke="rgba(255,255,255,.18)"/><line x1="150" x2="150" y1="14" y2="30" stroke="rgba(255,255,255,.4)"/>
+ <text class="at-t" x="20" y="40">OBLATE −0.5</text><text class="at-t" x="150" y="40" text-anchor="middle">SPHERE</text><text class="at-t" x="280" y="40" text-anchor="end">PROLATE +0.5</text>
+ <rect x="${Math.min(150,x(b2))}" y="18" width="${Math.abs(x(b2)-150)}" height="8" rx="4" fill="var(--cx)"/><circle cx="${x(Math.max(-.5,Math.min(.5,b2)))}" cy="22" r="5" fill="#fff"/>
+ <rect x="20" y="50" width="260" height="6" rx="3" fill="rgba(255,255,255,.08)"/><rect x="20" y="50" width="${Math.min(260,b3/.3*260)}" height="6" rx="3" fill="#b45bff"/><text class="at-t" x="20" y="47">PEAR β₃ ${b3.toFixed(2)}</text></svg>
+ <div class="dgrid" style="margin-top:6px">${stat('Quadrupole β₂',(b2>=0?'+':'')+b2.toFixed(2))}${stat('Octupole β₃',b3.toFixed(2))}${stat('Shape',o.p.shape)}${stat('Source',s.known?'tabulated':'assumed round')}</div>`;}
+
+function derived(o){
+ const A=o.A,Rr=o.p.radiusFm,Vo=4/3*Math.PI*Rr**3,rho=A*1.66054e-27/(Vo*1e-45),dm=o.p.binding/931.494,fis=o.Z*o.Z/A;
+ const u=2*o.Z+o.N,d=o.Z+2*o.N,pf=o.Z/A*100;
+ return `<div class="at-stack" title="Protons vs neutrons"><i style="width:${pf}%;background:var(--pcol,#ff2200)"></i><i style="width:${100-pf}%;background:var(--ncol,#2255ff)"></i></div>
+ <div class="at-stack" title="Up vs down quarks"><i style="width:${u/(3*A)*100}%;background:var(--cx2)"></i><i style="width:${d/(3*A)*100}%;background:#b45bff"></i></div>
+ <div class="dgrid">${stat('Protons : neutrons',o.Z+' : '+o.N)}${stat('Up : down quarks',u+' : '+d)}${stat('Volume',Vo.toFixed(0)+' fm³')}${stat('Surface area',(4*Math.PI*Rr*Rr).toFixed(0)+' fm²')}
+ ${stat('Density',(rho/1e17).toFixed(2)+'×10¹⁷ kg/m³')}${stat('Mass defect',dm.toFixed(4)+' u')}${stat('Neutron excess',((o.N-o.Z)/A).toFixed(3))}${stat('Fissility x',(fis/(2*SX.aS/SX.aC)).toFixed(2))}
+ ${stat('Coulomb energy',f(-semf(o.Z,A).C,1)+' MeV')}${stat('Mean B per p/n',f(o.p.binding/A,2)+' MeV')}</div>
+ <div class="at-sub">Nuclear matter has near-constant density (~2.3×10¹⁷ kg/m³) whatever A is. Fissility x = (Z²/A)/(2aS/aC); x → 1 means the nucleus is on the verge of splitting.</div>`;}
+
+function render(){
+ const box=$('atlas');if(!box)return;init();const o=P[state.Z-1];
+ box.innerHTML=`<div class="at-card"><div class="dsect">Trend · all 118 elements</div>${trend(o)}</div>
+ <div class="at-card"><div class="dsect">Valley of stability</div>${valley(o)}</div>
+ <div class="at-card"><div class="dsect">Binding-energy budget</div>${semfCard(o)}</div>
+ <div class="at-card"><div class="dsect">Magic numbers &amp; shells</div>${magic(o)}</div>
+ <div class="at-card"><div class="dsect">Deformation</div>${shape(o)}</div>
+ <div class="at-card"><div class="dsect">Composition &amp; bulk properties</div>${derived(o)}</div>`;}
+
+const _prev=updateDataPanel;
+updateDataPanel=function(){_prev();if(!$('tab-data').classList.contains('active'))return;$('data-content').insertAdjacentHTML('beforeend','<div id="atlas"></div>');render();};
+const zAt=(s,e)=>{const r=s.getBoundingClientRect(),W=+s.dataset.w,L=+s.dataset.l,Rr=+s.dataset.r,px=(e.clientX-r.left)/r.width*W;return Math.max(1,Math.min(118,Math.round((px-L)/(W-L-Rr)*117)+1))};
+$('data-content').addEventListener('click',e=>{
+ const c=e.target.closest('[data-m]');if(c){cur=c.dataset.m;render();return}
+ const z=e.target.closest('[data-z]');if(z){selectElement(+z.dataset.z);return}
+ const s=e.target.closest('#at-main');if(s)selectElement(zAt(s,e));});
+$('data-content').addEventListener('pointermove',e=>{
+ const s=e.target.closest&&e.target.closest('#at-main');if(!s||!P)return;const Z=zAt(s,e),o=P[Z-1],m=cm(),L=+s.dataset.l,Rr=+s.dataset.r,W=+s.dataset.w,x=L+(Z-1)/117*(W-L-Rr);
+ $('at-read').innerHTML=`<span>${o.sym}${sup(o.A)} · ${o.name} · Z ${Z}</span><b>${f(val(m,o))} ${m.u}</b>`;
+ $('at-x').innerHTML=`<line x1="${x}" x2="${x}" y1="10" y2="132" stroke="#fff" stroke-opacity=".5"/>`;});
+})();
+
 })();
 /* ===================================================================
    DEEP DIVE — vacuum scene in 2-D or 3-D (Canvas, no WebGL needed).
@@ -1828,6 +2267,64 @@ setTimeout(hideHint, 8000);
 canvas.addEventListener('pointerdown', hideHint, {once:true});
 canvas.addEventListener('wheel', hideHint, {once:true, passive:true});
 
+})();
+</script>
+<script>
+/* UI v2 glue: dock buttons, "only one sheet open" on phones, active-tools badge,
+   and body flags the CSS layout reads. Pure UI; no render logic. */
+(function(){
+  var $=function(i){return document.getElementById(i);}, mq=matchMedia('(max-width:900px)');
+  var tb=$('toolbar'), lp=$('left-panel'), tt=$('toolbar-toggle'), pt=$('panel-toggle');
+  var dEl=$('dock-el'), dTl=$('dock-tools'), dRs=$('dock-reset');
+  if(!tb||!lp||!tt||!pt||!dEl) return;
+  var col=function(e){return e.classList.contains('collapsed');}, lastTb=col(tb);
+  function sync(){
+    var m4=document.body.classList.contains('m4d'), n=Array.prototype.filter.call(tb.querySelectorAll('.tbtn.tg.on'),function(e){return m4||!e.classList.contains('only4d');}).length;
+    ['tool-badge','dock-badge'].forEach(function(id){var b=$(id); if(b) b.textContent=n?String(n):'';});
+    document.body.classList.toggle('toolbar-collapsed',col(tb));
+    document.body.classList.toggle('panel-collapsed',col(lp));
+    dEl.classList.toggle('on',!col(lp)); dTl.classList.toggle('on',!col(tb));
+    dEl.setAttribute('aria-pressed',String(!col(lp))); dTl.setAttribute('aria-pressed',String(!col(tb)));
+    if(mq.matches && col(tb)!==lastTb) window.dispatchEvent(new Event('resize'));
+    lastTb=col(tb);
+  }
+  var mo=new MutationObserver(sync);
+  mo.observe(tb,{attributes:true,attributeFilter:['class'],subtree:true});
+  mo.observe(lp,{attributes:true,attributeFilter:['class']});
+  dEl.addEventListener('click',function(){ if(mq.matches&&col(lp)&&!col(tb)) tt.click(); pt.click(); });
+  dTl.addEventListener('click',function(){ if(mq.matches&&col(tb)&&!col(lp)) pt.click(); tt.click(); });
+  dRs.addEventListener('click',function(){ var r=$('btn-reset'); if(r) r.click(); });
+  sync();
+})();
+</script>
+<script>
+/* Smart panels (phones): tapping the 3D view tucks away any open sheet so the model gets the whole screen.
+   Only a real TAP counts (small movement, short press, one finger) so rotating / pinching with Tools open
+   never closes it mid-adjustment. Uses the existing toggle buttons, so ARIA state and layout stay in sync. */
+(function(){
+  var $=function(i){return document.getElementById(i);}, mq=matchMedia('(max-width:900px)');
+  var st=$('stage'), tb=$('toolbar'), lp=$('left-panel'), tt=$('toolbar-toggle'), pt=$('panel-toggle');
+  if(!st||!tb||!lp||!tt||!pt) return;
+  var down=null, pointers=0, multi=false;
+  var open=function(e){return !e.classList.contains('collapsed');};
+  st.addEventListener('pointerdown',function(e){
+    pointers++; if(pointers>1) multi=true;
+    down={x:e.clientX,y:e.clientY,t:performance.now(),moved:false};
+  },{passive:true});
+  st.addEventListener('pointermove',function(e){
+    if(down && Math.hypot(e.clientX-down.x,e.clientY-down.y)>12) down.moved=true;
+  },{passive:true});
+  function end(e,cancelled){
+    pointers=Math.max(0,pointers-1);
+    if(pointers>0||!down) return;
+    var tap=!cancelled && !multi && !down.moved && performance.now()-down.t<500;
+    down=null; multi=false;
+    if(!tap||!mq.matches) return;
+    if(open(tb)) tt.click();
+    if(open(lp)) pt.click();
+  }
+  st.addEventListener('pointerup',function(e){end(e,false);},{passive:true});
+  st.addEventListener('pointercancel',function(e){end(e,true);},{passive:true});
 })();
 </script>
 </body></html>
