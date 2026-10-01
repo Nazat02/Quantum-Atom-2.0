@@ -611,6 +611,7 @@ input[type=range]:focus-visible{outline:none;}
     <button class="tbtn tg" id="btn-grid" type="button"><svg class="ti" aria-hidden="true"><use href="#i-grid"/></svg><span class="tl">Cartesian grid</span><small class="td">x, y, z reference grid</small><span class="dot"></span></button>
     <div class="tg-h only4d">4D time</div>
     <button class="tbtn tg only4d on" id="btn-4d-play" type="button"><svg class="ti" aria-hidden="true"><use href="#i-clock"/></svg><span class="tl">Time flowing</span><small class="td">Pause or resume</small><span class="dot"></span></button>
+    <button class="tbtn tg only4d on" id="btn-4d-blur" type="button"><svg class="ti" aria-hidden="true"><use href="#i-layers"/></svg><span class="tl">Motion blur</span><small class="td">Continuous: quarks to vacuum</small><span class="dot"></span></button>
     <button class="tbtn act only4d" id="btn-4d-speed" type="button"><svg class="ti" aria-hidden="true"><use href="#i-ff"/></svg><span class="tl">Time speed 1×</span><small class="td">Tap to cycle speed</small></button>
     <div class="tg-h">Scale</div>
     <button class="tbtn act hero" id="btn-dive" type="button"><svg class="ti" aria-hidden="true"><use href="#i-dive"/></svg><span class="tl" id="dive-label">Dive to Planck</span><small class="td">Fly to 1.6×10⁻³⁵ m</small></button>
@@ -1328,11 +1329,18 @@ function fresnelMaterial(color){
       uniform vec3 uColor; uniform float uPower; uniform float uOpacity;
       varying vec3 vNormal; varying vec3 vViewDir;
       void main(){
-        float fres = pow(1.0 - max(dot(normalize(vNormal), normalize(vViewDir)), 0.0), uPower);
-        vec3 col = uColor * (0.25 + fres*1.4);
-        gl_FragColor = vec4(col, clamp(fres*uOpacity + 0.04, 0.0, 1.0));
+        // abs(): with DoubleSide a back face has a negative dot, which used to read as "fully edge-on"
+        // and painted every back face at full brightness (the main cause of the white-out).
+        float fres = pow(1.0 - abs(dot(normalize(vNormal), normalize(vViewDir))), uPower);
+        float a = clamp(fres*uOpacity*0.55 + 0.03, 0.0, 1.0);   // glassy: faint faces, brighter rims
+        vec3 col = uColor * (0.35 + fres*0.9);
+        gl_FragColor = vec4(col*a, a);                          // premultiplied, for the screen blend below
       }`,
-    transparent:true, depthWrite:false, side:THREE.DoubleSide, blending:THREE.AdditiveBlending
+    // Screen blend (src + dst*(1-src)) instead of plain additive: many nested shells stack into a
+    // translucent tinted glow that saturates toward the shell colour, not flat white.
+    transparent:true, depthWrite:false, side:THREE.DoubleSide,
+    blending:THREE.CustomBlending, blendEquation:THREE.AddEquation,
+    blendSrc:THREE.OneFactor, blendDst:THREE.OneMinusSrcColorFactor
   });
 }
 
@@ -2126,7 +2134,7 @@ let fitZ = 16;                       // camera distance that frames the current 
 const ZOOM_MIN_Z = 0.00008;             // close enough to resolve quarks inside a heavy nucleus (same limit as the Nucleus Explorer)
 const ATOM_BIG = 0.45;               // atoms are framed 1/0.45 ≈ 2.2× larger than the old whole-atom fit
 const ZOOM_MAX_FIT = 7;              // farthest = 7x the fit distance (zoom out ≈ 3× to see the whole atom again)
-const clampZ = z => Math.max((state.mode==='molecule' || state.fourD) ? 0.35 : ZOOM_MIN_Z, Math.min(fitZ*ZOOM_MAX_FIT, z));
+const clampZ = z => Math.max(state.mode==='molecule' ? 0.35 : ZOOM_MIN_Z, Math.min(fitZ*ZOOM_MAX_FIT, z));
 camera.position.set(0,0,camZ);
 
 // layered lighting for real depth on the packed nucleons — warm key,
@@ -2756,7 +2764,7 @@ function buildMolecule(mol){
    This visualises phase evolution of the stylised shells; it is not a full solution
    of the time-dependent Schroedinger equation. Time runs in slow motion (1 s = 145 as).
    ===================================================================== */
-const FOURD = { slices:[], t:0, running:true, speed:1, tex:null, kind:'discrete', span:1, half:0 };
+const FOURD = { slices:[], t:0, vt:0, running:true, speed:1, tex:null, kind:'discrete', span:1, half:0, fade:[], root:null, blur:true, blurK:0, moveK:0, nucGhosts:[], foamGhosts:[] };   // vt: vacuum clock (follows pause / speed / reverse)
 const FD_N = 5, FD_NC = 20, FD_AU_PER_S = 6, FD_AS_PER_AU = 24.1888, FD_LAG = 2.4, FD_PERIOD = 40;   // FD_PERIOD: a.u. of history the continuous tube spans
 const FD_FADE = [1, .62, .42, .28, .18], FD_SPEEDS = [1, 2, 4, 0.5, -1];
 const fdOmega = n => 0.5/((n||1)*(n||1));
@@ -2771,8 +2779,70 @@ function fdLabelTex(){
 function fdDisposeUnused(g){
   g.traverse(o=>{ if(o.material) [].concat(o.material).forEach(m=>m.dispose()); if(o.geometry && !o.isPoints) o.geometry.dispose(); });
 }
+/* ---- 4D: a nucleus in every moment + Planck-scale vacuum fluctuations on the t-axis ---- */
+const FD_FOAM = { uT:{value:0} };
+/* CONTINUOUS motion blur = a true sub-frame shutter. Fast things (quark orbits and Zitterbewegung at ~40 rad/s,
+   vacuum sparks, the Planck grid) are drawn FD_BLUR_N extra times at slightly EARLIER moments and blended at falling
+   weights, so every moving point leaves a short trail instead of a hard dot. */
+const FD_BLUR_N = 4, FD_BLUR_DT = 0.011, FD_BLUR_W = [0.28, 0.21, 0.14, 0.07];   // 4 x 11 ms of shutter; weights sum to 0.7 (keeps brightness in check)
+function fdFadeItem(mat, ghost){ mat.transparent = true; FOURD.fade.push({m:mat, b:mat.opacity, ghost:!!ghost}); }   // dimmed together while diving into the core
+/* Clone of a nucleus. Geometry is shared (nucleon motion, pions and quarks stay in step for free); materials are
+   copied so each clone can fade on its own. fdSyncNucleus() copies the live opacities (quark reveal, gluon pulse) x a
+   weight every frame. With timeU, the clone runs its shader clock on that uniform instead: a time-lagged ghost. */
+function fdCloneNucleus(src, timeU){
+  const from = [], to = [], links = [], lights = [];
+  src.traverse(o=>from.push(o));
+  const grp = src.clone(true);
+  grp.traverse(o=>{ to.push(o); if(o.isLight) lights.push(o); });
+  const dup = m=>{
+    const d = m.clone(), orig = m.onBeforeCompile;
+    d.transparent = true; d.depthWrite = false;
+    d.onBeforeCompile = timeU
+      ? (sh, r)=>{ orig.call(m, sh, r); if(sh.uniforms.uTime === NJIT.uTime) sh.uniforms.uTime = timeU; }
+      : orig;
+    links.push({src:m, dst:d}); return d;
+  };
+  for(let i=0; i<from.length && i<to.length; i++){
+    const m = from[i].material; if(!m) continue;
+    to[i].material = Array.isArray(m) ? m.map(dup) : dup(m);
+  }
+  lights.forEach(l=>l.parent && l.parent.remove(l));   // a clone must not add scene lights
+  return { group:grp, links };
+}
+function fdSyncNucleus(nuc, k){ if(nuc) for(let i=0;i<nuc.links.length;i++){ const l = nuc.links[i]; l.dst.opacity = l.src.opacity*k; } }
+/* Vacuum sheath around the nucleus worldline: sparks that pop in, live briefly and annihilate (virtual pairs),
+   wobbling on their own clocks. Driven by the 4D clock, so pause / speed / reverse apply to the vacuum too.
+   The true Planck-length scene is reached with DIVE TO PLANCK (it uses the same clock). */
+function fdFoamMaterial(timeU, extent, size, color, opacity){
+  const wob = (extent*0.012).toFixed(5);
+  const mat = new THREE.PointsMaterial({ color, size:size*1.1, map:GLOW_TEX, transparent:true, opacity, depthWrite:false, sizeAttenuation:true, blending:THREE.AdditiveBlending });
+  mat.onBeforeCompile = sh=>{
+    sh.uniforms.uFoamT = timeU;
+    sh.vertexShader = 'attribute float aSeed;\nuniform float uFoamT;\nvarying float vFl;\n' + sh.vertexShader.replace('#include <begin_vertex>', `
+      vec3 transformed = vec3(position);
+      float ph = aSeed*6.2831853;
+      float life = 0.5 + 0.5*sin(uFoamT*(2.0 + aSeed*5.0) + ph*3.0);
+      vFl = life*life;
+      transformed += vec3(sin(uFoamT*3.1 + ph), sin(uFoamT*2.3 + ph*2.0), cos(uFoamT*2.7 + ph*3.0))*${wob};`);
+    sh.fragmentShader = 'varying float vFl;\n' + sh.fragmentShader.replace('#include <color_fragment>', '#include <color_fragment>\n  diffuseColor.a *= vFl;');
+  };
+  return mat;
+}
+function fdBuildFoam(x0, x1, extent, size, color){
+  const N = 2600, pos = new Float32Array(N*3), seed = new Float32Array(N), r0 = extent*0.035;
+  for(let i=0;i<N;i++){
+    const a = Math.random()*Math.PI*2, r = r0*(0.15 + 3.2*Math.pow(Math.random(), 2));
+    pos[i*3] = x0 + Math.random()*(x1-x0); pos[i*3+1] = r*Math.cos(a); pos[i*3+2] = r*Math.sin(a); seed[i] = Math.random();
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('aSeed', new THREE.BufferAttribute(seed,1));
+  const mk = (timeU, opacity)=>{ const mat = fdFoamMaterial(timeU, extent, size, color, opacity), pts = new THREE.Points(geo, mat); pts.frustumCulled = false; return {points:pts, mat}; };
+  return Object.assign(mk(FD_FOAM.uT, 0.7), { make:mk });
+}
 function build4D(Z){
   const cont = FOURD.kind==='continuous';
+  FOURD.fade = []; FOURD.nucGhosts = []; FOURD.foamGhosts = [];
   // Thin clouds per slice keep every slice inside the GPU budget; mesh modes do not apply.
   // Continuous mode builds a live "now" atom plus one very thin shared cloud for the streaming past.
   const sd = state.density, su = state.ultra, ss = state.surface, sv = state.volumetric;
@@ -2790,7 +2860,7 @@ function build4D(Z){
   if(!cont){
     // DISCRETE: FD_N separate snapshots at distinct moments
     for(let j=0;j<FD_N;j++){
-      let sl = base;
+      let sl = base, nuc = null;
       if(j>0){
         sl = new THREE.Group();
         base.children.forEach(c=>{
@@ -2799,11 +2869,12 @@ function build4D(Z){
           const pt = new THREE.Points(c.geometry, m); pt.userData.n = c.userData.n; sl.add(pt);
         });
         const dot = new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW_TEX, color:tint, transparent:true, opacity:.9*FD_FADE[j], blending:THREE.AdditiveBlending, depthWrite:false}));
-        dot.scale.setScalar(extent*0.16); sl.add(dot);
+        dot.scale.setScalar(extent*0.16); sl.add(dot); fdFadeItem(dot.material);
+        nuc = fdCloneNucleus(NUC.group); sl.add(nuc.group);   // the full nucleus (nucleons, quarks, gluons, pions) at every moment
       }
       sl.position.x = half - j*gap; sl.scale.setScalar(1 - 0.06*j);
       if(j>0) root.add(sl);
-      FOURD.slices.push({j, shells: sl.children.filter(c=>c.isPoints).map(c=>({obj:c, n:c.userData.n}))});
+      FOURD.slices.push({j, nuc, nucK:FD_FADE[j], shells: sl.children.filter(c=>c.isPoints).map(c=>({obj:c, n:c.userData.n, op:c.material.opacity}))});
     }
   } else {
     // CONTINUOUS: the live atom sits at the tip of the t-axis; behind it, FD_NC densely packed past
@@ -2817,29 +2888,62 @@ function build4D(Z){
         const pt = new THREE.Points(c.geometry, m); pt.userData.n = c.userData.n; sl.add(pt);
         return {obj:pt, n:c.userData.n, op:c.material.opacity};
       });
+      const nuc = fdCloneNucleus(NUC.group); sl.add(nuc.group);   // the nucleus worldline: one nucleus per tube sample
       root.add(sl);
-      FOURD.slices.push({j, grp:sl, shells});
+      FOURD.slices.push({j, grp:sl, shells, nuc});
     }
     pts.forEach(c=>c.parent && c.parent.remove(c));
     fdDisposeUnused(trail);   // the trail template's own materials/nucleus are unused
     base.position.x = half;
     FOURD.slices.push({j:-1, live:true, shells: livePts()});
+    // motion blur for the live nucleus: time-lagged ghosts of nucleons, quarks, gluons and halos
+    for(let k=1; k<=FD_BLUR_N; k++){
+      const timeU = {value:0}, nuc = fdCloneNucleus(NUC.group, timeU);
+      base.add(nuc.group); FOURD.nucGhosts.push({k, w:FD_BLUR_W[k-1], timeU, nuc});
+    }
     root.add(base);
   }
   if(!cont) root.add(base);
   // time axis: the nucleus worldline, arrow towards the future
   const x0 = -half - gap*0.7, x1 = half + gap*0.95;
   const lg = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x0,0,0), new THREE.Vector3(x1,0,0)]);
-  root.add(new THREE.Line(lg, new THREE.LineBasicMaterial({color:tint, transparent:true, opacity: cont ? .85 : .55})));
+  const axis = new THREE.Line(lg, new THREE.LineBasicMaterial({color:tint, transparent:true, opacity: cont ? .85 : .55}));
+  root.add(axis);
   const head = new THREE.Mesh(new THREE.ConeGeometry(extent*0.07, extent*0.22, 12), new THREE.MeshBasicMaterial({color:tint}));
   head.rotation.z = -Math.PI/2; head.position.x = x1; root.add(head);
   const lab = new THREE.Sprite(new THREE.SpriteMaterial({map:fdLabelTex(), color:tint, transparent:true, depthWrite:false}));
   lab.scale.setScalar(extent*0.5); lab.position.set(x1 + extent*0.1, extent*0.3, 0); root.add(lab);
+  fdFadeItem(axis.material); fdFadeItem(head.material); fdFadeItem(lab.material);
+  const shellMat = (base.children.find(c=>c.isPoints)||{}).material;
+  const foam = fdBuildFoam(x0, x1, extent, shellMat && shellMat.size ? shellMat.size : 0.07, tint);
+  root.add(foam.points); fdFadeItem(foam.mat);
+  if(cont) for(let k=1; k<=FD_BLUR_N; k++){      // motion blur for the vacuum sparks: time-lagged copies of the same cloud
+    const timeU = {value:0}, g = foam.make(timeU, 0.7*FD_BLUR_W[k-1]);
+    root.add(g.points); fdFadeItem(g.mat, true); FOURD.foamGhosts.push({k, timeU});
+  }
+  FOURD.root = root;
   return { group:root, excitedInfo:res.excitedInfo };
 }
 renderLoop.push(dt=>{
   if(!state.fourD || state.mode!=='atom' || !FOURD.slices.length) return;
-  if(FOURD.running) FOURD.t += dt*FD_AU_PER_S*FOURD.speed;
+  if(FOURD.running){ FOURD.t += dt*FD_AU_PER_S*FOURD.speed; FOURD.vt += dt*FOURD.speed; }
+  FD_FOAM.uT.value = FOURD.t*0.35;
+  // diving into the core: the electron history and the t-axis fade out, the nucleus stays
+  const zc = camera.position.z, fade = 1 - sstepD(fitZ*0.03, fitZ*0.002, zc);
+  const contNow = FOURD.kind==='continuous', blurOn = FOURD.blur && contNow, ease = 1-Math.exp(-dt*6);
+  FOURD.blurK += ((blurOn?1:0) - FOURD.blurK)*ease;                              // blur fades in/out instead of popping
+  FOURD.moveK += (((blurOn && FOURD.running)?1:0) - FOURD.moveK)*ease;           // clock-driven things only blur while time flows
+  FOURD.fade.forEach(f=>{ f.m.opacity = f.b*fade*(f.ghost ? FOURD.moveK : 1); });
+  if(contNow){
+    FOURD.nucGhosts.forEach(g=>{ g.timeU.value = NJIT.uTime.value - g.k*FD_BLUR_DT; g.nuc.group.visible = FOURD.blurK > 0.01; fdSyncNucleus(g.nuc, g.w*FOURD.blurK); });
+    const foamStep = FD_AU_PER_S*0.35*FOURD.speed*FD_BLUR_DT;                   // foam-clock units per ghost step; signed, so reverse trails the other way
+    FOURD.foamGhosts.forEach(g=>{ g.timeU.value = FD_FOAM.uT.value - g.k*foamStep; });
+  }
+  // ... and the view glides onto the live (newest) nucleus so the dive goes into it, not into empty space
+  if(FOURD.root){
+    const a = Math.log(fitZ*0.30), b = Math.log(fitZ*0.03), tt = Math.min(1, Math.max(0, (a - Math.log(zc))/(a - b)));
+    FOURD.root.position.x = -FOURD.half*tt*tt*(3-2*tt);
+  }
   const cont = FOURD.kind==='continuous', span = FOURD.span, rate = span/FD_PERIOD;   // world units of drift per a.u. of time
   FOURD.slices.forEach(sl=>{
     if(cont && !sl.live){
@@ -2847,11 +2951,13 @@ renderLoop.push(dt=>{
       const tb = FOURD.t - a/rate;                                        // moment this slice was born
       sl.grp.position.x = FOURD.half - a; sl.grp.scale.setScalar(1 - 0.3*u);
       const env = Math.min(u/0.1, 1)*Math.pow(1-u, 1.4)*0.6;             // fade in near the tip, fade out into the past
-      sl.shells.forEach(s=>{ const w = fdOmega(s.n); s.obj.rotation.y = 0.35*w*tb; s.obj.scale.setScalar(1 + 0.06*Math.sin(w*tb + s.n)); s.obj.material.opacity = s.op*env; });
+      sl.shells.forEach(s=>{ const w = fdOmega(s.n); s.obj.rotation.y = 0.35*w*tb; s.obj.scale.setScalar(1 + 0.06*Math.sin(w*tb + s.n)); s.obj.material.opacity = s.op*env*fade; });
+      fdSyncNucleus(sl.nuc, Math.min(1, env*1.6));
       return;
     }
     const T = sl.live ? FOURD.t : FOURD.t - sl.j*FD_LAG;
-    sl.shells.forEach(s=>{ const w = fdOmega(s.n); s.obj.rotation.y = 0.35*w*T; s.obj.scale.setScalar(1 + 0.06*Math.sin(w*T + s.n)); });
+    sl.shells.forEach(s=>{ const w = fdOmega(s.n); s.obj.rotation.y = 0.35*w*T; s.obj.scale.setScalar(1 + 0.06*Math.sin(w*T + s.n)); if(s.op!==undefined) s.obj.material.opacity = s.op*fade; });
+    fdSyncNucleus(sl.nuc, sl.nucK);
   });
   const el = document.getElementById('hud-t'), txt = 't = ' + (FOURD.t*FD_AS_PER_AU).toFixed(0) + ' as' + (FOURD.speed<0 ? '  ◂ reversed' : '');
   if(el && el.textContent!==txt) el.textContent = txt;
@@ -3283,6 +3389,7 @@ toggleBtn('btn-ultra', on=>{ state.ultra = on; if(on){ state.surface = false; st
 toggleBtn('btn-surface', on=>{ state.surface = on; if(on){ state.ultra = false; state.volumetric = false; $('btn-ultra').classList.remove('on'); $('btn-volumetric').classList.remove('on'); } render(); });
 toggleBtn('btn-volumetric', on=>{ state.volumetric = on; if(on){ state.ultra = false; state.surface = false; $('btn-ultra').classList.remove('on'); $('btn-surface').classList.remove('on'); } render(); });
 toggleBtn('btn-excited', on=>{ state.excited = on; render(); refreshExPicker(); });
+toggleBtn('btn-4d-blur', on=>{ FOURD.blur = on; });
 toggleBtn('btn-4d-play', on=>{ FOURD.running = on; document.querySelector('#btn-4d-play span').textContent = on ? 'TIME FLOWING' : 'TIME FROZEN'; });
 document.getElementById('btn-4d-speed').addEventListener('click', ()=>{
   FOURD.speed = FD_SPEEDS[(FD_SPEEDS.indexOf(FOURD.speed)+1) % FD_SPEEDS.length];
@@ -3593,7 +3700,7 @@ updateDataPanel = function(){
   const el = ELEMENT_BY_Z[state.Z], box = $('data-content');
   if(state.fourD){
     const shells = [...new Set((lastExcitedInfo ? lastExcitedInfo.subs : el.config).map(c=>c.n))].sort((a,b)=>a-b);
-    box.insertAdjacentHTML('beforeend','<div class="dsect">4D · Spacetime</div><div class="dgrid">'+stat('Time model',FOURD.kind==='continuous'?'Continuous':'Discrete')+(FOURD.kind==='continuous' ? stat('History shown',(FD_PERIOD*FD_AS_PER_AU).toFixed(0)+' as')+stat('Tube samples',FD_NC) : stat('Time slices',FD_N)+stat('Slice spacing',(FD_LAG*FD_AS_PER_AU).toFixed(0)+' as'))+stat('Playback','1 s = '+(FD_AU_PER_S*FD_AS_PER_AU).toFixed(0)+' as')+stat('Slow-motion','≈ 7×10¹⁵ ×')+'</div><div class="dsect">Shell phase rates (ω = ½n⁻² Ha)</div><div class="dconfig">'+shells.map(n=>n+': '+fdOmega(n).toFixed(3)+' rad/a.u.').join(' · ')+'</div><div class="dnote">The 4th dimension is time. The arrow is the t-axis through the nucleus. Discrete: five separate snapshots, the newest at the tip and older ones fading behind it. Continuous: the live atom sits at the tip while its past streams smoothly backwards as one unbroken worldtube, each layer keeping the state it had when it was the present. Each shell breathes and twists at its own hydrogen-like phase rate, so inner shells (large ω) wind quickly and outer ones slowly, tracing a helix through spacetime. This animates the stylised orbital shells\' phase evolution rather than solving the full time-dependent Schrödinger equation. Use Time Flowing / Time Speed (including reversed) in the tools panel.</div>');
+    box.insertAdjacentHTML('beforeend','<div class="dsect">4D · Spacetime</div><div class="dgrid">'+stat('Time model',FOURD.kind==='continuous'?'Continuous':'Discrete')+(FOURD.kind==='continuous' ? stat('History shown',(FD_PERIOD*FD_AS_PER_AU).toFixed(0)+' as')+stat('Tube samples',FD_NC) : stat('Time slices',FD_N)+stat('Slice spacing',(FD_LAG*FD_AS_PER_AU).toFixed(0)+' as'))+stat('Playback','1 s = '+(FD_AU_PER_S*FD_AS_PER_AU).toFixed(0)+' as')+stat('Slow-motion','≈ 7×10¹⁵ ×')+stat('Nucleus','In every moment')+stat('Vacuum','Planck foam · dive to 1.6×10⁻³⁵ m')+'</div><div class="dsect">Shell phase rates (ω = ½n⁻² Ha)</div><div class="dconfig">'+shells.map(n=>n+': '+fdOmega(n).toFixed(3)+' rad/a.u.').join(' · ')+'</div><div class="dnote">The 4th dimension is time. The arrow is the t-axis through the nucleus. Discrete: five separate snapshots, the newest at the tip and older ones fading behind it. Continuous: the live atom sits at the tip while its past streams smoothly backwards as one unbroken worldtube, each layer keeping the state it had when it was the present. Each shell breathes and twists at its own hydrogen-like phase rate, so inner shells (large ω) wind quickly and outer ones slowly, tracing a helix through spacetime. This animates the stylised orbital shells\' phase evolution rather than solving the full time-dependent Schrödinger equation. Use Time Flowing / Time Speed (including reversed) in the tools panel.</div>');
   }
   const rel = ELEMENTS.filter(x=>x.category===el.category && x.Z!==el.Z).sort((a,b)=>Math.abs(a.Z-el.Z)-Math.abs(b.Z-el.Z)).slice(0,6);
   const nb = [ELEMENT_BY_Z[el.Z-1], ELEMENT_BY_Z[el.Z+1]].filter(Boolean);
@@ -4039,11 +4146,29 @@ function DeepDive(canvas, opt){
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
   }
   function draw(L, t){ return mode === '3d' ? draw3D(L, t) : draw2D(L, t); }
+  /* Shutter blur: K samples spread over [t-span .. t] (span is signed, so reversed time trails the other way),
+     summed at 1/K each. Covers the Planck lattice, virtual pairs and spacetime foam in one go. */
+  let acc = null, actx = null;
+  function drawBlur(L, t, span, K){
+    if(!span || K < 2){ draw(L, t); return; }
+    const W = canvas.width, H = canvas.height; if(!W || !H) return;
+    if(!acc){ acc = document.createElement('canvas'); actx = acc.getContext('2d'); }
+    if(acc.width !== W || acc.height !== H){ acc.width = W; acc.height = H; }
+    actx.globalCompositeOperation = 'source-over'; actx.globalAlpha = 1; actx.fillStyle = '#000'; actx.fillRect(0,0,W,H);
+    actx.globalCompositeOperation = 'lighter';
+    for(let i=0;i<K;i++){
+      if(i>0) lastT = t - span*(i/(K-1));          // 3-D mode advances its slow orbit by dt; older samples must add none
+      draw(L, t - span*(i/(K-1)));
+      actx.globalAlpha = 1/K; actx.drawImage(canvas, 0, 0);
+    }
+    lastT = t;
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; ctx.drawImage(acc, 0, 0);
+  }
   function setMode(m){ mode = (m === '3d') ? '3d' : '2d'; }
   function rotate(dx, dy){ yaw += dx*0.006; pitch = clamp(pitch + dy*0.006, -1.2, 1.2); }
   function resize(){ const dpr = Math.min(window.devicePixelRatio||1, 2), w = canvas.clientWidth, h = canvas.clientHeight;
     canvas._dpr = dpr; if(canvas.width !== Math.round(w*dpr) || canvas.height !== Math.round(h*dpr)){ canvas.width = Math.round(w*dpr); canvas.height = Math.round(h*dpr); } }
-  return { draw, resize, setMode, rotate };
+  return { draw, drawBlur, resize, setMode, rotate };
 }
 /* stage names + captions for a given view width (log10 metres) */
 const DEEP_STAGES = [
@@ -4094,7 +4219,7 @@ setVac3d(vac3d, false);
 })();
 const L0now = () => zNuc(ZOOM_MIN_Z);
 const sstepD = (a,b,x)=>{ const t=Math.min(1,Math.max(0,(x-a)/(b-a))); return t*t*(3-2*t); };
-const canDive = () => state.mode==='atom' && !state.fourD && !!NUC;
+const canDive = () => state.mode==='atom' && !!NUC;   // 4D included: the dive goes into the live nucleus
 function setDeepL(L){ if(L >= L0now()){ deepActive=false; camZ=ZOOM_MIN_Z; } else { deepActive=true; deepL=Math.max(L_PLANCK, L); } }
 function zoomBy(f){
   diveAnim = null;
@@ -4181,7 +4306,12 @@ renderLoop.push(dt=>{
   const dive = canDive();
   const L = dive ? (deepActive ? deepL : zToL(Math.max(ZOOM_MIN_Z, camera.position.z))) : 0;
   const a = deepActive ? sstepD(L0now(), L0now()-1.1, L) : 0;
-  if(a > 0.004){ deepCanvas.style.visibility='visible'; deepCanvas.style.opacity=a; deepView.resize(); deepView.draw(L, performance.now()/1000); }
+  if(a > 0.004){ deepCanvas.style.visibility='visible'; deepCanvas.style.opacity=a; deepView.resize(); {
+    if(state.fourD){   // 4D: the vacuum runs on the 4D clock; continuous mode adds shutter blur (4 samples ~ 80 ms of motion)
+      const blur = FOURD.kind==='continuous' && FOURD.blur && FOURD.running && Math.abs(FOURD.speed) > 0;
+      deepView.drawBlur(L, FOURD.vt, blur ? 0.08*FOURD.speed : 0, 4);
+    } else deepView.draw(L, performance.now()/1000);
+  } }
   else if(deepCanvas.style.visibility !== 'hidden'){ deepCanvas.style.visibility='hidden'; deepCanvas.style.opacity=0; }
   const showHud = dive ? sstepD(-10.9, -12.6, L) : 0;                // the ladder appears once you head for the core
   document.getElementById('scale-hud').style.opacity = showHud;
