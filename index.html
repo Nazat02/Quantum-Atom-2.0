@@ -780,14 +780,34 @@ function sampleOrbital(type, n){
 }
 
 const ORBITAL_N = {'1s':330000, '2s':156000, '2p':204000, '3d':228000};
-function makeCloudPoints(type, n, size, color){
-  const count = ORBITAL_N[type] || n;
+
+/* Hero cloud density multiplier.
+   Phones (coarse pointer, including "desktop mode" on a phone) keep the base
+   counts, which already look dense because the cloud is physically tiny.
+   Laptops/desktops show the same cloud physically much larger, so individual
+   points become visible; they get more points instead.
+   Override for tuning: index.html?density=4  (0.25 - 8). */
+const HERO_BOOST = (function(){
+  try{
+    const q = parseFloat(new URLSearchParams(location.search).get('density'));
+    if(q > 0) return Math.min(q, 8);
+    return matchMedia('(pointer:coarse)').matches ? 1 : 3;
+  }catch(e){ return 1; }
+})();
+
+const MAX_CLOUD_POINTS = 1500000; // hard ceiling so a bad ?density= can't freeze the tab
+function makeCloudPoints(type, n, size, color, boost){
+  boost = boost || 1;
+  const count = Math.min(MAX_CLOUD_POINTS, Math.round((ORBITAL_N[type] || n) * boost));
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(sampleOrbital(type,count),3));
   const pointSize = (type==='1s' ? (size||0.05)*0.55 : (size||0.05)*0.7);
+  // additive blending sums every point, so more points would blow out to flat
+  // orange; trade part of the extra count back as lower per-point opacity.
+  const opacity = Math.min(.85, .85 / Math.sqrt(boost));
   const mat = new THREE.PointsMaterial({
     color:color||CX_GLOW, size:pointSize, map:GLOW_TEX_SOFT,
-    transparent:true, opacity:.85, depthWrite:false, sizeAttenuation:true,
+    transparent:true, opacity:opacity, depthWrite:false, sizeAttenuation:true,
     blending:THREE.AdditiveBlending
   });
   return new THREE.Points(geo, mat);
@@ -811,7 +831,7 @@ function makeCloudPoints(type, n, size, color){
 
   const group = new THREE.Group();
   group.add(nucleus(0.1));
-  let cloud = makeCloudPoints('1s', 5500, 0.055, CX_GLOW);
+  let cloud = makeCloudPoints('1s', 5500, 0.055, CX_GLOW, HERO_BOOST);
   group.add(cloud);
   scene.add(group);
 
@@ -830,7 +850,7 @@ function makeCloudPoints(type, n, size, color){
       document.querySelectorAll('#orb-picker .orb-chip').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       group.remove(cloud); cloud.geometry.dispose(); cloud.material.dispose();
-      cloud = makeCloudPoints(btn.dataset.orb, 5500, 0.055, CX_GLOW);
+      cloud = makeCloudPoints(btn.dataset.orb, 5500, 0.055, CX_GLOW, HERO_BOOST);
       group.add(cloud);
     });
   });

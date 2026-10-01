@@ -644,7 +644,7 @@ input[type=range]:focus-visible{outline:none;}
           <div class="clabel"><span>Jitter</span><b id="jit-val">Low</b></div>
           <div class="cline">
             <button class="cbtn" id="jit-minus" type="button" aria-label="Decrease jitter">−</button>
-            <input type="range" id="jit" min="0" max="200" step="1" value="25" aria-label="Jitter intensity">
+            <input type="range" id="jit" min="0" max="200" step="1" value="10" aria-label="Jitter intensity">
             <button class="cbtn" id="jit-plus" type="button" aria-label="Increase jitter">+</button>
           </div>
           <div class="cnote">Living shimmer — points wobble, the orbital shape holds.</div>
@@ -3732,6 +3732,7 @@ const Q = (function(){
       if(mobile){ start = (mem>=6 || cores>=8) ? 2 : 1; cap = 3; }
       else if(discrete || appleSi){ start = 3; }
       else if(intel){ start = 2; cap = 3; }
+      else { start = 3; }   // unknown desktop GPU (some browsers mask it): start High, auto-tune steps down if it lags
       if(cores<=4){ start--; cap = Math.min(cap,3); }
       if(mem && mem<=4){ start--; cap = Math.min(cap,2); }
       if(maxTex<8192) cap = Math.min(cap,2);
@@ -3748,7 +3749,8 @@ const Q = (function(){
 
   /* ---- level -> live settings ---- */
   const bk = mobile ? 0.5 : 1;   // phones/tablets: half the point memory
-  Q.densityFor = L => { const l = LV[L==null ? Q.level : L]; return Math.min(densMax(), state.realImage ? l.densR : l.densN); };
+  const dkN = mobile ? 1 : 2;    // laptops/desktops: normal-mode clouds 2x denser at every level (phones unchanged)
+  Q.densityFor = L => { const l = LV[L==null ? Q.level : L]; return Math.min(densMax(), state.realImage ? l.densR : l.densN*dkN); };
   function pushValues(L){
     const l = LV[L];
     POINT_BUDGET = Math.round(l.budgetN*1e6*bk);
@@ -4206,7 +4208,7 @@ function setJit(v, save){
 jitEl.addEventListener('input', ()=>setJit(+jitEl.value));
 $('jit-minus').addEventListener('click', ()=>setJit(+jitEl.value-5));
 $('jit-plus').addEventListener('click',  ()=>setJit(+jitEl.value+5));
-setJit(store.get().jit!=null ? store.get().jit : 25, false);
+setJit(store.get().jit!=null ? store.get().jit : 10, false);   // default: tiny but not zero ("Subtle")
 
 /* adaptive quality now lives in SMART QUALITY (Q) above: it tunes both ways and respects manual control */
 
