@@ -95,6 +95,14 @@ nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:60;he
 .tab-content.active{display:flex;}
 
 .mode-switch{display:flex;gap:6px;padding:3px;border:1px solid var(--glass-border);border-radius:9px;background:rgba(0,0,0,.25);margin-bottom:10px;flex-shrink:0;}
+#ex-picker{grid-column:1/-1;padding:2px 4px 6px;}
+.ex-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.exchip{height:30px;min-width:40px;padding:0 10px;border-radius:8px;border:1px solid var(--glass-border);background:rgba(0,0,0,.25);color:var(--mid);font-family:var(--mono);font-size:.72rem;cursor:pointer;transition:all .15s;}
+.exchip:hover{color:#fff;}
+.exchip.on{background:linear-gradient(160deg,rgba(255,85,0,.32),rgba(255,85,0,.1));color:#fff;border-color:rgba(255,120,40,.6);}
+.exchip.forb{border-style:dashed;}
+.exchip:disabled{opacity:.35;cursor:not-allowed;}
+@media(pointer:coarse){.exchip{height:38px;}}
 .mchip{flex:1;padding:10px 0;font-size:.66rem;letter-spacing:.1em;border:none;border-radius:7px;background:none;color:var(--lo);cursor:pointer;transition:all .2s;}
 .mchip.active{background:linear-gradient(160deg,rgba(255,85,0,.32),rgba(255,85,0,.1));color:#fff;box-shadow:0 2px 10px rgba(255,85,0,.3);}
 
@@ -594,6 +602,12 @@ input[type=range]:focus-visible{outline:none;}
     <div class="tg-h">Scene</div>
     <button class="tbtn tg" id="btn-antimatter" type="button"><svg class="ti" aria-hidden="true"><use href="#i-anti"/></svg><span class="tl">Antimatter</span><small class="td">Anti-particle palette</small><span class="dot"></span></button>
     <button class="tbtn tg" id="btn-excited" type="button"><svg class="ti" aria-hidden="true"><use href="#i-bolt"/></svg><span class="tl">Excited state</span><small class="td">Electron jumps orbitals</small><span class="dot"></span></button>
+    <div id="ex-picker" role="group" aria-label="Excited state to show" style="display:none">
+      <div class="ex-chips" id="ex-chips"></div>
+      <div class="cnote" id="ex-orb-h" style="display:none">Orbital the electron lands in</div>
+      <div class="ex-chips" id="ex-orbs"></div>
+      <div class="cnote" id="ex-note"></div>
+    </div>
     <button class="tbtn tg" id="btn-grid" type="button"><svg class="ti" aria-hidden="true"><use href="#i-grid"/></svg><span class="tl">Cartesian grid</span><small class="td">x, y, z reference grid</small><span class="dot"></span></button>
     <div class="tg-h only4d">4D time</div>
     <button class="tbtn tg only4d on" id="btn-4d-play" type="button"><svg class="ti" aria-hidden="true"><use href="#i-clock"/></svg><span class="tl">Time flowing</span><small class="td">Pause or resume</small><span class="dot"></span></button>
@@ -605,6 +619,18 @@ input[type=range]:focus-visible{outline:none;}
     <div id="ctrl" role="group" aria-label="Cloud density and zoom controls">
       <button class="tbtn act ctrl-head" id="ctrl-toggle" type="button" aria-expanded="true" aria-controls="ctrl-body"><svg class="ti" aria-hidden="true"><use href="#i-zoom"/></svg><span class="tl">CLOUD &amp; ZOOM</span><small class="td">Density, jitter, zoom</small><span class="chev">▾</span></button>
       <div id="ctrl-body">
+        <div class="dens-row" id="q-row">
+          <div class="clabel"><span>Quality</span><b id="q-val">Auto</b></div>
+          <div class="cbtns" id="q-btns" role="group" aria-label="Quality level">
+            <button class="cbtn wide" type="button" data-q="auto">AUTO</button>
+            <button class="cbtn wide" type="button" data-q="0">ECO</button>
+            <button class="cbtn wide" type="button" data-q="1">LOW</button>
+            <button class="cbtn wide" type="button" data-q="2">MED</button>
+            <button class="cbtn wide" type="button" data-q="3">HIGH</button>
+            <button class="cbtn wide" type="button" data-q="4">ULTRA</button>
+          </div>
+          <div class="cnote" id="q-note"></div>
+        </div>
         <div class="dens-row">
           <div class="clabel"><span>Cloud density</span><b id="dens-val">1.00×</b></div>
           <div class="cline">
@@ -624,7 +650,7 @@ input[type=range]:focus-visible{outline:none;}
           <div class="cnote">Living shimmer — points wobble, the orbital shape holds.</div>
         </div>
         <div class="dens-row" id="pg-row" style="display:none">
-          <div class="clabel"><span>Page theme parameters</span><b><button class="cbtn" id="pg-reset" type="button" title="Back to the landing look" style="height:22px;font-size:.6rem;letter-spacing:.1em">RESET</button></b></div>
+          <div class="clabel"><span>Real image parameters</span><b><button class="cbtn" id="pg-reset" type="button" title="Back to the landing look (all colour types)" style="height:22px;font-size:.6rem;letter-spacing:.1em">RESET</button></b></div>
           <div class="pg-row" id="pg-body"></div>
           <div class="cnote" id="pg-status" style="min-height:2.4em"></div>
           <div class="cnote">Everything here is manual. Cloud density is the main slider above (now up to 1000×, log scale).</div>
@@ -1882,6 +1908,84 @@ function excitedConfig(baseConfig){
     to:   orbitalTag(n2, l2, occChangeIndex(l2, oldTarget, oldTarget+1)) };
 }
 
+/* All reachable excited states for an atom. Option "default" is the classic single transition from
+   excitedConfig(). On top of it, the active electron (the default's source orbital, and the outermost
+   occupied subshell) can be promoted to ANY higher subshell within 3 shells, in Madelung order — so
+   hydrogen offers 2s, 2p, 3s, 3p, 3d, 4s … not just 2p. Dipole selection (Δl = ±1) is reported per state:
+   Δl ≠ ±1 states (e.g. H 2s) are real but metastable — a single photon cannot reach them. */
+const H_NMAX = 5;   // hydrogen offers n = 2…5 (5g would be valid but g orbitals are not drawn)
+function excitedOptions(baseConfig){
+  const def = excitedConfig(baseConfig);
+  if(!def) return { list:[], defaultKey:null };
+  const lab = (n,l)=> n + L_LABEL[l];
+  const idxOf = (n,l)=> FILL_ORDER_EXT.findIndex(x=>x[0]===n && x[1]===l);
+  const finish = (info, forced)=>{
+    const f = info.from, t = info.to;
+    info.key = info.kind==='intra' ? 'intra:'+f.name+'>'+t.name : (f.n+'.'+f.l+'>'+t.n+'.'+t.l);
+    info.fromLabel = lab(f.n,f.l); info.toLabel = info.kind==='intra' ? (f.l===3?'f–f':'d–d') : lab(t.n,t.l);
+    info.dl = Math.abs(t.l - f.l);
+    info.allowed = info.kind==='intra' ? null : info.dl===1;
+    return info;
+  };
+  const list = [ finish(def) ], seen = new Set([ list[0].key ]);
+  const srcs = [ { n:def.from.n, l:def.from.l } ];
+  let outer = null;                                   // outermost occupied subshell (Madelung order)
+  for(let i=FILL_ORDER_EXT.length-1;i>=0;i--){ const [n,l]=FILL_ORDER_EXT[i]; if(baseConfig.find(s=>s.n===n && s.l===l && s.count>0)){ outer = {n,l}; break; } }
+  if(outer && !srcs.some(s=>s.n===outer.n && s.l===outer.l)) srcs.push(outer);
+  const hydrogenic = baseConfig.reduce((a,s)=>a+s.count,0)===1;   // one electron: energy depends on n only (2s ≡ 2p)
+  srcs.forEach(src=>{
+    const si = idxOf(src.n, src.l); if(si<0) return;
+    let targets;
+    if(hydrogenic){                                  // every real (n, l): l < n, n above the source; l ≤ 3 (g orbitals are not drawn)
+      targets = [];
+      for(let n2=src.n+1; n2<=H_NMAX; n2++) for(let l2=0; l2<=Math.min(n2-1,3); l2++) targets.push([n2,l2]);
+    } else {                                         // many electrons: Madelung order, within 3 shells of the source
+      targets = FILL_ORDER_EXT.filter(([n2,l2], ti)=> ti>si && n2<=src.n+3 && !(n2===src.n && l2===src.l));
+    }
+    targets.forEach(([n2,l2])=>{
+      const subs = baseConfig.map(s=>Object.assign({},s));
+      const so = subs.find(s=>s.n===src.n && s.l===src.l); if(!so || so.count<1) return;
+      const tOld = (subs.find(s=>s.n===n2 && s.l===l2)||{count:0}).count;
+      if(tOld>=SUBSHELL_CAP[l2]) return;               // target subshell already full
+      const sOld = so.count; so.count -= 1;
+      const f = subs.filter(s=>s.count>0), t = f.find(s=>s.n===n2 && s.l===l2);
+      if(t) t.count += 1; else f.push({n:n2,l:l2,count:1});
+      const info = finish({ subs:f, kind:'inter',
+        from: orbitalTag(src.n, src.l, occChangeIndex(src.l, sOld, sOld-1)),
+        to:   orbitalTag(n2, l2, occChangeIndex(l2, tOld, tOld+1)) });
+      if(seen.has(info.key)) return; seen.add(info.key); list.push(info);
+    });
+  });
+  list.sort((a,b)=> (a===list[0]?-1:0) - (b===list[0]?-1:0));   // default stays addressable at [0]
+  const defaultKey = list[0].key;
+  const ui = list.slice().sort((a,b)=> a.to.n-b.to.n || a.to.l-b.to.l || a.from.n-b.from.n || a.from.l-b.from.l).slice(0,14);
+  if(!ui.includes(list[0])) ui.unshift(list[0]);
+  return { list:ui, defaultKey, multiSource: srcs.length>1 };
+}
+/* Which specific orbitals of the TARGET subshell can take the electron (px/py/pz, dxy/dz²/…, f…): a
+   chosen orbital must not already hold 2 electrons. Default is Hund's first orbital. */
+function targetOrbitalChoices(info, baseConfig){
+  if(!info || info.kind!=='inter') return [];
+  const defs = orbitalDefs(info.to.l); if(defs.length<2) return [];
+  const t = baseConfig.find(s=>s.n===info.to.n && s.l===info.to.l);
+  const occ = hundOccupancy(info.to.l, t ? t.count : 0);
+  return defs.map((d,i)=>({ index:i, name:d.name, ok:(occ[i]||0)<2 }));
+}
+function withTargetOrbital(info, baseConfig, idx){
+  const ch = targetOrbitalChoices(info, baseConfig);
+  if(!ch[idx] || !ch[idx].ok) return info;
+  const t = baseConfig.find(s=>s.n===info.to.n && s.l===info.to.l);
+  const occ = hundOccupancy(info.to.l, t ? t.count : 0).slice(); occ[idx] += 1;
+  return Object.assign({}, info, { to:orbitalTag(info.to.n, info.to.l, idx), overrideOcc:{ n:info.to.n, l:info.to.l, occ } });
+}
+function orbPretty(name){ return name.replace(/([xyz])([23])/g,(m,a,b)=>a+({2:'²',3:'³'}[b])).replace(/-/g,'−'); }
+function pickExcited(baseConfig, key, orbIdx){
+  const o = excitedOptions(baseConfig);
+  if(!o.list.length) return null;
+  const info = o.list.find(x=>x.key===key) || o.list.find(x=>x.key===o.defaultKey) || o.list[0];
+  return orbIdx==null ? info : withTargetOrbital(info, baseConfig, orbIdx);
+}
+
 /* =====================================================================
    VSEPR GEOMETRY MODULE — one function, reused by all 52 molecules.
    Y is the principal/polar axis throughout, matching the polar
@@ -2002,7 +2106,7 @@ const MOLECULES = [
   {f:'XeF₂',n:'Xenon Difluoride',c:'Xe',l:[['F',2]],shape:'linear'}
 ];
 if(MOLECULES.length!==52 && typeof console!=='undefined' && console.warn){ console.warn('expected 52 molecules, got '+MOLECULES.length); }
-Object.assign(QA2, { MOLECULES, geometryDirections, MOL_STYLE, excitedConfig }); // exposed for console debugging/tests
+Object.assign(QA2, { MOLECULES, geometryDirections, MOL_STYLE, excitedConfig, excitedOptions, pickExcited, targetOrbitalChoices }); // exposed for console debugging/tests
 
 
 /* =====================================================================
@@ -2160,6 +2264,8 @@ const state = {
   surface:false,
   volumetric:false,
   excited:false,
+  excitedOrb:null,    // chosen specific target orbital index (null = Hund's default)
+  excitedKey:null,    // which excited state is shown (null = the default transition)
   density:1,          // cloud density multiplier (point clouds only)
   densityScale:1      // <1 when the global point budget capped the request
 };
@@ -2460,7 +2566,7 @@ function updatePions(dt){
   ['position','color'].forEach(a=>{ pn.pg.attributes[a].needsUpdate=true; pn.lg.attributes[a].needsUpdate=true; });
 }
 
-const POINT_BUDGET = window.matchMedia('(max-width:900px)').matches ? 2500000 : 6000000;
+let POINT_BUDGET = window.matchMedia('(max-width:900px)').matches ? 2500000 : 6000000;   // Smart Quality (Q) rewrites this per level
 function buildAtom(Z){
   const el = ELEMENT_BY_Z[Z];
   const g = new THREE.Group();
@@ -2473,7 +2579,7 @@ function buildAtom(Z){
   let subs = el.config;
   let excitedInfo = null;
   if(state.excited){
-    const ex = excitedConfig(el.config);
+    const ex = pickExcited(el.config, state.excitedKey, state.excitedOrb);
     if(ex){ subs = ex.subs; excitedInfo = ex; }
   }
 
@@ -2550,13 +2656,13 @@ function buildAtom(Z){
     const ptsArr = state.volumetric ? sampleVolumePoints(s.n,s.l,n,orb) : sampleSubshellPoints(s.n,s.l,n,orb);
     geo.setAttribute('position', new THREE.BufferAttribute(ptsArr,3));
     const highlighted = isExcitedTarget || isExcitedSource;
-    if(useRainbow && !highlighted && state.rainbow!=='page') geo.setAttribute('color', new THREE.BufferAttribute(rainbowColors(state.rainbow, ptsArr, extent, state.rainbow==='warm' ? wi : shellT(s)),3));
+    if(useRainbow && !highlighted) geo.setAttribute('color', new THREE.BufferAttribute(rainbowColors(state.rainbow, ptsArr, extent, state.rainbow==='warm' ? wi : shellT(s)),3));
     const vc = useRainbow && !highlighted;
-    if(state.rainbow==='page' && useRainbow){   // landing look: single additive layer, flat colour; every value comes from PAGE
+    if(isPageTheme()){   // Real Image pipeline for EVERY colour type: single additive layer; every value comes from PAGE
       PAGE_RT.effDens = effDens;
-      const pm = new THREE.PointsMaterial({ color, size:0.05, map:pageTex(PAGE.soft), transparent:true, depthWrite:false, sizeAttenuation:true, blending:PAGE.additive?THREE.AdditiveBlending:THREE.NormalBlending });
+      const pm = new THREE.PointsMaterial({ color:vc?0xffffff:color, vertexColors:vc, size:0.05, map:pageTex(PAGE.soft), transparent:true, depthWrite:false, sizeAttenuation:true, blending:PAGE.additive?THREE.AdditiveBlending:THREE.NormalBlending });
       pm.userData.pageSize = (s.n===1 && s.l===0) ? PAGE_LOOK.size1s : PAGE_LOOK.sizeOther;
-      pm.userData.pageAuto = color; pm.userData.pageKeep = highlighted;   // excited-state highlight colours are never overridden
+      pm.userData.pageAuto = color; pm.userData.pageKeep = highlighted; pm.userData.pageVC = vc;   // excited-state highlight colours are never overridden
       g.add(tagShell(new THREE.Points(geo, pagePointPatch(pm)), s.n));
       return;
     }
@@ -2788,7 +2894,7 @@ function pageTex(soft){
   return _pgTex.get(k);
 }
 function pageOpacity(){ return Math.min(1, PAGE.opacity * Math.min(1, Math.pow(Math.max(0.05, PAGE_RT.effDens), -PAGE.compExp)) * (state.volumetric ? 0.7 : 1)); }
-function isPageTheme(){ return state.realImage && state.rainbow==='page' && state.mode==='atom' && !state.fourD && !state.ultra && !state.surface; }
+function isPageTheme(){ return state.realImage && state.mode==='atom' && !state.fourD && !state.ultra && !state.surface; }
 function densMax(){ return isPageTheme() ? 1000 : 10; }
 function pointBudget(){ return isPageTheme() ? PAGE.budgetM*1e6 : POINT_BUDGET; }
 function syncColourPipeline(){
@@ -2828,7 +2934,13 @@ function updatePageLive(){
     m.size = m.userData.pageSize*PAGE.size*fitZ/PAGE_LOOK.refDist;
     if(m.map!==tex){ m.map = tex; m.needsUpdate = true; }
     if(m.blending!==bl){ m.blending = bl; m.needsUpdate = true; }
-    if(!m.userData.pageKeep) m.color.set(PAGE.color!==null ? PAGE.color : m.userData.pageAuto);
+    if(!m.userData.pageKeep){
+      if(m.userData.pageVC){   // per-point colour type: AUTO keeps its colours, a picked colour overrides them
+        const vcOn = PAGE.color===null;
+        m.color.set(vcOn ? 0xffffff : PAGE.color);
+        if(m.vertexColors!==vcOn){ m.vertexColors = vcOn; m.needsUpdate = true; }
+      } else m.color.set(PAGE.color!==null ? PAGE.color : m.userData.pageAuto);
+    }
   });
   pageStatus();
 }
@@ -2858,6 +2970,44 @@ function pagePointPatch(mat){
   };
   return mat;
 }
+
+/* -- excited-state picker: one chip per reachable state; dashed = not reachable by one photon (Δl ≠ ±1) -- */
+function refreshExPicker(){
+  const box = document.getElementById('ex-picker'); if(!box) return;
+  const show = state.excited && state.mode==='atom';
+  box.style.display = show ? '' : 'none';
+  if(!show) return;
+  const el = ELEMENT_BY_Z[state.Z], o = excitedOptions(el.config), chips = document.getElementById('ex-chips'), note = document.getElementById('ex-note');
+  chips.textContent = '';
+  if(!o.list.length){ note.textContent = 'No excited state available for this atom.'; return; }
+  const cur = (lastExcitedInfo && lastExcitedInfo.key) || o.defaultKey;
+  o.list.forEach(x=>{
+    const b = document.createElement('button'); b.type = 'button';
+    b.className = 'exchip' + (x.key===cur ? ' on' : '') + (x.allowed===false ? ' forb' : '');
+    b.textContent = o.multiSource && x.kind==='inter' ? x.fromLabel+'→'+x.toLabel : x.toLabel;
+    b.setAttribute('aria-pressed', String(x.key===cur));
+    b.title = x.fromLabel+' → '+x.toLabel + (x.allowed===true ? ' · allowed (Δl = ±1)' : x.allowed===false ? ' · metastable / dipole-forbidden (Δl = '+x.dl+')' : '');
+    b.addEventListener('click', ()=>{ state.excitedKey = x.key; state.excitedOrb = null; render({keepView:true}); });
+    chips.appendChild(b);
+  });
+  const orbs = document.getElementById('ex-orbs'), orbH = document.getElementById('ex-orb-h');   // specific orbital of the target subshell
+  orbs.textContent = '';
+  const choices = targetOrbitalChoices(lastExcitedInfo, el.config);
+  orbH.style.display = choices.length ? '' : 'none';
+  choices.forEach(c=>{
+    const b = document.createElement('button'); b.type = 'button';
+    const on = lastExcitedInfo && lastExcitedInfo.to.orbitalIndex===c.index;
+    b.className = 'exchip' + (on ? ' on' : ''); b.disabled = !c.ok;
+    b.textContent = lastExcitedInfo.to.n + orbPretty(c.name);
+    b.title = c.ok ? 'Electron lands in '+lastExcitedInfo.to.n+orbPretty(c.name) : 'Already holds two electrons';
+    b.setAttribute('aria-pressed', String(!!on));
+    b.addEventListener('click', ()=>{ state.excitedOrb = c.index; render({keepView:true}); });
+    orbs.appendChild(b);
+  });
+  const c = o.list.find(x=>x.key===cur);
+  note.textContent = c ? (c.allowed===false ? 'Dashed = metastable: real, but a single photon cannot reach it.' : 'Pick any excited state to view.') : '';
+}
+const QHOOK = { rebuilt:()=>{}, failed:()=>{} };   // Smart Quality plugs in here
 function render(opts){
   const keepView = !!(opts && opts.keepView);
   if(state.density>densMax()) state.density = densMax();   // leaving Page theme: fall back to the normal range
@@ -2869,7 +3019,7 @@ function render(opts){
     for(let attempt=0; attempt<4 && !built; attempt++){
       try{ built = state.fourD ? build4D(state.Z) : buildAtom(state.Z); }
       catch(err){
-        console.error('[render] cloud build failed', err);
+        console.error('[render] cloud build failed', err); QHOOK.failed();
         if(isPageTheme() && PAGE.budgetM>0.6){ PAGE.budgetM = Math.max(0.5, PAGE.budgetM/2); if(pgRefs.budgetM) pgRefs.budgetM(); pageNote = 'Build failed (memory) — max points lowered to '+PAGE.budgetM.toFixed(1)+'M'; }
         else if(state.density>1){ state.density = Math.max(1, state.density/2); pageNote = 'Build failed — density lowered to '+state.density.toFixed(2)+'×'; }
         else throw err;
@@ -2877,6 +3027,7 @@ function render(opts){
     }
     const {group, excitedInfo} = built;
     lastExcitedInfo = excitedInfo;
+    refreshExPicker();
     track(group);
     mainGroup.add(group);
     document.getElementById('hud').classList.toggle('excited', !!excitedInfo);
@@ -2886,6 +3037,7 @@ function render(opts){
     fitZ = Math.max(9, Math.max(...fitSubs.map(c=>subshellOuterRadius(c.n,c.l)))*1.9) * ATOM_BIG * (state.fourD ? 2.9 : 1);   // gigantic: the cloud fills the screen; 4D needs room for the time axis
   } else {
     lastExcitedInfo = null;
+    refreshExPicker();
     const mol = MOLECULES[state.moleculeIndex];
     const group = buildMolecule(mol);
     track(group);
@@ -2896,6 +3048,7 @@ function render(opts){
     fitZ = 12; NUC = null;
   }
   updatePageLive();
+  QHOOK.rebuilt();
   camZ = keepView ? clampZ(camZ) : fitZ;
   updateDataPanel();
   updateCtrlUI();
@@ -2963,11 +3116,16 @@ function updateDataPanel(){
     html += `<div class="dconfig">${cfgStr}</div>`;
     if(lastExcitedInfo){
       const from = lastExcitedInfo.from, to = lastExcitedInfo.to;
-      const fmtOrb = t => `${t.n}${orbitalDefs(t.l).length>1 ? t.name.replace(/([xyz])(\d)/g, (m,p1,p2)=>p1+({2:'²',3:'³'}[p2]||p2)) : L_LABEL[t.l]}`;
+      const fmtOrb = t => `${t.n}${orbitalDefs(t.l).length>1 ? orbPretty(t.name) : L_LABEL[t.l]}`;
       const noteLabel = lastExcitedInfo.kind==='intra'
         ? (from.l===3 ? 'f–f transition' : 'd–d transition')
         : 'electron promoted';
-      html += `<div class="dnote">⚡ Excited State — ${noteLabel}: <b>${fmtOrb(from)} → ${fmtOrb(to)}</b></div>`;
+      html += `<div class="dnote">⚡ Excited State — ${noteLabel}: <b>${fmtOrb(from)} → ${fmtOrb(to)}</b>${lastExcitedInfo.allowed===false ? ' · metastable (Δl = '+lastExcitedInfo.dl+', no single-photon route)' : ''}</div>`;
+      if(state.Z===1 && lastExcitedInfo.kind==='inter'){   // hydrogen: exact Bohr/Rydberg energy of the jump
+        const n1 = from.n, n2 = to.n, E = 13.605693*(1/(n1*n1) - 1/(n2*n2)), nm = 1239.84198/E;
+        const ser = {1:'Lyman',2:'Balmer',3:'Paschen',4:'Brackett'}[n1], gk = ['α','β','γ','δ','ε','ζ'][n2-n1-1] || '';
+        html += `<div class="dnote">Hydrogen ${ser||'n='+n1} ${gk}: ΔE = <b>${E.toFixed(3)} eV</b> · λ = <b>${nm.toFixed(1)} nm</b></div>`;
+      }
     }
     box.innerHTML = html;
   } else {
@@ -3118,13 +3276,13 @@ toggleBtn('btn-antimatter', on=>{
   document.documentElement.classList.toggle('antimatter', on);
   render();
 });
-toggleBtn('btn-realimage', on=>{ state.realImage = on; render(); });
+toggleBtn('btn-realimage', on=>{ state.realImage = on; state.density = Q.mode!=='custom' ? Q.densityFor() : (on && state.density<4 ? 4 : state.density); render(); });
 toggleBtn('btn-grid', on=>{ state.cartesianGrid = on; gridGroup.visible = on; });
 toggleBtn('btn-smooth', on=>{ state.smooth = on; render(); });
 toggleBtn('btn-ultra', on=>{ state.ultra = on; if(on){ state.surface = false; state.volumetric = false; $('btn-surface').classList.remove('on'); $('btn-volumetric').classList.remove('on'); } render(); });
 toggleBtn('btn-surface', on=>{ state.surface = on; if(on){ state.ultra = false; state.volumetric = false; $('btn-ultra').classList.remove('on'); $('btn-volumetric').classList.remove('on'); } render(); });
 toggleBtn('btn-volumetric', on=>{ state.volumetric = on; if(on){ state.ultra = false; state.surface = false; $('btn-ultra').classList.remove('on'); $('btn-surface').classList.remove('on'); } render(); });
-toggleBtn('btn-excited', on=>{ state.excited = on; render(); });
+toggleBtn('btn-excited', on=>{ state.excited = on; render(); refreshExPicker(); });
 toggleBtn('btn-4d-play', on=>{ FOURD.running = on; document.querySelector('#btn-4d-play span').textContent = on ? 'TIME FLOWING' : 'TIME FROZEN'; });
 document.getElementById('btn-4d-speed').addEventListener('click', ()=>{
   FOURD.speed = FD_SPEEDS[(FD_SPEEDS.indexOf(FOURD.speed)+1) % FD_SPEEDS.length];
@@ -3205,7 +3363,7 @@ zoomEl.addEventListener('pointerup', ()=>{ zoomDragging = false; });
 document.getElementById('zoom-in').addEventListener('click',  ()=>{ zoomBy(1/1.25); });
 document.getElementById('zoom-out').addEventListener('click', ()=>{ zoomBy(1.25); });
 document.getElementById('zoom-fit').addEventListener('click', ()=>{ camZ = fitZ; });
-document.getElementById('ctrl-reset').addEventListener('click', ()=>{ camZ = fitZ; setDensity(1, true); });
+document.getElementById('ctrl-reset').addEventListener('click', ()=>{ camZ = fitZ; if(Q.mode==='custom') setDensity(1, true); else Q.sync(true); });
 
 // Keep the zoom slider in sync with wheel / pinch / button zooming.
 renderLoop.push(()=>{
@@ -3269,7 +3427,7 @@ const rbBtns = document.querySelectorAll('#rb-btns .cbtn'), rbVal = $('rb-val'),
 const RB_NOTES = {
   ember:'Theme orange gradient — pale peach at the nucleus, deepening to fiery orange at the edge.',
   brand:'The landing page orange — one flat brand colour for every orbital.',
-  page:'Exactly the landing page look: same orange, same sharp points, same raw colour output (no tone mapping).',
+  page:'Flat landing-page orange. (All colour types now share the Real Image parameters below.)',
   red:'One pure red cloud — heating to yellow at the centre.',
   warm:'Every orbital its own pure colour — red, orange, crimson, amber and more.',
   classic:'Original amber/red gradient by depth.',
@@ -3286,7 +3444,7 @@ function updateRainbowUI(){
 }
 function setRainbow(t, save){
   if(!state.realImage || !RAINBOW_TYPES[t]) return;   // colour type is editable only in Real Image Mode
-  state.rainbow = t; if(t==='page' && state.density<4) state.density = 4;   // the landing look needs a dense cloud
+  state.rainbow = t; if(Q.mode==='custom' && state.density<4) state.density = 4;   // the Real Image look needs a dense cloud
   updateRainbowUI();
   if(save!==false) store.set({rainbow:t});
   if(state.realImage) render({keepView:true});
@@ -3312,6 +3470,7 @@ const PG_TOGGLES = [
 ];
 let pgTimer = null;
 function pgApply(rebuild){
+  if(rebuild) Q.touch();   // editing Max points by hand = manual control
   syncColourPipeline();
   if(rebuild){ clearTimeout(pgTimer); pgTimer = setTimeout(()=>render({keepView:true}), 220); }
   else updatePageLive();
@@ -3325,6 +3484,7 @@ function resetPageTheme(){
   clearTimeout(pgTimer); clearTimeout(densTimer);
   Object.assign(PAGE, PAGE_DEF);                       // landing look
   state.density = 4;                                   // landing-like cloud density
+  if(Q.mode!=='custom') Q.sync();                      // Smart Quality re-applies this device's level
   pageNote = ''; deepActive = false; diveAnim = null;  // leave any deep dive / stale message
   try{ store.set({page:Object.assign({}, PAGE_DEF)}); }catch(e){}
   Object.values(pgRefs).forEach(f=>f());               // refresh every slider, toggle and the colour picker
@@ -3358,7 +3518,7 @@ function resetPageTheme(){
   col.addEventListener('input', ()=>{ PAGE.color = col.value; showC(); pgApply(false); });
   auto.addEventListener('click', ()=>{ PAGE.color = null; showC(); pgApply(false); });
   pgRefs.color = showC; showC();
-  const rb = document.createElement('button'); rb.type='button'; rb.className='cbtn wide'; rb.id='pg-reset2'; rb.style.flex='0 0 auto'; rb.textContent='RESET PAGE THEME (PARAMS + DENSITY + VIEW)';
+  const rb = document.createElement('button'); rb.type='button'; rb.className='cbtn wide'; rb.id='pg-reset2'; rb.style.flex='0 0 auto'; rb.textContent='RESET REAL IMAGE LOOK (PARAMS + DENSITY + VIEW)';
   body.appendChild(rb);
   $('pg-reset').addEventListener('click', resetPageTheme);
   rb.addEventListener('click', resetPageTheme);
@@ -3533,6 +3693,148 @@ $('data-content').addEventListener('pointermove',e=>{
 })();
 
 
+/* =====================================================================
+   SMART QUALITY — every device runs the highest setup it can sustain.
+   1. Probe: GPU string, cores, memory, mobile, texture limits  ->  a start level and a hard cap.
+   2. Tune: measure real frame rate; climb a level after two smooth windows, drop one if it lags.
+   3. Remember: the last stable level is saved per device, so the next visit starts there.
+   Manual control always wins: pick a preset, or touch the density slider / Max points, and
+   auto-tuning stops until AUTO is pressed again.
+   A level sets: cloud density, max points (Real Image + normal), and the render resolution cap.
+   ===================================================================== */
+const Q = (function(){
+  const LV = [
+    { name:'Eco',    densR:1,  densN:0.5, budgetR:1.5, budgetN:1,   dpr:1    },
+    { name:'Low',    densR:2,  densN:0.8, budgetR:4,   budgetN:2.5, dpr:1.25 },
+    { name:'Medium', densR:4,  densN:1,   budgetR:8,   budgetN:4,   dpr:1.5  },
+    { name:'High',   densR:8,  densN:1.5, budgetR:15,  budgetN:6,   dpr:2    },
+    { name:'Ultra',  densR:16, densN:2.5, budgetR:25,  budgetN:10,  dpr:2    }
+  ];
+  const MAXL = LV.length-1, clampL = v => Math.max(0, Math.min(MAXL, v|0));
+  const SMOOTH = 50, LAGGING = 27, WINDOW = 90, MAX_CHANGES = 12;
+
+  /* ---- 1. probe ---- */
+  const gl = renderer.getContext();
+  let gpu = ''; try{ const x = gl.getExtension('WEBGL_debug_renderer_info'); if(x) gpu = String(gl.getParameter(x.UNMASKED_RENDERER_WEBGL)||''); }catch(e){}
+  const maxTex = (gl.getParameter(gl.MAX_TEXTURE_SIZE)|0) || 4096;
+  const cores = navigator.hardwareConcurrency || 4, mem = navigator.deviceMemory || 0;   // mem 0 = unknown (Safari/Firefox)
+  const ua = navigator.userAgent || '';
+  const mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (navigator.maxTouchPoints>1 && /Mac/i.test(navigator.platform||'')) || (matchMedia('(pointer:coarse)').matches && !matchMedia('(hover:hover)').matches);
+  const software = /swiftshader|llvmpipe|softpipe|software|basic render/i.test(gpu);
+  const discrete = /rtx|gtx|geforce|radeon rx|radeon pro|quadro|titan|arc a\d|rx ?\d{3,4}/i.test(gpu);
+  const appleSi  = !mobile && /apple (m\d|gpu)/i.test(gpu);
+  const intel    = /intel/i.test(gpu) && !/arc a\d/i.test(gpu);
+  const saveData = !!(navigator.connection && navigator.connection.saveData);
+  function probe(){
+    let start = 2, cap = MAXL;
+    if(software){ start = 0; cap = 0; }
+    else {
+      if(mobile){ start = (mem>=6 || cores>=8) ? 2 : 1; cap = 3; }
+      else if(discrete || appleSi){ start = 3; }
+      else if(intel){ start = 2; cap = 3; }
+      if(cores<=4){ start--; cap = Math.min(cap,3); }
+      if(mem && mem<=4){ start--; cap = Math.min(cap,2); }
+      if(maxTex<8192) cap = Math.min(cap,2);
+      if(maxTex<4096) cap = Math.min(cap,1);
+      if(saveData) cap = Math.min(cap,1);
+    }
+    cap = clampL(cap); start = Math.min(clampL(start), cap);
+    return { start, cap };
+  }
+  const P = probe();
+  const sig = gpu+'|'+screen.width+'x'+screen.height+'@'+(window.devicePixelRatio||1);
+
+  const Q = { mode:'auto', level:P.start, cap:P.cap, ceiling:P.cap, fps:0, gpu, mobile, LV };
+
+  /* ---- level -> live settings ---- */
+  const bk = mobile ? 0.5 : 1;   // phones/tablets: half the point memory
+  Q.densityFor = L => { const l = LV[L==null ? Q.level : L]; return Math.min(densMax(), state.realImage ? l.densR : l.densN); };
+  function pushValues(L){
+    const l = LV[L];
+    POINT_BUDGET = Math.round(l.budgetN*1e6*bk);
+    PAGE.budgetM = Math.max(0.5, +(l.budgetR*bk).toFixed(2)); if(pgRefs.budgetM) pgRefs.budgetM();
+    const dpr = Math.min(window.devicePixelRatio||1, l.dpr);
+    if(renderer.getPixelRatio()!==dpr){ renderer.setPixelRatio(dpr); fit(); }
+  }
+  function setLevel(L, renderNow){
+    Q.level = clampL(L); pushValues(Q.level);
+    const d = Q.densityFor();
+    if(renderNow===false) state.density = d; else setDensity(d, true);
+    ui();
+  }
+  Q.sync = renderNow => setLevel(Q.level, !!renderNow);
+
+  /* ---- persistence ---- */
+  function save(){ store.set({ quality:{ mode:Q.mode, level:Q.level, sig } }); }
+
+  /* ---- UI ---- */
+  const qBtns = document.querySelectorAll('#q-btns .cbtn'), qVal = $('q-val'), qNote = $('q-note'), qRow = $('q-row');
+  qRow.title = 'GPU: '+(gpu||'unknown')+' · '+cores+' cores'+(mem?' · '+mem+' GB':'')+(mobile?' · mobile':'')+' · highest level for this device: '+LV[P.cap].name;
+  function ui(){
+    qBtns.forEach(b=>{ const k = b.dataset.q, on = k==='auto' ? Q.mode==='auto' : (Q.mode==='manual' && +k===Q.level); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+    qVal.textContent = Q.mode==='auto' ? 'Auto · '+LV[Q.level].name : (Q.mode==='manual' ? LV[Q.level].name : 'Custom');
+    const hint = Q.mode==='auto' ? 'Tuned for this device — steps up while smooth, eases down if it lags.' : (Q.mode==='manual' ? 'Fixed level. AUTO re-enables smart tuning.' : 'You set density / points by hand. AUTO re-enables smart tuning.');
+    qNote.textContent = hint + (Q.fps ? '  ' + Math.round(Q.fps) + ' fps' : '');
+  }
+  Q.touch = function(){ if(Q.mode==='custom') return; Q.mode = 'custom'; save(); ui(); };   // any manual density / points edit
+  qBtns.forEach(b=>b.addEventListener('click', ()=>{
+    if(b.dataset.q==='auto'){ Q.mode = 'auto'; Q.ceiling = Q.cap; setLevel(P.start); }
+    else { Q.mode = 'manual'; setLevel(+b.dataset.q); }
+    save();
+  }));
+  densEl.addEventListener('input', Q.touch); densEl.addEventListener('change', Q.touch);
+  $('dens-minus').addEventListener('click', Q.touch); $('dens-plus').addEventListener('click', Q.touch);
+
+  /* ---- 2. tune: measure real frame rate ---- */
+  let last = performance.now(), acc = 0, frames = 0, settleUntil = last + 4000, smooth = 0, changes = 0;
+  const cloudNow = () => state.mode==='atom' && !state.ultra && !state.surface;
+  const resetWindow = ms => { acc = 0; frames = 0; settleUntil = Math.max(settleUntil, performance.now()+ms); };
+  QHOOK.rebuilt = () => resetWindow(1500);          // a rebuild is a one-off long frame, not the steady rate
+  QHOOK.failed  = () => {                           // out of memory: step down (render() already halves the budget)
+    if(Q.mode!=='auto' || Q.level===0) return;
+    Q.level--; Q.ceiling = Math.min(Q.ceiling, Q.level); smooth = 0; ui(); save();
+  };
+  renderLoop.push(()=>{
+    const now = performance.now(), dtm = now-last; last = now;
+    if(document.hidden || dtm>500){ resetWindow(1500); return; }   // tab switch or stall
+    if(now<settleUntil || !cloudNow()){ acc = 0; frames = 0; return; }
+    acc += dtm; frames++;
+    if(frames<WINDOW) return;
+    const fps = 1000*frames/acc; acc = 0; frames = 0; Q.fps = fps;
+    if(Q.mode==='auto' && changes<MAX_CHANGES){
+      const target = Math.min(Q.cap, Q.ceiling);
+      if(fps<LAGGING && Q.level>0){
+        const nl = Q.level-1; Q.ceiling = Math.min(Q.ceiling, nl);   // the level above did not hold on this device
+        smooth = 0; changes++; setLevel(nl); save();
+        toast('Auto quality: '+LV[nl].name+' for smooth motion');
+        return;
+      }
+      if(fps>=SMOOTH){
+        smooth++;
+        if(smooth>=2 && Q.level<target){ smooth = 0; changes++; setLevel(Q.level+1); save(); return; }
+        if(smooth>=2) save();                                           // settled at the best level: remember it
+      } else smooth = 0;
+    }
+    ui();
+  });
+
+  /* ---- battery saver: low battery caps the level ---- */
+  try{ if(navigator.getBattery) navigator.getBattery().then(b=>{
+    if(!b.charging && b.level<0.2){ Q.cap = Math.min(Q.cap,1); Q.ceiling = Math.min(Q.ceiling,1); if(Q.mode==='auto' && Q.level>1) setLevel(1); }
+  }); }catch(e){}
+
+  /* ---- init (no render here: restore() below renders once with the final values) ---- */
+  const sv = store.get().quality;
+  if(sv && typeof sv==='object'){
+    if(sv.mode==='manual' && Number.isInteger(sv.level)){ Q.mode = 'manual'; Q.level = clampL(sv.level); }
+    else if(sv.mode==='custom'){ Q.mode = 'custom'; }
+    else if(sv.mode==='auto' && sv.sig===sig && Number.isInteger(sv.level)){ Q.level = Math.min(clampL(sv.level), Q.cap); }
+  }
+  if(Q.mode!=='custom') setLevel(Q.level, false); else ui();
+  return Q;
+})();
+
+
 /* -- remember settings; deep links win over saved state -- */
 document.addEventListener('click', e=>{
   if(e.target.closest('.tbtn,.mchip,.cbtn')) setTimeout(()=>store.set({toggles:TOGGLES.filter(id=>$(id).classList.contains('on')), density:state.density}),0);
@@ -3548,8 +3850,8 @@ function applyHash(){
 window.addEventListener('hashchange', applyHash);
 (function restore(){
   const sv = store.get();
-  const d = sv.density!=null ? sv.density : (isTouchy || (navigator.hardwareConcurrency||8)<=4 || (navigator.deviceMemory||8)<=4 ? 0.6 : 1);
-  if(d!==1) setDensity(d, true);
+  const d = Q.mode!=='custom' ? Q.densityFor() : (sv.density!=null ? sv.density : (isTouchy || (navigator.hardwareConcurrency||8)<=4 || (navigator.deviceMemory||8)<=4 ? 0.6 : 1));
+  if(Q.mode!=='custom' || d!==1) setDensity(d, true);
   (sv.toggles||[]).forEach(id=>{ if($(id) && !$(id).classList.contains('on')) $(id).click(); });
   if(!applyHash() && sv.Z && ELEMENT_BY_Z[sv.Z]) selectElement(sv.Z);
 })();
@@ -3906,20 +4208,7 @@ $('jit-minus').addEventListener('click', ()=>setJit(+jitEl.value-5));
 $('jit-plus').addEventListener('click',  ()=>setJit(+jitEl.value+5));
 setJit(store.get().jit!=null ? store.get().jit : 25, false);
 
-/* -- adaptive quality: if the frame rate stays low, quietly thin the cloud -- */
-(function(){
-  let acc=0, frames=0, cuts=0, start=performance.now();
-  renderLoop.push(dt=>{
-    if(document.hidden || performance.now()-start<4000) return;
-    acc+=dt; frames++;
-    if(frames<120) return;
-    const fps = frames/acc; acc=0; frames=0;
-    if(fps<26 && cuts<3 && state.mode==='atom' && !state.ultra && !state.surface && state.density>0.4){
-      cuts++; setDensity(Math.max(0.4, state.density*0.75), true); start=performance.now();
-      toast('Running slowly — cloud density lowered to '+state.density.toFixed(2)+'× for smoother motion');
-    }
-  });
-})();
+/* adaptive quality now lives in SMART QUALITY (Q) above: it tunes both ways and respects manual control */
 
 // On phones, start with just the toolbar (secondary render toggles)
 // collapsed. The left panel holds primary navigation — element/molecule
