@@ -535,6 +535,33 @@ input[type=range]:focus-visible{outline:none;}
   .toolbar-toggle,.toolbar-toggle:hover{background:rgb(16,9,5)}
 }
 </style>
+<style>
+/* ============ PHOTON MODE (added) ============ */
+#photon-stage{position:absolute;inset:0;width:100%;height:100%;display:none;z-index:1;cursor:grab;touch-action:none;}
+#photon-panel{display:none;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:2px 6px 14px 2px;scrollbar-width:thin;overscroll-behavior:contain;}
+body.mph #photon-stage{display:block;}
+body.mph #stage{visibility:hidden;pointer-events:none;}
+body.mph #photon-panel{display:block;}
+body.mph .search-wrap,body.mph .tile-scroll,body.mph #nd-ctrl,body.mph #fd-switch,body.mph #dim-note,body.mph #hint,body.mph #toolbar,body.mph #dock-tools{display:none!important;}
+body.mph{--inset-r:16px;}
+.ph-sec{margin:0 0 14px;}
+.ph-modes{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.ph-m{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;padding:9px 10px;min-height:48px;border-radius:10px;border:1px solid var(--glass-border);background:rgba(0,0,0,.25);color:var(--mid);cursor:pointer;transition:all .15s;}
+.ph-m b{font-family:var(--display);font-weight:700;font-size:.78rem;letter-spacing:.1em;color:var(--hi);}
+.ph-m small{font-size:.56rem;letter-spacing:.06em;color:var(--lo);line-height:1.3;}
+.ph-m.hero{grid-column:1/-1;}
+.ph-m.on{border-color:var(--cx);background:linear-gradient(135deg,var(--cx-18),var(--cx-08));box-shadow:0 0 14px var(--cx-18);}
+.ph-read{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.ph-read div{padding:8px 10px;border-radius:9px;border:1px solid var(--glass-border);background:rgba(0,0,0,.25);}
+.ph-read span{display:block;font-size:.54rem;letter-spacing:.16em;color:var(--lo);text-transform:uppercase;}
+.ph-read b{font-family:var(--display);font-size:.95rem;color:var(--hi);letter-spacing:.04em;}
+.ph-eq{font-size:.66rem;line-height:1.75;color:var(--mid);padding:10px 12px;border-radius:10px;border:1px solid var(--glass-border);background:rgba(0,0,0,.28);}
+.ph-eq i{font-style:normal;color:var(--cx2);}
+.ph-eq .ph-note{display:block;margin-top:6px;font-size:.58rem;line-height:1.5;color:var(--lo);}
+#photon-panel input[type=range]{flex:1;min-width:0;}
+/* DATA tab belongs to the Atoms view only: 4D, N-D and Photon keep just EXPLORE */
+body.m4d .ptab[data-tab="data"],body.mND .ptab[data-tab="data"],body.mph .ptab[data-tab="data"]{display:none;}
+</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
@@ -571,6 +598,7 @@ input[type=range]:focus-visible{outline:none;}
 
 <div id="app">
   <canvas id="stage"></canvas>
+  <canvas id="photon-stage" aria-label="Photon 3D view"></canvas>
   <div id="hint" role="note" data-desktop="DRAG TO ROTATE · SCROLL TO ZOOM · ← → CYCLE · / SEARCH · R RANDOM" data-touch="DRAG TO ROTATE · PINCH TO ZOOM">DRAG TO ROTATE · SCROLL TO ZOOM · ← → CYCLE · / SEARCH · R RANDOM</div>
   <canvas id="deep" aria-hidden="true"></canvas>
   <div id="scale-hud" aria-live="off"><div class="sh-top"><span class="sh-val" id="sh-val"></span><span class="sh-name" id="sh-name"></span></div><div class="sh-cap" id="sh-cap"></div><div class="sh-ladder" id="sh-ladder"></div></div>
@@ -588,6 +616,7 @@ input[type=range]:focus-visible{outline:none;}
           <button class="mchip" id="mode-molecules" hidden style="display:none" aria-hidden="true" tabindex="-1">MOLECULES</button>
           <button class="mchip" id="mode-4d" title="Atom in spacetime: x, y, z + time">4D</button>
           <button class="mchip" id="mode-nd" title="N-dimensional atom: 3D, 4D, 5D … 10D">N-D</button>
+          <button class="mchip" id="mode-photon" title="Photon in volumetric 3D: waves, wave packet, twisted light, atomic emission, yin-yang">PHOTON</button>
         </div>
         <div class="mode-switch only4d" id="fd-switch" role="group" aria-label="4D time representation">
           <button class="mchip active" id="fd-discrete" title="Separate snapshots of the atom at distinct moments">DISCRETE</button>
@@ -599,6 +628,7 @@ input[type=range]:focus-visible{outline:none;}
           <div class="ndticks"><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
         </div>
         <div class="only4d" id="dim-note" style="font-size:.6rem;line-height:1.6;color:var(--lo);margin:-4px 2px 10px"></div>
+        <div id="photon-panel" role="region" aria-label="Photon controls"></div>
         <div class="search-wrap"><input id="search" type="search" placeholder="Search name, symbol, group…" autocomplete="off" enterkeyhint="go" aria-label="Search"><span class="kbd">/</span></div>
         <div class="tile-scroll">
           <div class="tile-grid" id="element-grid"></div>
@@ -2553,19 +2583,34 @@ scene.add(new THREE.Points(starGeo,new THREE.PointsMaterial({color:0x552211,size
 const mainGroup = new THREE.Group();
 scene.add(mainGroup);
 
-// translucent cartesian grid (own theme styling, toggleable)
+// Cartesian grid: an endless, self-similar decimal grid. One layer per power of ten (cells 1 µ… 100 units);
+// whichever layer matches the current view is bright and the others fade, so the grid always seems to be
+// there, and finer lines emerge out of it as you zoom in (coarser ones melt away as you zoom out).
 const gridGroup = new THREE.Group();
+const GRID_LAYERS = [];
 (function(){
-  const size=14, divisions=14, mat=new THREE.LineBasicMaterial({color:0xff5500, transparent:true, opacity:.16});
-  const planes = ['xy','xz','yz'];
-  planes.forEach(plane=>{
-    const g = new THREE.GridHelper(size, divisions, 0xff5500, 0xff5500);
-    g.material.transparent = true; g.material.opacity = .14;
-    if(plane==='xy') g.rotation.x = Math.PI/2;
-    else if(plane==='yz') g.rotation.z = Math.PI/2;
-    gridGroup.add(g);
-  });
+  const DIV = 14, VS = 'varying float vR;\nuniform float uHalf;\nvoid main(){ vR = length(position)/uHalf; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
+        FS = 'varying float vR;\nuniform float uOp;\nuniform vec3 uCol;\nvoid main(){ float f = 1.0 - smoothstep(0.30, 1.0, vR); gl_FragColor = vec4(uCol, uOp*f*f); }';
+  for(let k=-6;k<=2;k++){
+    const cell = Math.pow(10,k), size = DIV*cell, layer = new THREE.Group();
+    const mat = new THREE.ShaderMaterial({ uniforms:{ uHalf:{value:size*0.5*1.7}, uOp:{value:0}, uCol:{value:new THREE.Color(0xff5500)} },
+      vertexShader:VS, fragmentShader:FS, transparent:true, depthWrite:false, blending:THREE.AdditiveBlending });
+    ['xy','xz','yz'].forEach(plane=>{
+      const g = new THREE.GridHelper(size, DIV, 0xff5500, 0xff5500), m = new THREE.LineSegments(g.geometry, mat);
+      if(plane==='xy') m.rotation.x = Math.PI/2; else if(plane==='yz') m.rotation.z = Math.PI/2;
+      m.frustumCulled = false; layer.add(m);
+    });
+    layer.visible = false; gridGroup.add(layer); GRID_LAYERS.push({cell, layer, mat});
+  }
 })();
+renderLoop.push(()=>{
+  if(!gridGroup.visible) return;
+  const V = 2*Math.tan(25*Math.PI/180)*camera.position.z, ideal = V/9;      // the cell size that suits the current view
+  GRID_LAYERS.forEach(L=>{
+    const x = Math.log10(L.cell/ideal), op = 0.34*Math.exp(-(x*x)/(2*0.55*0.55));
+    L.mat.uniforms.uOp.value = op; L.layer.visible = op > 0.004;
+  });
+});
 gridGroup.visible = false;
 scene.add(gridGroup);
 
@@ -2599,7 +2644,8 @@ canvas.addEventListener('touchend', e=>{ if(e.touches.length<2) pinchStart=null;
 
 renderLoop.push(dt=>{
   drag.apply(dt);
-  camera.position.z += (camZ-camera.position.z)*0.12;
+  { const cz = camera.position.z, lr = Math.log(camZ/cz);   // glide in log space, frame-rate independent: constant perceived zoom speed
+    camera.position.z = Math.abs(lr) < 1e-4 ? camZ : cz*Math.exp(lr*(1-Math.exp(-Math.min(dt,0.1)*9))); }
   // Far-plane guard: the farthest allowed camera distance is fitZ*ZOOM_MAX_FIT and the cloud
   // extends ~fitZ/1.9 beyond its centre. A fixed far plane (1500) clipped big atoms entirely
   // (nucleus first, then the whole cloud) when zoomed out. Keep far beyond the back of the cloud.
@@ -2608,7 +2654,7 @@ renderLoop.push(dt=>{
   // keep fog proportional to viewing distance so large atoms are not fogged out
   scene.fog.density = 0.012*16/Math.max(16, camera.position.z);
   JIT.uZoom.value = Math.max(1, camera.position.z/Math.max(1,fitZ));
-  renderer.render(scene, camera);
+  if(!document.body.classList.contains('mph')) renderer.render(scene, camera);   // Photon mode owns the screen: skip the hidden atom draw
 });
 
 /* =====================================================================
@@ -4717,17 +4763,39 @@ function DeepDive(canvas, opt){
     ctx.fillStyle = vg; ctx.fillRect(0,0,W,H);
     ctx.globalCompositeOperation = 'lighter';
 
-    // --- Planck lattice: warped grid, more violent the deeper you go
-    const gA = .05 + .22*foamK + .05*violence, warp = (.004 + .13*foamK + .02*violence) * S;
-    ctx.lineWidth = Math.max(1, dpr*.9); ctx.strokeStyle = anti ? `rgba(255,47,168,${gA})` : `rgba(255,120,30,${gA})`;
-    const span = S*1.5, step = span/(gridN-1), seg = 16;
-    for(let dirn=0; dirn<2; dirn++){ for(let g=0; g<gridN; g++){ ctx.beginPath();
-      for(let s=0; s<=seg; s++){ const u = s/seg*span - span/2, v = g*step - span/2;
-        const wx = Math.sin(u*.011 + v*.017 + t*1.3 + g)*warp + Math.sin(v*.023 - t*2.1 + s*.7)*warp*.5;
-        const wy = Math.cos(v*.013 + u*.019 - t*1.1 + g*.6)*warp + Math.sin(u*.027 + t*1.9)*warp*.5;
-        const px = cx + (dirn? v : u) + wx, py = cy + (dirn? u : v) + wy;
-        s ? ctx.lineTo(px,py) : ctx.moveTo(px,py); }
-      ctx.stroke(); } }
+    // --- spacetime lattice at its true size: nested decade grids (cell edge 10^e m fills 10^(e-L) of the view);
+    //     fuzz = l_P/cell of a cell, so only cells near the Planck length wobble.
+    {
+      const gA = .075 + .20*foamK + .05*violence, exps = [], fl = Math.floor(L);
+      for(let e=fl-1; e<=fl+1; e++) if(e > L_PLANCK + 0.05) exps.push(e);
+      exps.push(L_PLANCK);
+      const gr = ctx.createRadialGradient(cx,cy,S*.12,cx,cy,S*.95), rgb = anti ? '255,47,168' : '255,120,30';
+      gr.addColorStop(0,'rgba('+rgb+',1)'); gr.addColorStop(1,'rgba('+rgb+',0)');
+      ctx.strokeStyle = gr; ctx.lineJoin = 'round';
+      let domE = null, domW = 0;
+      for(const e of exps){
+        const rel = Math.pow(10, e - L), xx = Math.log10(rel/0.12), wgt = (e === L_PLANCK && xx > 0) ? 1 : Math.exp(-xx*xx/(2*.5*.5));
+        const cell = S*rel; if(wgt < .03 || cell < S*.012) continue;
+        if(wgt > domW){ domW = wgt; domE = e; }
+        const wr = Math.min(.5, Math.pow(10, L_PLANCK - e)), span = Math.max(W,H)*1.1, n = Math.min(120, Math.ceil(span/cell)), seg = wr > .01 ? 24 : 2;
+        for(const pass of [0,1]){
+          ctx.lineWidth = pass ? Math.max(1, dpr*.9) : dpr*3.2; ctx.globalAlpha = gA*wgt*(pass ? 1.5 : .3);
+          ctx.beginPath();
+          for(let dirn=0; dirn<2; dirn++) for(let g=-n; g<=n; g++){
+            for(let q=0; q<=seg; q++){ const u = (q/seg - .5)*2*span, v = g*cell;
+              const wob = wr*cell, wx = (Math.sin(u/cell*1.1 + g*1.7 + t*1.3)*.6 + Math.sin(g*2.3 - t*2.0 + u/cell*.7)*.3)*wob, wy = (Math.cos(g*1.5 + u/cell*1.3 - t*1.1)*.6 + Math.sin(u/cell*2.1 + t*1.8)*.3)*wob;
+              const px = cx + (dirn? v : u) + wx, py = cy + (dirn? u : v) + wy; q ? ctx.lineTo(px,py) : ctx.moveTo(px,py); }
+          }
+          ctx.stroke();
+        }
+      }
+      if(domE !== null){
+        ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = .55*Math.min(1, domW*1.4); ctx.fillStyle = anti ? '#ffb8e6' : '#ffc89a';
+        ctx.font = Math.round(Math.max(10, S*.016))+'px ui-monospace,Menlo,Consolas,monospace'; ctx.textBaseline = 'bottom';
+        ctx.fillText(domE === L_PLANCK ? 'GRID CELL = PLANCK LENGTH  1.6 × 10'+String(-35).split('').map(c=>SUP[c]).join('')+' m' : 'GRID CELL = 10'+String(domE).split('').map(c=>SUP[c]).join('')+' m', S*.03, H - S*.03);
+        ctx.globalCompositeOperation = 'lighter';
+      }
+    }
 
     // --- virtual particle–antiparticle pairs (endless-zoom layers)
     const phase = (L0 - L) * 0.22;                                    // one layer cycle every ~4.5 decades
@@ -4774,7 +4842,7 @@ function DeepDive(canvas, opt){
     for(let i=0;i<300;i++){ const a = r()*6.283, b = Math.acos(2*r()-1);
       P3.push({x:(r()-.5)*5.2, y:(r()-.5)*4.2, zb:r(), dx:Math.sin(b)*Math.cos(a), dy:Math.sin(b)*Math.sin(a), dz:Math.cos(b), sep:.05+r()*.16, per:1.3+r()*3.4, off:r(), sz:.6+r()*1.0, k:r()<.5?0:1}); }
     for(let i=0;i<64;i++) F3.push({x:(r()-.5)*4.4, y:(r()-.5)*3.6, zb:r(), R:.10+r()*.24, w:.7+r()*2.4, ph:r()*6.283, d:r()*6.283, j:Math.floor(r()*64)}); }
-  const LN = 8, LG = 1.0, latX = new Float32Array((LN+1)*(LN+1)*(LN+1)), latY = new Float32Array(latX.length), latZ = new Float32Array(latX.length), latA = new Float32Array(latX.length), latW = new Float32Array(latX.length);
+  const LN = 12, LG = 1.0, latX = new Float32Array((LN+1)*(LN+1)*(LN+1)), latY = new Float32Array(latX.length), latZ = new Float32Array(latX.length), latA = new Float32Array(latX.length), latW = new Float32Array(latX.length);
   let cy_ = 0, sy_ = 1, cp_ = 1, sp_ = 0;
   function proj(x,y,z,out,f){                       // rotate about the view centre, then perspective-project
     const px = x, py = y, pz = z - ZC;
@@ -4785,6 +4853,11 @@ function DeepDive(canvas, opt){
   const _p = {x:0,y:0,z:0,k:0}, _q = {x:0,y:0,z:0,k:0};
   const fogA = z => Math.max(0, Math.min(1, (ZN+ZSPAN+.6 - z)/(ZSPAN*.85)));
   const wrapFade = u => sstep(0,.09,u) * (1 - sstep(.86,1,u));
+  /* ZOOM, not flight: the whole scene is scaled about the view centre. Each layer grows from a speck at the
+     centre (SMIN) to SMAX and fades out, while the next one grows in behind it, so shrinking the view width
+     reads as diving into the middle of the vacuum and magnifying it. */
+  const SMIN = 0.2, SMAX = 2.3, scaleOf = u => SMIN*Math.pow(SMAX/SMIN, u);
+  const nearA = z => sstep(0.55, 1.5, z);                      // fade anything that gets close to the camera plane
 
   function draw3D(L, t){
     const dpr = canvas._dpr || 1, W = canvas.width, H = canvas.height; if(!W || !H) return;
@@ -4798,42 +4871,71 @@ function DeepDive(canvas, opt){
     vg.addColorStop(0, anti ? `rgba(90,20,80,${.25+.25*violence})` : `rgba(120,32,0,${.25+.25*violence})`); vg.addColorStop(1,'rgba(5,3,2,0)');
     ctx.fillStyle = vg; ctx.fillRect(0,0,W,H);
     ctx.globalCompositeOperation = 'lighter';
-    const ph = (L0 - L)*0.3;                            // flight distance (in cycles); shrinking the view = flying deeper in
+    const ph = (L0 - L)*0.3;                            // zoom phase (cycles); shrinking the view = magnifying the vacuum about the centre
     const lw = Math.max(1, dpr*.9);
 
     // --- Planck lattice: a warped 3-D grid of spacetime cells
     const warp = (.012 + .30*foamK + .05*violence);
-    const fz = frac(ph), N1 = LN+1;
-    for(let a=0;a<N1;a++) for(let b=0;b<N1;b++) for(let c=0;c<N1;c++){
-      const id = (a*N1+b)*N1+c, zw = (c - fz)*LG*(ZSPAN/LN) + ZN, X0 = (a-LN/2)*LG*.72, Y0 = (b-LN/2)*LG*.6;
-      const zk = zw + Math.floor(ph)*0;               // continuous in zw, so nothing pops when the grid wraps
-      const wx = Math.sin(Y0*1.7 + zk*1.3 + t*1.3)*warp + Math.sin(zk*2.3 - t*2.0 + X0)*warp*.5;
-      const wy = Math.cos(X0*1.5 + zk*1.1 - t*1.1)*warp + Math.sin(zk*2.1 + t*1.8 + Y0)*warp*.5;
-      const wz = Math.sin(X0*1.2 + Y0*1.4 + t*1.5)*warp*.8;
-      proj(X0+wx, Y0+wy, zk+wz, _p, f);
-      latX[id] = cx + _p.x; latY[id] = cy + _p.y; latZ[id] = _p.z;
-      const u = (c - fz)/LN; latA[id] = _p.k ? wrapFade(u<0?0:u>1?1:u) * fogA(_p.z) : 0;
+    /* Spacetime lattice, drawn at its TRUE size relative to the view. A cell of edge 10^e m fills the fraction
+       10^(e-L) of a view that is 10^L m wide, so each decade you dive makes every cell 10x bigger on screen.
+       Nested decade grids (like a ruler) fade in and out as their cells become resolvable, and the finest layer
+       is the Planck cell itself (1.6e-35 m). Positional fuzz is a fraction l_P/cell of a cell, so ordinary cells
+       stay perfectly straight and only cells near the Planck length wobble. */
+    const N1 = LN+1, VW = 3.4, gA = .075 + .20*foamK + .05*violence, HALF = LN/2;
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.strokeStyle = anti ? 'rgb(255,47,168)' : 'rgb(255,120,30)';
+    const exps = [], fl = Math.floor(L);
+    for(let e=fl-1; e<=fl+1; e++) if(e > L_PLANCK + 0.05) exps.push(e);
+    exps.push(L_PLANCK);
+    let domE = null, domW = 0;
+    for(const e of exps){
+      const rel = Math.pow(10, e - L), xx = Math.log10(rel/0.12);
+      const wgt = (e === L_PLANCK && xx > 0) ? 1 : Math.exp(-xx*xx/(2*.5*.5));
+      if(wgt < .03) continue;
+      if(wgt > domW){ domW = wgt; domE = e; }
+      const cell = VW*rel, wr = Math.min(.5, Math.pow(10, L_PLANCK - e));
+      for(let a=0;a<N1;a++) for(let b=0;b<N1;b++) for(let c=0;c<N1;c++){
+        const id = (a*N1+b)*N1+c, i0 = a-HALF, j0 = b-HALF, k0 = c-HALF;
+        const wx = (Math.sin(j0*1.7 + k0*1.3 + t*1.3)*.6 + Math.sin(k0*2.3 - t*2.0 + i0)*.3)*wr*cell;
+        const wy = (Math.cos(i0*1.5 + k0*1.1 - t*1.1)*.6 + Math.sin(k0*2.1 + t*1.8 + j0)*.3)*wr*cell;
+        const wz = Math.sin(i0*1.2 + j0*1.4 + t*1.5)*.5*wr*cell;
+        proj(i0*cell + wx, j0*cell + wy, ZC + k0*cell + wz, _p, f);
+        latX[id] = cx + _p.x; latY[id] = cy + _p.y; latZ[id] = _p.z;
+        const rr = Math.sqrt(i0*i0 + j0*j0 + k0*k0)/HALF;
+        latA[id] = _p.k ? wgt * (1 - sstep(.35, 1, rr)) * fogA(_p.z) * nearA(_p.z) : 0;
+      }
+      const buckets = [new Path2D(), new Path2D(), new Path2D(), new Path2D()];       // batch: one stroke per brightness level
+      for(let a=0;a<N1;a++) for(let b=0;b<N1;b++) for(let c=0;c<N1;c++){
+        const id = (a*N1+b)*N1+c, al0 = latA[id]; if(al0 < .04) continue;
+        const nb0 = a<LN?((a+1)*N1+b)*N1+c:-1, nb1 = b<LN?(a*N1+b+1)*N1+c:-1, nb2 = c<LN?(a*N1+b)*N1+c+1:-1;
+        for(let q=0;q<3;q++){ const j = q===0?nb0:q===1?nb1:nb2; if(j < 0) continue; const al = Math.min(al0, latA[j]); if(al < .04) continue;
+          const bk = buckets[Math.min(3, (al*4)|0)]; bk.moveTo(latX[id],latY[id]); bk.lineTo(latX[j],latY[j]); }
+      }
+      for(let q=0;q<4;q++){
+        const al = gA*(q+.5)/4*1.6;
+        ctx.lineWidth = lw*3.2; ctx.globalAlpha = al*.22; ctx.stroke(buckets[q]);       // soft glow
+        ctx.lineWidth = lw;     ctx.globalAlpha = al;     ctx.stroke(buckets[q]);       // crisp core
+      }
     }
-    const gA = .06 + .26*foamK + .07*violence;
-    ctx.lineWidth = lw; ctx.strokeStyle = anti ? 'rgb(255,47,168)' : 'rgb(255,120,30)';
-    const buckets = [new Path2D(), new Path2D(), new Path2D(), new Path2D()];       // batch the lattice: one stroke per brightness level
-    for(let a=0;a<N1;a++) for(let b=0;b<N1;b++) for(let c=0;c<N1;c++){
-      const id = (a*N1+b)*N1+c, al0 = latA[id]; if(al0 < .04) continue;
-      const nb0 = a<LN?((a+1)*N1+b)*N1+c:-1, nb1 = b<LN?(a*N1+b+1)*N1+c:-1, nb2 = c<LN?(a*N1+b)*N1+c+1:-1;
-      for(let e=0;e<3;e++){ const j = e===0?nb0:e===1?nb1:nb2; if(j < 0) continue; const al = Math.min(al0, latA[j]); if(al < .04) continue;
-        const bk = buckets[Math.min(3, (al*4)|0)]; bk.moveTo(latX[id],latY[id]); bk.lineTo(latX[j],latY[j]); }
+    ctx.lineWidth = lw;
+    // true scale of one lattice cell, bottom-left
+    if(domE !== null){
+      ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = .55*Math.min(1, domW*1.4);
+      ctx.fillStyle = anti ? '#ffb8e6' : '#ffc89a'; ctx.font = Math.round(Math.max(10, S*.016))+'px ui-monospace,Menlo,Consolas,monospace'; ctx.textBaseline = 'bottom';
+      const txt = domE === L_PLANCK ? 'GRID CELL = PLANCK LENGTH  1.6 × 10'+String(-35).split('').map(c=>SUP[c]).join('')+' m' : 'GRID CELL = 10'+String(domE).split('').map(c=>SUP[c]).join('')+' m';
+      ctx.fillText(txt, S*.03, H - S*.03);
+      ctx.globalCompositeOperation = 'lighter';
     }
-    for(let q=0;q<4;q++){ ctx.globalAlpha = gA*(q+.5)/4*1.5; ctx.stroke(buckets[q]); }
 
     // --- virtual particle–antiparticle pairs, flying past in true perspective
     const speed = 1 + 5.5*violence, sA = anti ? SP.aFire : SP.fire, sB = anti ? SP.aPale : SP.pale, sC = anti ? SP.aDeep : SP.deep;
     const o1 = {x:0,y:0,z:0,k:0}, o2 = {x:0,y:0,z:0,k:0};
     for(let i=0;i<P3.length;i++){ const p = P3[i];
-      const u = frac(p.zb - ph), z0 = ZN + u*ZSPAN, fade = wrapFade(u); if(fade < .015) continue;
-      const w = frac(t*speed/p.per + p.off), life = Math.sin(Math.PI*w), d = p.sep*life, flash = w > .93 ? (w-.93)/.07 : 0;
-      proj(p.x + p.dx*d, p.y + p.dy*d, z0 + p.dz*d, o1, f); proj(p.x - p.dx*d, p.y - p.dy*d, z0 - p.dz*d, o2, f);
+      const u = frac(p.zb + ph), sc = scaleOf(u), fade = wrapFade(u); if(fade < .015) continue;
+      const w = frac(t*speed/p.per + p.off), life = Math.sin(Math.PI*w), d = p.sep*life*sc*.55, flash = w > .93 ? (w-.93)/.07 : 0;
+      const bx = p.x*.7*sc, by = p.y*.7*sc, bz = ZC + (frac(p.zb*7.31 + p.off)-.5)*2.4*sc;
+      proj(bx + p.dx*d, by + p.dy*d, bz + p.dz*d, o1, f); proj(bx - p.dx*d, by - p.dy*d, bz - p.dz*d, o2, f);
       if(!o1.k || !o2.k) continue;
-      const fg = fogA(o1.z)*fade, size = p.sz*.055*(.5+.5*life)*(1+.5*violence);
+      const fg = fogA(o1.z)*nearA(o1.z)*fade, size = p.sz*.055*sc*.6*(.5+.5*life)*(1+.5*violence);
       if(depth < .35 && life > .05){ ctx.globalAlpha = fg*.3*(1-depth*2.4)*life; ctx.strokeStyle = anti ? 'rgb(255,47,168)' : 'rgb(255,153,68)'; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(cx+o1.x,cy+o1.y);
         const mx = (o1.x+o2.x)/2 + Math.sin(t*6+i)*size*o1.k*.25, my = (o1.y+o2.y)/2 + Math.cos(t*5+i)*size*o1.k*.25; ctx.quadraticCurveTo(cx+mx,cy+my,cx+o2.x,cy+o2.y); ctx.stroke(); }
       const r1 = size*o1.k, r2 = size*o2.k; ctx.globalAlpha = fg*(.35+.65*life);
@@ -4844,10 +4946,10 @@ function DeepDive(canvas, opt){
     // --- spacetime foam: shaded 3-D bubbles that swell, merge and vanish
     if(foamK > .01){
       const pj = new Array(F3.length);
-      for(let i=0;i<F3.length;i++){ const b = F3[i], u = frac(b.zb - ph), z0 = ZN + u*ZSPAN, pul = .35 + .65*Math.abs(Math.sin(t*b.w + b.ph));
-        proj(b.x + Math.sin(t*.7*b.w + b.d)*.18*foamK, b.y + Math.cos(t*.6*b.w + b.ph)*.18*foamK, z0 + Math.sin(t*.5*b.w + b.d)*.2*foamK, _p, f);
+      for(let i=0;i<F3.length;i++){ const b = F3[i], u = frac(b.zb + ph), sc = scaleOf(u), pul = .35 + .65*Math.abs(Math.sin(t*b.w + b.ph));
+        proj((b.x*.7 + Math.sin(t*.7*b.w + b.d)*.18*foamK)*sc, (b.y*.7 + Math.cos(t*.6*b.w + b.ph)*.18*foamK)*sc, ZC + ((frac(b.zb*5.17 + b.w)-.5)*2.4 + Math.sin(t*.5*b.w + b.d)*.2*foamK)*sc, _p, f);
         if(!_p.k){ pj[i] = null; continue; }
-        const fg = fogA(_p.z)*wrapFade(u), r = b.R*pul*(.6+.9*foamK)*_p.k; pj[i] = {x:cx+_p.x, y:cy+_p.y, z:_p.z, r, fg};
+        const fg = fogA(_p.z)*nearA(_p.z)*wrapFade(u), r = b.R*sc*.6*pul*(.6+.9*foamK)*_p.k; pj[i] = {x:cx+_p.x, y:cy+_p.y, z:_p.z, r, fg};
         ctx.globalAlpha = foamK*.75*fg*pul; ctx.drawImage(anti? SPH.a : SPH.m, cx+_p.x-r*1.5, cy+_p.y-r*1.5, r*3, r*3);
         ctx.globalAlpha = foamK*.55*fg; ctx.lineWidth = lw; ctx.strokeStyle = anti ? 'rgb(255,207,240)' : 'rgb(255,207,158)'; ctx.beginPath(); ctx.arc(cx+_p.x, cy+_p.y, r*.62, 0, 6.283); ctx.stroke(); }
       for(let i=0;i<F3.length;i++){ const A = pj[i], B = pj[F3[i].j]; if(!A || !B) continue; const dd = Math.hypot(A.x-B.x, A.y-B.y), lim = S*.22*Math.min(A.r,B.r)/(S*.05);
@@ -4930,11 +5032,17 @@ setVac3d(vac3d, false);
 const L0now = () => zNuc(ZOOM_MIN_Z);
 const sstepD = (a,b,x)=>{ const t=Math.min(1,Math.max(0,(x-a)/(b-a))); return t*t*(3-2*t); };
 const canDive = () => state.mode==='atom' && !!NUC;   // 4D included: the dive goes into the live nucleus
-function setDeepL(L){ if(L >= L0now()){ deepActive=false; camZ=ZOOM_MIN_Z; } else { deepActive=true; deepL=Math.max(L_PLANCK, L); } }
+let deepT = 0;   // where the deep view is heading; deepL glides toward it every frame
+function setDeepL(L, imm){
+  const L0 = L0now();
+  if(L >= L0){ if(deepActive && !imm){ deepT = L0; return; } deepActive = false; camZ = ZOOM_MIN_Z; return; }
+  if(!deepActive){ deepActive = true; deepL = L0; }
+  deepT = Math.max(L_PLANCK, L); if(imm) deepL = deepT;
+}
 function zoomBy(f){
   diveAnim = null;
   if(!canDive()){ deepActive=false; camZ = clampZ(camZ*f); return; }
-  if(deepActive){ setDeepL(deepL + Math.log10(f)*DEEP_GAIN); return; }
+  if(deepActive){ setDeepL(deepT + Math.log10(f)*DEEP_GAIN); return; }
   if(f<1 && camZ <= ZOOM_MIN_Z*1.0005){ setDeepL(L0now() + Math.log10(f)*DEEP_GAIN); return; }
   camZ = clampZ(camZ*f);
 }
@@ -4970,19 +5078,20 @@ diveBtn.addEventListener('click', ()=>{
   if(!canDive()) return;
   const surfaceL = zToL(clampZ(fitZ)), cur = viewNowL();
   const goDown = !(cur < surfaceL - 3 && !(diveAnim && diveAnim.target > cur));
-  diveAnim = {target: goDown ? L_PLANCK : surfaceL};
+  diveAnim = {target: goDown ? L_PLANCK : surfaceL, t:0};
 });
 function stepDive(dt){
   if(!diveAnim) return; const cur = viewNowL(), dist = diveAnim.target - cur;
-  if(Math.abs(dist) < 0.02){ if(diveAnim.target >= L0now()) deepActive = false; else setDeepL(diveAnim.target); if(diveAnim.target > L0now()) camZ = clampZ(fitZ); diveAnim = null; return; }
-  const rate = Math.min(2.6, 0.5 + Math.abs(dist)*0.6), nL = cur + Math.sign(dist)*Math.min(Math.abs(dist), rate*dt);
+  if(Math.abs(dist) < 0.02){ if(diveAnim.target >= L0now()) deepActive = false; else setDeepL(diveAnim.target, true); if(diveAnim.target > L0now()) camZ = clampZ(fitZ); diveAnim = null; return; }
+  diveAnim.t = (diveAnim.t||0) + dt; const ramp = Math.min(1, diveAnim.t/1.4), ease = ramp*ramp*(3-2*ramp);   // ease in, so it never lurches
+  const rate = Math.min(2.6, 0.5 + Math.abs(dist)*0.6) * (0.12 + 0.88*ease), nL = cur + Math.sign(dist)*Math.min(Math.abs(dist), rate*dt);
   if(nL >= L0now()){
     deepActive = false;
     // invert the blended scale by bisection on log z (the map is monotonic)
     let lo = Math.log(ZOOM_MIN_Z), hi = Math.log(fitZ*ZOOM_MAX_FIT);
     for(let i=0;i<40;i++){ const mid=(lo+hi)/2; (zToL(Math.exp(mid)) < nL) ? lo=mid : hi=mid; }
     camZ = clampZ(Math.exp((lo+hi)/2));
-  } else setDeepL(nL);
+  } else setDeepL(nL, true);
 }
 
 /* nucleus, every frame: same motion, quark reveal, gluon pulse and pions as the Nucleus Explorer */
@@ -5013,9 +5122,11 @@ renderLoop.push(dt=>{
 /* scale readout, deep canvas, dive button state */
 renderLoop.push(dt=>{
   stepDive(dt);
+  if(deepActive && !diveAnim){ deepL += (deepT-deepL)*(1-Math.exp(-Math.min(dt,0.1)*8)); if(Math.abs(deepT-deepL) < 1e-4) deepL = deepT;
+    if(deepT >= L0now()-1e-6 && deepL > L0now()-0.02){ deepActive = false; camZ = ZOOM_MIN_Z; } }   // finished gliding back up: hand over to the 3-D view
   const dive = canDive();
   const L = dive ? (deepActive ? deepL : zToL(Math.max(ZOOM_MIN_Z, camera.position.z))) : 0;
-  const a = deepActive ? sstepD(L0now(), L0now()-1.1, L) : 0;
+  const a = deepActive ? (t=>t*t*t*(t*(t*6-15)+10))(Math.min(1,Math.max(0,(L0now()-L)/2.2))) : 0;   // quintic cross-fade over 2.2 decades
   if(a > 0.004){ deepCanvas.style.visibility='visible'; deepCanvas.style.opacity=a; deepView.resize(); {
     if(state.fourD){   // 4D: the vacuum runs on the 4D clock; continuous mode adds shutter blur (4 samples ~ 80 ms of motion)
       const blur = FOURD.kind==='continuous' && FOURD.blur && FOURD.running && Math.abs(FOURD.speed) > 0;
@@ -6760,6 +6871,385 @@ BOX.addEventListener('pointermove',e=>{if(e.target.id==='qa-cv'&&drag===null&&GE
 new MutationObserver(()=>{if(!$('qa-an'))mount();}).observe(BOX,{childList:true});
 mount();
 })();
+</script>
+<script>
+/* =====================================================================
+   PHOTON MODE — volumetric photon visualiser (self-contained module)
+   Own canvas + WebGL context; all wave motion is evaluated on the GPU
+   from closed-form field expressions, so a frame costs one draw call
+   per layer regardless of particle count. Particle positions are drawn
+   from the real energy-density distribution of each field (u ∝ E²).
+   ===================================================================== */
+(function(){
+'use strict';
+const QA = window.__QA2, $ = id => document.getElementById(id);
+const canvas = $('photon-stage'), panel = $('photon-panel'), chip = $('mode-photon');
+if(!window.THREE || !QA || !canvas || !panel || !chip) return;
+try{
+const TAU = Math.PI*2, LH = 22, VC = 2.2;                 // scene half-length (units), visual speed of light (units/s)
+const PHYS = { h:6.62607015e-34, c:299792458, eV:1.602176634e-19 };
+
+/* ---------- physics helpers ---------- */
+const props = nm => { const lam = nm*1e-9, f = PHYS.c/lam, E = PHYS.h*f; return { f, eV:E/PHYS.eV, p:PHYS.h/lam }; };
+const fmt = (v,d)=>{ const e = Math.floor(Math.log10(Math.abs(v))); const m = v/Math.pow(10,e); return m.toFixed(d)+'×10'+String(e).replace(/-/g,'⁻').replace(/\d/g,c=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[c]); };
+const band = nm => nm<10?'X-ray':nm<380?'Ultraviolet':nm<=750?'Visible':'Infrared';
+function spectral(nm){                                      // Bruton wavelength → RGB, lifted to a vivid glow
+  let r=0,g=0,b=0;
+  if(nm<380){r=.62;g=.25;b=1;} else if(nm<440){r=(440-nm)/60;b=1;} else if(nm<490){g=(nm-440)/50;b=1;}
+  else if(nm<510){g=1;b=(510-nm)/20;} else if(nm<580){r=(nm-510)/70;g=1;} else if(nm<645){r=1;g=(645-nm)/65;}
+  else if(nm<=780){r=1;} else {r=1;g=.05;b=.05;}
+  const m = Math.max(r,g,b)||1; return [r/m,g/m,b/m].map(v=>Math.pow(v,.8));
+}
+/* fused-silica Sellmeier (Malitson 1965, λ in µm) → n, group index n_g = n − λ dn/dλ, β₂ = λ³/(2πc²)·d²n/dλ² */
+const ZD = 13, ZR_OAM = 10, lamV = nm => 1.6*nm/500;
+function matGlass(nm){ const S2=l=>{ const x=l*l; return Math.sqrt(1+.6961663*x/(x-.0684043*.0684043)+.4079426*x/(x-.1162414*.1162414)+.8974794*x/(x-9.896161*9.896161)); };
+  const l=nm/1000, d=.002, n0=S2(l), a=S2(l-d), b=S2(l+d), dn=(b-a)/(2*d), d2=(b-2*n0+a)/(d*d);
+  return { n:n0, ng:n0-l*dn, b2:Math.pow(nm*1e-9,3)/(2*Math.PI*PHYS.c*PHYS.c)*d2*1e12*1e27 };   // fs²/mm
+}
+const comp = c => { const q = c.map(v=>1-v), m = Math.max(...q)||1; return q.map(v=>.12+.88*v/m); };   // B-field colour = complement of E-field colour
+
+/* ---------- sampling ---------- */
+const mulberry = a => () => { a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; };
+const gauss = r => Math.sqrt(-2*Math.log(1-r()))*Math.cos(TAU*r());
+const alloc = n => ({ n, pos:new Float32Array(n*3), aP:new Float32Array(n*4) });
+const put = (o,i,x,y,z,s,d,h,t)=>{ o.pos[3*i]=x; o.pos[3*i+1]=y; o.pos[3*i+2]=z; const j=4*i; o.aP[j]=s; o.aP[j+1]=d; o.aP[j+2]=h; o.aP[j+3]=t; };
+// yin-yang (taijitu) classifier in the unit disk: 0 = yang (E-field), 1 = yin (B-field)
+function yy(x,y){
+  let t = x>0 ? 0 : 1;
+  if(x*x+(y-.5)*(y-.5) <= .25) t = 1;
+  if(x*x+(y+.5)*(y+.5) <= .25) t = 0;
+  if(x*x+(y-.5)*(y-.5) <= .0169) t = 0;
+  if(x*x+(y+.5)*(y+.5) <= .0169) t = 1;
+  return t;
+}
+const BUILD = {
+  real(n,r){ const o=alloc(n); for(let i=0;i<n;i++) put(o,i,gauss(r),gauss(r),gauss(r),0,0,r(),0); return o; },
+  plane(n,r){ const o=alloc(n); for(let i=0;i<n;i++){ const t=i&1; put(o,i,0,0,(r()*2-1)*LH,r(),t?Math.PI/2:0,r(),t); } return o; },
+  // particles drawn from the pulse intensity |ψ|²; aP.x stores the field amplitude √I/√Imax
+  packet(n,r,S){ const o=alloc(n), id=PK[S.pk].id, T=pkT(), lim=LH*.95;
+    for(let i=0;i<n;i++){ let z,a; do{
+      if(id==='sech'){ z=T*Math.atanh(2*Math.min(.999999,Math.max(1e-6,r()))-1); a=1/Math.cosh(z/T); }
+      else if(id==='atom'){ z=T*Math.log(1-r()); a=Math.exp(z/(2*T)); }          // sharp front, exponential tail behind it
+      else { z=gauss(r)*T/Math.SQRT2; a=Math.exp(-z*z/(2*T*T)); }
+    }while(Math.abs(z)>lim);
+      put(o,i,gauss(r)*1.5,gauss(r)*1.5,z,a,0,r(),r()<.5?0:1); } return o; },
+  // Laguerre–Gauss LG(p=0,ℓ): I ∝ (2r²/w²)^|ℓ| e^(−2r²/w²)  ⇒  u = 2r²/w² ~ Gamma(|ℓ|+1)
+  oam(n,r,S){ const o=alloc(n), L=Math.abs(S.ell), zR=ZR_OAM, w0=Math.sqrt(zR*3*S.nm/500/Math.PI);   // w0 and zR tied by zR = πw0²/λ
+    for(let i=0;i<n;i++){ const z=(r()*2-1)*LH, w=w0*Math.sqrt(1+z*z/(zR*zR)); let u=0; for(let k=0;k<=L;k++) u-=Math.log(1-r());
+      const rr=w*Math.sqrt(u/2), a=TAU*r(); put(o,i,rr*Math.cos(a),rr*Math.sin(a),z,0,0,r(),0); } return o; },
+  // Hertzian dipole: photon density ∝ sin²θ / r²  (uniform in r, sin³θ in θ)
+  dipole(n,r){ const o=alloc(n); for(let i=0;i<n;i++){ const rr=.4+r()*(LH-1); let c; do{ c=r()*2-1; }while(r()>1-c*c);
+      const s=Math.sqrt(1-c*c), a=TAU*r(); put(o,i,rr*s*Math.cos(a),rr*c,rr*s*Math.sin(a),rr,0,r(),r()<.5?0:1); } return o; },
+  yinyang(n,r){ const o=alloc(n), R=3.1, z=()=>Math.max(-LH+2,Math.min(LH-2,gauss(r)*6.5));
+    for(let i=0;i<n;i++){ const q=r(); let u,v,m=0;
+      if(q<.05){ const a=TAU*r(); u=Math.cos(a)*(1+gauss(r)*.012); v=Math.sin(a)*(1+gauss(r)*.012); m=1; }                      // outer rim
+      else if(q<.09){ const a=Math.PI*r(), top=r()<.5; u=top? .5*Math.sin(a) : -.5*Math.sin(a); v=top? .5+.5*Math.cos(a) : -.5+.5*Math.cos(a); u+=gauss(r)*.01; v+=gauss(r)*.01; m=1; } // S-curve membrane
+      else { do{ u=r()*2-1; v=r()*2-1; }while(u*u+v*v>1); }
+      put(o,i,u*R,v*R,z(),m,0,r(),yy(u,v)); } return o; }
+};
+
+/* ---------- modes ---------- */
+const MODES = [
+ { id:'yy', name:'YIN-YANG CLOUD', tag:'E ⇄ B energy halves, twisting with spin', sh:4, circ:0, build:'yinyang', bright:.27, view:[.30,1.05], spin:1,
+   eq:'<i>u</i> = ½ε₀<i>E</i>² + <i>B</i>²/2μ₀ ,  <i>u<sub>E</sub></i> = <i>u<sub>B</sub></i><br>twist ∝ −σ·kz/2 ,  <i>S<sub>z</sub></i> = σħ',
+   note:'Each particle is drawn from the photon’s energy density. Yang half = electric field, yin half = magnetic field; a free photon splits its energy equally between them. The twist is the spin of circular polarisation. Artistic layout, physical fields.' },
+ { id:'lin', name:'LINEAR WAVE', tag:'Plane wave, E ⟂ B', sh:0, circ:0, build:'plane', bright:.5, view:[.28,1.2],
+   eq:'<i>E</i>(z,t) = <i>E₀</i> cos(kz − ωt) <i>x̂</i><br><i>B</i>(z,t) = (<i>E₀</i>/c) cos(kz − ωt) <i>ŷ</i><br>ω = ck ,  k = 2π/λ',
+   note:'Transverse electromagnetic wave: E and B in phase, perpendicular to each other and to the direction of travel (+z).' },
+ { id:'circ', name:'CIRCULAR WAVE', tag:'Helicity ±1, spin ±ħ', sh:0, circ:1, build:'plane', bright:.5, view:[.28,1.2], spin:1,
+   eq:'<i>E</i> = <i>E₀</i>[cos φ <i>x̂</i> − σ sin φ <i>ŷ</i>] ,  φ = kz − ωt<br><i>B</i> = <i>ẑ</i> × <i>E</i> / c ,  σ = ±1',
+   note:'The field vector rotates once per wavelength, tracing a helix. Each photon carries spin angular momentum σħ along its motion.' },
+ { id:'pkt', name:'WAVE PACKETS', tag:'Gaussian · sech² · atomic photon · dispersive glass', sh:1, circ:0, build:'packet', bright:.1, view:[.22,1.15], pk:true, eq:'', note:'' },
+ { id:'real', name:'REAL PHOTON', tag:'What a detector actually sees', sh:5, circ:0, build:'real', bright:.3, view:[.22,1.15], real:true,
+   eq:'|ψ(<b>r</b>,t)|² = |ψ<sub>∥</sub>(z−ct)|² · (2/π<i>w</i>²) e<sup>−2ρ²/<i>w</i>²</sup><br><i>w</i>(z) = <i>w₀</i>√(1+z²/<i>z<sub>R</sub></i>²) ,  <i>z<sub>R</sub></i> = π<i>w₀</i>²/λ ,  θ = λ/π<i>w₀</i>',
+   note:'A photon is never a tiny ball. It travels as a bullet of probability: a pulse (length from the cycle count) inside a Gaussian beam that focuses at the waist, then spreads by diffraction. A detector absorbs the whole photon at ONE random point; each click is drawn from |ψ|², and many clicks rebuild the beam spot.' },
+ { id:'oam', name:'OAM VORTEX', tag:'Laguerre–Gauss, twisted light', sh:2, circ:0, build:'oam', bright:.6, view:[.22,1.15], ell:true,
+   eq:'<i>E</i> ∝ (√2 r/w)<sup>|ℓ|</sup> e<sup>−r²/w²</sup> e<sup>i[kz + ℓφ − (|ℓ|+1)ψ + kr²z/2(z²+z<sub>R</sub>²) − ωt]</sup><br><i>w</i>(z)=<i>w₀</i>√(1+z²/z<sub>R</sub>²) ,  <i>L<sub>z</sub></i> = ℓħ',
+   note:'Paraxial LG (p = 0) mode with the exact radial intensity, Gouy phase and wavefront curvature. The phase front is a helicoid with |ℓ| intertwined arms.' },
+ { id:'dip', name:'ATOM EMISSION', tag:'Dipole radiation', sh:3, circ:0, build:'dipole', bright:1.0, view:[.5,.5],
+   eq:'<i>E<sub>θ</sub></i> ∝ sin θ · cos(kr − ωt) / r<br>⟨<i>S</i>⟩ ∝ sin²θ / r² ,  ħω = <i>E<sub>i</sub></i> − <i>E<sub>f</sub></i>',
+   note:'The photon an excited atom releases: a Δl = ±1 transition radiates like an oscillating electric dipole — doughnut pattern, no emission along the axis.' }
+];
+const PK = [
+ { id:'gauss', name:'GAUSSIAN PULSE', tag:'Vacuum · Fourier-limited', tbp:.441, fw:2*Math.sqrt(Math.LN2),
+   eq:'ψ(z,t) = exp[−(z−ct)²/2L²] · e<sup>i(kz−ωt)</sup><br>Δν·Δt<sub>FWHM</sub> = 0.441 ,  <i>v<sub>g</sub></i> = <i>v<sub>p</sub></i> = c',
+   note:'Fourier-limited Gaussian pulse in vacuum: no dispersion, so the shape never changes. Particle density follows |ψ|²; sideways offsets are E (x) and B (y), in phase.' },
+ { id:'sech', name:'SECH² PULSE', tag:'Mode-locked laser · soliton', tbp:.315, fw:1.763,
+   eq:'<i>E</i>(t) ∝ sech(t/<i>T₀</i>) e<sup>−iω₀t</sup> ,  <i>I</i> ∝ sech²(t/<i>T₀</i>)<br>Δν·Δt<sub>FWHM</sub> = 0.315 ,  <i>T</i><sub>FWHM</sub> = 1.763 <i>T₀</i>',
+   note:'Envelope of a mode-locked laser or a fundamental fibre soliton: narrower spectrum than a Gaussian of equal duration, with exponential wings.' },
+ { id:'atom', name:'ATOMIC PHOTON', tag:'Spontaneous emission', tbp:.11, fw:Math.LN2,
+   eq:'ψ(t) ∝ Θ(t) e<sup>−t/2τ</sup> e<sup>−iω₀t</sup> ,  <i>I</i> ∝ e<sup>−t/τ</sup><br>Δν = 1/2πτ (Lorentzian) ,  ΔE·τ = ħ',
+   note:'A photon from a decaying excited state: sharp leading edge, exponential tail. A real one holds ~10⁷ carrier cycles, so the display compresses the envelope; every number listed is physical.' },
+ { id:'glass', name:'PULSE IN GLASS', tag:'Dispersion · chirp · slow v_g', tbp:.441, fw:2*Math.sqrt(Math.LN2),
+   eq:'<i>T</i>(z) = <i>T₀</i>√(1+(z/<i>L<sub>D</sub></i>)²) ,  <i>L<sub>D</sub></i> = <i>T₀</i>²/|β₂|<br>C = sgn(β₂)·z/<i>L<sub>D</sub></i> ,  <i>v<sub>g</sub></i> = c/<i>n<sub>g</sub></i><br>β₂ = λ³/(2πc²)·d²n/dλ²',
+   note:'Gaussian pulse in fused silica (Sellmeier fit). Normal dispersion: red leads, blue lags (up-chirp), so the carrier wavelength changes across the pulse while it broadens. Drag z/L<sub>D</sub>.' }
+];
+const DENS = [{l:'ECO',n:35000},{l:'MED',n:70000},{l:'HIGH',n:130000},{l:'ULTRA',n:220000}];
+const PRESETS = [['Hα 656',656.3],['Hβ 486',486.1],['Hγ 434',434.0],['Na-D 589',589.0],['Green 532',532],['Violet 405',405],['UV 254',254],['IR 1064',1064]];
+const coarse = matchMedia('(pointer:coarse)').matches;
+const S = { w0:1.6, pk:0, N:4, zd:1.5, tau:16, mode:0, nm:656.3, helic:1, ell:3, bright:1, dens: coarse?1:2, speed:1, paused:false, t:0 };
+
+function pkT(){ const K=PK[S.pk], g=K.id==='glass'?matGlass(S.nm):null;       // visual 1/e field length of the envelope
+  return (K.id==='atom'?4:S.N)*lamV(S.nm)/(g?g.ng:1)/K.fw; }
+/* ---------- renderer / scene ---------- */
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:false, alpha:true, powerPreference:'high-performance' });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2)); renderer.setClearColor(0x000000,0);
+const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(50,1,.5,600), group = new THREE.Group();
+scene.add(group);
+const drag = QA.addDragRotate(canvas, group, { startX:.3, startY:1.05, auto:true, autoSpeed:.05 });
+let active=false, fitD=40, zoom=1, core=null, haze=null;
+
+const U = { uTime:{value:0}, uK:{value:1}, uW:{value:1}, uC:{value:VC}, uSpin:{value:1}, uCirc:{value:0}, uMode:{value:0}, uEll:{value:3},
+  uRW:{value:1.6}, uRZR:{value:5}, uSz:{value:2}, uLT:{value:40}, uZD:{value:ZD}, uStretch:{value:1}, uChirp:{value:0}, uSlip:{value:0}, uPA:{value:1}, uAmp:{value:3.2}, uLH:{value:LH}, uZR:{value:16}, uSize:{value:.22}, uPx:{value:900}, uBright:{value:.5},
+  uColE:{value:new THREE.Color(1,.7,.2)}, uColB:{value:new THREE.Color(.3,.6,1)} };
+const VS = `
+attribute vec4 aP;
+uniform float uMode,uTime,uK,uW,uC,uSpin,uCirc,uEll,uAmp,uLH,uZR,uSize,uPx,uBright,uSzK,uAK,uStretch,uChirp,uSlip,uPA,uRW,uRZR,uSz,uLT,uZD;
+uniform vec3 uColE,uColB;
+varying vec3 vCol; varying float vA;
+float fade(float z){ return 1.0 - smoothstep(0.62*uLH, uLH, abs(z)); }
+void main(){
+  vec3 p = position; float h = aP.z, ty = aP.w, a = 1.0, mc = ty, ph;
+  if(uMode < 0.5){                                   // plane wave: linear (uCirc=0) or circular (uCirc=1)
+    ph = uK*p.z - uW*uTime;
+    float ang = aP.y - uCirc*uSpin*ph, m = mix(cos(ph), 1.0, uCirc);
+    p.xy = uAmp*aP.x*m*vec2(cos(ang), sin(ang)) + (vec2(h, fract(h*37.17)) - 0.5)*0.10;
+    a = (0.45 + 0.55*abs(m)) * (0.5 + 0.5*aP.x) * fade(p.z);
+  } else if(uMode < 1.5){                            // wave packet at group speed: A(ζ)·cos(kζ − C ζ²/2L² + k(vg−vp)t)
+    float z0 = p.z, zs = z0*uStretch;
+    ph = uK*zs - uChirp*z0*z0 + uSlip*uTime; float c = cos(ph);
+    p.z = mod(zs + uTime*uC + uLH, 2.0*uLH) - uLH;
+    float am = 0.55*aP.x*uPA*c; p.x += (1.0-ty)*am; p.y += ty*am;
+    a = (0.22 + 0.78*c*c) * fade(p.z);
+  } else if(uMode < 2.5){                            // Laguerre–Gauss vortex
+    float z = p.z, r2 = dot(p.xy,p.xy), L = abs(uEll);
+    ph = uK*z + uEll*atan(p.y,p.x) + uK*r2*z/(2.0*(z*z+uZR*uZR)) - (L+1.0)*atan(z/uZR) - uW*uTime;
+    float c = cos(ph); a = (0.10 + 0.90*c*c) * fade(z); mc = 0.5 - 0.5*c;
+  } else if(uMode < 3.5){                            // Hertzian dipole, outgoing spherical wave
+    float r = length(p); ph = uK*r - uW*uTime; float c = cos(ph);
+    a = (0.08 + 0.92*c*c) * (1.0 + 1.5*exp(-r*0.9)) * (1.0 - smoothstep(0.75*uLH, uLH, r)); mc = 0.5 - 0.5*c;
+  } else if(uMode < 4.5){                            // yin-yang photon: E (yang) / B (yin) halves, spin twist
+    float z0 = p.z; ph = uK*z0; float c = cos(ph), tw = -uSpin*0.5*uK*z0, cs = cos(tw), sn = sin(tw);
+    vec2 q = mat2(cs,sn,-sn,cs)*p.xy;
+    q += 0.16*vec2(sin(h*47.0 + uTime*0.8 + z0*0.35), cos(h*61.0 + uTime*0.7 - z0*0.30))*(0.35 + h);   // cloud turbulence
+    p = vec3(q, mod(z0 + uTime*uC + uLH, 2.0*uLH) - uLH);
+    a = (0.35 + 0.65*c*c) * (1.0 + 1.3*aP.x) * fade(p.z);
+  } else {                                           // real photon: |psi|^2 of a pulsed Gaussian beam, absorbed at the detector
+    float zc = mod(uTime*uC, uLT) - uLH, w = uRW*sqrt(1.0 + zc*zc/(uRZR*uRZR));
+    p = vec3(position.xy*0.5*w, zc + position.z*uSz);
+    a = (1.0 - smoothstep(uZD-2.5, uZD, zc)) * smoothstep(-uLH, -uLH+3.0, zc); mc = 0.0;
+  }
+  vec4 mv = modelViewMatrix*vec4(p,1.0);
+  gl_Position = projectionMatrix*mv;
+  gl_PointSize = clamp(uSize*uSzK*(0.55 + 1.1*h*h)*uPx/(-mv.z), 1.0, 90.0);
+  vCol = mix(uColE, uColB, mc);
+  vA = a*uBright*uAK*(0.7 + 0.6*fract(h*7.7));
+}`;
+const FS = `varying vec3 vCol; varying float vA;
+void main(){ vec2 d = gl_PointCoord - 0.5; float r2 = dot(d,d)*4.0; if(r2 > 1.0) discard; gl_FragColor = vec4(vCol, vA*exp(-r2*3.2)); }`;
+const mk = (szk,ak) => new THREE.ShaderMaterial({ uniforms:Object.assign({}, U, { uSzK:{value:szk}, uAK:{value:ak} }),
+  vertexShader:VS, fragmentShader:FS, transparent:true, depthTest:false, depthWrite:false, blending:THREE.AdditiveBlending });
+const matCore = mk(1,1), matHaze = mk(3.4,.16);
+/* ---- detector screen: single-photon clicks sampled from |psi|^2 ---- */
+const MAXC=4000, dpos=new Float32Array(MAXC*3); let nc=0, zcPrev=null;
+const dg=new THREE.BufferGeometry(); dg.setAttribute('position',new THREE.BufferAttribute(dpos,3)); dg.setDrawRange(0,0); dg.boundingSphere=new THREE.Sphere(new THREE.Vector3(),LH*2);
+const det=new THREE.Points(dg,new THREE.PointsMaterial({size:3.5,sizeAttenuation:false,transparent:true,opacity:.9,depthTest:false,depthWrite:false,blending:THREE.AdditiveBlending,color:0xffffff}));
+const rp=[]; for(let i=0;i<=64;i++){ const a=TAU*i/64; rp.push(new THREE.Vector3(8*Math.cos(a),8*Math.sin(a),ZD)); }
+const ring=new THREE.Line(new THREE.BufferGeometry().setFromPoints(rp),new THREE.LineBasicMaterial({color:0x8899aa,transparent:true,opacity:.5,depthTest:false}));
+det.frustumCulled=ring.frustumCulled=false; det.visible=ring.visible=false; group.add(det,ring);
+const wAt=z=>{ const zR=Math.PI*S.w0*S.w0/lamV(S.nm); return S.w0*Math.sqrt(1+z*z/(zR*zR)); };
+function clearDet(){ nc=0; dg.setDrawRange(0,0); zcPrev=null; }
+function click(){ if(nc>=MAXC) return; const sg=wAt(ZD)/2; dpos[3*nc]=gauss(Math.random)*sg; dpos[3*nc+1]=gauss(Math.random)*sg; dpos[3*nc+2]=ZD; nc++; dg.setDrawRange(0,nc); dg.attributes.position.needsUpdate=true; }
+
+/* ---------- build / update ---------- */
+function build(){
+  const M = MODES[S.mode], n = DENS[S.dens].n, o = BUILD[M.build](n, mulberry(1337+S.mode*101+S.ell), S);
+  if(core){ group.remove(core,haze); core.geometry.dispose(); haze.geometry.dispose(); }
+  const g = new THREE.BufferGeometry(), g2 = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(o.pos,3)); g.setAttribute('aP', new THREE.BufferAttribute(o.aP,4));
+  g.boundingSphere = new THREE.Sphere(new THREE.Vector3(), LH*2);                    // positions animate on the GPU → fixed bounds
+  g2.setAttribute('position', g.getAttribute('position')); g2.setAttribute('aP', g.getAttribute('aP'));
+  g2.setDrawRange(0, (o.n*.22)|0); g2.boundingSphere = g.boundingSphere;
+  haze = new THREE.Points(g2, matHaze); core = new THREE.Points(g, matCore); haze.frustumCulled = core.frustumCulled = false;
+  group.add(haze, core); mkLines(); det.visible=ring.visible=!!M.real; clearDet(); uniforms();
+}
+/* ---- explicit field curves for wave packets: E(z) along x, B(z) along y, amplitude envelopes, stems, axis ---- */
+let ln=null;
+function mkLines(){
+  if(ln){ Object.values(ln.o).forEach(o=>{ group.remove(o); o.geometry.dispose(); }); ln=null; }
+  if(!MODES[S.mode].pk) return;
+  const NP=1400, NS=300, bm=THREE.AdditiveBlending;
+  const g=n=>{ const q=new THREE.BufferGeometry(); q.setAttribute('position',new THREE.BufferAttribute(new Float32Array(n*3),3)); q.boundingSphere=new THREE.Sphere(new THREE.Vector3(),LH*2); return q; };
+  const m=op=>new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:op,depthTest:false,depthWrite:false,blending:bm});
+  const L=(n,op)=>{ const o=new THREE.Line(g(n),m(op)); o.frustumCulled=false; return o; }, LS=(n,op)=>{ const o=new THREE.LineSegments(g(n),m(op)); o.frustumCulled=false; return o; };
+  ln={ NP, NS, A:new Float32Array(NP), C:new Float32Array(NP), o:{ ax:L(2,.25), eP:L(NP,.4), eN:L(NP,.4), bP:L(NP,.4), bN:L(NP,.4), sE:LS(NS*2,.3), sB:LS(NS*2,.3), E:L(NP,1), B:L(NP,1) } };
+  const a=ln.o.ax.geometry.attributes.position.array; a[2]=-LH; a[5]=LH; Object.values(ln.o).forEach(o=>group.add(o));
+}
+const envA=(z,T,id)=> id==='sech'?1/Math.cosh(z/T) : id==='atom'?(z<=0?Math.exp(z/(2*T)):0) : Math.exp(-z*z/(2*T*T));
+function updLines(){
+  if(!ln) return;
+  const {NP,NS,A,C,o}=ln, T=pkT(), id=PK[S.pk].id, s=U.uStretch.value, k=U.uK.value, ch=U.uChirp.value, sl=U.uSlip.value, t=S.t, uc=U.uC.value, pa=U.uPA.value, AMP=2.6, L2=2*LH;
+  for(let i=0;i<NP;i++){ const z=-LH+L2*i/(NP-1), zs=((z-t*uc+LH)%L2+L2)%L2-LH, z0=zs/s;
+    A[i]=envA(z0,T,id)*pa*AMP; C[i]=A[i]*Math.cos(k*zs-ch*z0*z0+sl*t); }
+  const P=n=>o[n].geometry.attributes.position.array;
+  const e=P('E'),b=P('B'),xp=P('eP'),xn=P('eN'),yp=P('bP'),yn=P('bN'),se=P('sE'),sb=P('sB');
+  for(let i=0;i<NP;i++){ const z=-LH+L2*i/(NP-1), j=3*i;
+    e[j]=C[i]; e[j+1]=0; e[j+2]=z;  b[j]=0; b[j+1]=C[i]; b[j+2]=z;
+    xp[j]=A[i]; xp[j+1]=0; xp[j+2]=z;  xn[j]=-A[i]; xn[j+1]=0; xn[j+2]=z;
+    yp[j]=0; yp[j+1]=A[i]; yp[j+2]=z;  yn[j]=0; yn[j+1]=-A[i]; yn[j+2]=z; }
+  for(let q=0;q<NS;q++){ const i=Math.min(NP-1,Math.round(q*NP/NS)), z=-LH+L2*i/(NP-1), j=6*q;
+    se[j]=0; se[j+1]=0; se[j+2]=z; se[j+3]=C[i]; se[j+4]=0; se[j+5]=z;
+    sb[j]=0; sb[j+1]=0; sb[j+2]=z; sb[j+3]=0; sb[j+4]=C[i]; sb[j+5]=z; }
+  Object.values(o).forEach(l=>{ l.geometry.attributes.position.needsUpdate=true; });
+}
+function uniforms(){
+  const M = MODES[S.mode], pk = !!M.pk, K = PK[S.pk], gl = pk && K.id==='glass', g = gl ? matGlass(S.nm) : null;
+  const lam = pk ? lamV(S.nm) : 3*S.nm/500, k = TAU*(g?g.n:1)/lam, uc = g ? VC/g.ng : VC;   // geometry scaled, ratios preserved
+  U.uK.value = k; U.uW.value = k*VC; U.uC.value = uc; U.uMode.value = M.sh; U.uCirc.value = M.circ; U.uEll.value = S.ell; U.uSpin.value = S.helic;
+  U.uZR.value = ZR_OAM;
+  if(M.real){ const l=lamV(S.nm); U.uRW.value=S.w0; U.uRZR.value=Math.PI*S.w0*S.w0/l; U.uSz.value=S.N*l/1.665/Math.SQRT2; U.uC.value=VC*2.2; U.uLT.value=LH+ZD+3; }
+  const s = gl ? Math.sqrt(1+S.zd*S.zd) : 1, T = pk ? pkT() : 1;
+  U.uStretch.value = s; U.uPA.value = 1/Math.sqrt(s);
+  U.uChirp.value = gl ? Math.sign(g.b2)*S.zd/(2*T*T) : 0;
+  U.uSlip.value = gl ? k*VC*(1/g.ng-1/g.n) : 0;                                  // carrier slips through the envelope: v_p ≠ v_g
+  U.uBright.value = M.bright*S.bright*70000/DENS[S.dens].n;   // keep apparent brightness constant across particle counts
+  const e = spectral(S.nm); U.uColE.value.setRGB(...e); U.uColB.value.setRGB(...comp(e)); det.material.color.setRGB(...e);
+  if(ln){ const cb=comp(e), o=ln.o; o.E.material.color.setRGB(...e); o.sE.material.color.setRGB(...e); o.B.material.color.setRGB(...cb); o.sB.material.color.setRGB(...cb);
+    o.eP.material.color.setRGB(...e); o.eN.material.color.setRGB(...e); o.bP.material.color.setRGB(...cb); o.bN.material.color.setRGB(...cb); }
+}
+function fit(){
+  const w = canvas.clientWidth, h = canvas.clientHeight; if(!w||!h) return;
+  renderer.setSize(w,h,false); camera.aspect = w/h;
+  const cs = getComputedStyle(document.body), sh = (parseFloat(cs.getPropertyValue('--inset-l'))||0) - (parseFloat(cs.getPropertyValue('--inset-r'))||0);
+  if(w > 900) camera.setViewOffset(w,h,-sh/2,0,w,h); else camera.clearViewOffset();   // centre in the free area beside the panel
+  camera.updateProjectionMatrix(); fitD = Math.max(30, Math.min(150, 44/camera.aspect*1.05));
+  const px = renderer.getPixelRatio(); U.uPx.value = h*px/(2*Math.tan(25*Math.PI/180));
+}
+function realRows(){ const nm=S.nm, r=S.w0/lamV(nm), w0=r*nm, zR=Math.PI*w0*w0/nm, th=nm/(Math.PI*w0), f=v=>(+v).toPrecision(3);
+  return [['Waist w₀',f(w0/1000)+' µm'],['Rayleigh z_R',f(zR/1e6)+' mm'],['Divergence θ',f(th*1000)+' mrad'],['Pulse cycles',S.N.toFixed(1)],['Spot at screen',f(2*wAt(ZD)/S.w0*w0/1000)+' µm (1/e²)'],['Detections',String(nc)]]; }
+function pkRows(K,p){ const nm=S.nm, f3=v=>(+v).toPrecision(3), Tfs=nm/299.792458, dl=dnu=>nm*nm*1e-9*dnu/PHYS.c;   // Δλ[nm] = λ²Δν/c
+  if(K.id==='atom'){ const dnu=1/(TAU*S.tau*1e-9);
+    return [['Lifetime τ',f3(S.tau)+' ns'],['Natural width Δν',f3(dnu/1e6)+' MHz'],['Δλ (FWHM)',f3(dl(dnu)*1e6)+' fm'],['ΔE = ħ/τ',f3(6.582119569e-16/(S.tau*1e-9)*1e9)+' neV'],
+      ['Coherence length cτ',f3(PHYS.c*S.tau*1e-9)+' m'],['Cycles f·τ',fmt(p.f*S.tau*1e-9,2)],['Line Q = f/Δν',fmt(p.f/dnu,2)],['Δν·Δt (FWHM)','0.110']]; }
+  const tau=S.N*Tfs, dnu=K.tbp/(tau*1e-15), rows=[['Duration τ (FWHM)',f3(tau)+' fs'],['Cycles in pulse',S.N.toFixed(1)],['Bandwidth Δν',f3(dnu/1e12)+' THz'],['Δλ (FWHM)',f3(dl(dnu))+' nm'],
+    ['Δν / ν',f3(dnu/p.f*100)+' %'],['Pulse length cτ',f3(.299792458*tau)+' µm'],['ΔE (FWHM)',f3(PHYS.h*dnu/PHYS.eV*1000)+' meV'],['Δν·Δt (FWHM)',K.tbp.toFixed(3)]];
+  if(K.id==='glass'){ const g=matGlass(nm), LD=Math.pow(tau/1.665,2)/Math.abs(g.b2), s=Math.sqrt(1+S.zd*S.zd);
+    rows.push(['Index n / n_g',g.n.toFixed(4)+' / '+g.ng.toFixed(4)],['Group velocity v_g',(PHYS.c/g.ng/1e8).toFixed(3)+'×10⁸ m/s'],['β₂ (silica)',f3(g.b2)+' fs²/mm'],['Dispersion length L_D',f3(LD)+' mm'],
+      ['Distance z',f3(S.zd*LD)+' mm'],['τ(z) / τ₀',f3(tau*s)+' fs · '+s.toFixed(2)+'×'],['Chirp C',(Math.sign(g.b2)*S.zd).toFixed(2)]); }
+  return rows; }
+function sync(){
+  const M = MODES[S.mode], p = props(S.nm), pk = !!M.pk, K = PK[S.pk], id = K.id;
+  $('ph-mname').textContent = pk ? K.name : M.name; $('ph-mdesc').textContent = pk ? K.tag : M.tag;
+  $('ph-nm-val').textContent = S.nm.toFixed(1).replace(/\.0$/,'')+' nm · '+band(S.nm);
+  $('ph-nm').value = S.nm; $('ph-ell-val').textContent = (S.ell>0?'+':'')+S.ell; $('ph-ell').value = S.ell;
+  $('ph-helic-sec').style.display = M.spin ? '' : 'none'; $('ph-ell-sec').style.display = M.ell ? '' : 'none';
+  $('ph-pk-sec').style.display = pk ? '' : 'none'; $('ph-N-sec').style.display = (pk&&id!=='atom')||M.real ? '' : 'none'; $('ph-w-sec').style.display = $('ph-det-sec').style.display = M.real ? '' : 'none'; $('ph-w').value = S.w0; $('ph-w-val').textContent = S.w0.toFixed(1)+' (scaled)';
+  $('ph-zd-sec').style.display = pk&&id==='glass' ? '' : 'none'; $('ph-tau-sec').style.display = pk&&id==='atom' ? '' : 'none';
+  $('ph-N').value = S.N; $('ph-N-val').textContent = S.N.toFixed(1)+' cycles'; $('ph-zd').value = S.zd; $('ph-zd-val').textContent = S.zd.toFixed(2)+' L_D';
+  $('ph-tau').value = Math.log10(S.tau); $('ph-tau-val').textContent = S.tau.toPrecision(3)+' ns';
+  panel.querySelectorAll('.ph-m').forEach(b=>b.classList.toggle('on', +b.dataset.i===S.mode));
+  panel.querySelectorAll('[data-k]').forEach(b=>b.classList.toggle('on', +b.dataset.k===S.pk));
+  panel.querySelectorAll('[data-h]').forEach(b=>b.classList.toggle('on', +b.dataset.h===S.helic));
+  panel.querySelectorAll('[data-d]').forEach(b=>b.classList.toggle('on', +b.dataset.d===S.dens));
+  $('ph-pause').textContent = S.paused ? 'RESUME' : 'PAUSE';
+  const J = (M.circ||M.id==='yy' ? S.helic : 0) + (M.ell ? S.ell : 0);
+  const rows = [['Energy E = hf', p.eV.toFixed(3)+' eV'],['Frequency f',(p.f/1e12).toFixed(1)+' THz'],['Momentum p = h/λ',fmt(p.p,2)+' kg·m/s'],['J<sub>z</sub> (spin+orbital)',(J>0?'+':'')+J+' ħ']].concat(pk?pkRows(K,p):[]).concat(M.real?realRows():[]);
+  $('ph-read').innerHTML = rows.map(r=>'<div><span>'+r[0]+'</span><b>'+r[1]+'</b></div>').join('');
+  $('ph-eq').innerHTML = (pk?K.eq:M.eq) + '<span class="ph-note">'+(pk?K.note+'<br><b>Bright curve</b> = E-field (x), <b>complement colour</b> = B-field (y); thin outlines = field amplitude envelope A(z); haze = photon probability density |ψ|².':M.note)+'<br>Visual wavelength is scaled; ratios between colours are preserved.</span>';
+  hud();
+}
+function wl(v){ clearDet(); S.nm = Math.max(200,Math.min(1000,v)); uniforms(); sync(); if(MODES[S.mode].sh===1||MODES[S.mode].sh===2) later(build,140); }   // packet / vortex geometry depends on λ
+let hudStr = '';
+function hud(){ const s=$('hud-scale'), n=$('hud-name'), y=$('hud-sym'); if(!active||!s) return;
+  const str = S.nm.toFixed(1).replace(/\.0$/,'')+' nm · '+props(S.nm).eV.toFixed(3)+' eV';
+  const nm='PHOTON · '+MODES[S.mode].name; if(y&&y.textContent!=='γ') y.textContent='γ'; if(n&&n.textContent!==nm) n.textContent=nm; if(s.textContent!==str) s.textContent=str; hudStr=str; }
+const later = (()=>{ let t; return (f,ms)=>{ clearTimeout(t); t=setTimeout(f,ms); }; })();
+function setMode(i){ S.mode=i; const M=MODES[i]; drag.rot.x=M.view[0]; drag.rot.y=M.view[1]; drag.resetAuto(); build(); sync(); }
+
+/* ---------- panel UI ---------- */
+panel.innerHTML =
+ '<div class="ph-sec"><div class="clabel"><span>Photon mode</span><b id="ph-mname"></b></div><div class="ph-modes">'+
+   MODES.map((m,i)=>'<button type="button" class="ph-m'+(i===0?' hero':'')+'" data-i="'+i+'"><b>'+(i===0?'★ ':'')+m.name+'</b><small>'+m.tag+'</small></button>').join('')+
+ '</div><div class="cnote" id="ph-mdesc"></div></div>'+
+ '<div class="ph-sec"><div class="clabel"><span>Wavelength</span><b id="ph-nm-val"></b></div>'+
+   '<div class="cline"><button class="cbtn" id="ph-nm-m" type="button" aria-label="Shorter wavelength">−</button><input type="range" id="ph-nm" min="200" max="1000" step="0.1" aria-label="Wavelength in nanometres"><button class="cbtn" id="ph-nm-p" type="button" aria-label="Longer wavelength">+</button></div>'+
+   '<div class="ex-chips" style="margin-top:8px">'+PRESETS.map(p=>'<button type="button" class="exchip" data-nm="'+p[1]+'">'+p[0]+'</button>').join('')+'</div></div>'+
+ '<div class="ph-sec" id="ph-helic-sec"><div class="clabel"><span>Helicity (spin)</span></div><div class="ex-chips"><button type="button" class="exchip" data-h="1">σ = +1 · +ħ</button><button type="button" class="exchip" data-h="-1">σ = −1 · −ħ</button></div></div>'+
+ '<div class="ph-sec" id="ph-ell-sec"><div class="clabel"><span>Orbital number ℓ</span><b id="ph-ell-val"></b></div><div class="cline"><input type="range" id="ph-ell" min="-8" max="8" step="1" aria-label="Orbital angular momentum number"></div></div>'+
+ '<div class="ph-sec" id="ph-pk-sec"><div class="clabel"><span>Packet type</span></div><div class="ex-chips">'+PK.map((k,i)=>'<button type="button" class="exchip" data-k="'+i+'">'+k.name+'</button>').join('')+'</div></div>'+
+ '<div class="ph-sec" id="ph-w-sec"><div class="clabel"><span>Beam waist w₀</span><b id="ph-w-val"></b></div><div class="cline"><input type="range" id="ph-w" min="0.8" max="3" step="0.1" aria-label="Beam waist"></div></div>'+
+ '<div class="ph-sec" id="ph-det-sec"><div class="clabel"><span>Detector</span></div><div class="ex-chips"><button type="button" class="exchip" id="ph-fire">FIRE ×100 PHOTONS</button><button type="button" class="exchip" id="ph-clr">CLEAR</button></div></div>'+
+ '<div class="ph-sec" id="ph-N-sec"><div class="clabel"><span>Cycles in pulse (FWHM)</span><b id="ph-N-val"></b></div><div class="cline"><input type="range" id="ph-N" min="1.5" max="10" step="0.5" aria-label="Carrier cycles within the pulse"></div></div>'+
+ '<div class="ph-sec" id="ph-zd-sec"><div class="clabel"><span>Distance in glass z / L<sub>D</sub></span><b id="ph-zd-val"></b></div><div class="cline"><input type="range" id="ph-zd" min="0" max="5" step="0.05" aria-label="Propagation distance in dispersion lengths"></div></div>'+
+ '<div class="ph-sec" id="ph-tau-sec"><div class="clabel"><span>Excited-state lifetime τ</span><b id="ph-tau-val"></b></div><div class="cline"><input type="range" id="ph-tau" min="0" max="2" step="0.02" aria-label="Lifetime in nanoseconds, logarithmic"></div><div class="cnote">Na-D 3p: 16.3 ns · Hα 3d: 15.6 ns</div></div>'+
+ '<div class="ph-sec"><div class="clabel"><span>Brightness</span><b id="ph-br-val">1.0×</b></div><div class="cline"><input type="range" id="ph-br" min="-1" max="1" step="0.02" value="0" aria-label="Brightness"></div></div>'+
+ '<div class="ph-sec"><div class="clabel"><span>Particles</span></div><div class="ex-chips">'+DENS.map((d,i)=>'<button type="button" class="exchip" data-d="'+i+'">'+d.l+' · '+(d.n/1000|0)+'k</button>').join('')+'</div></div>'+
+ '<div class="ph-sec"><div class="clabel"><span>Time speed</span><b id="ph-sp-val">1.0×</b></div><div class="cline"><input type="range" id="ph-sp" min="-1" max="1" step="0.02" value="0" aria-label="Time speed"><button class="cbtn" id="ph-pause" type="button" style="min-width:76px;font-size:.62rem;letter-spacing:.1em"></button></div></div>'+
+ '<div class="ph-sec ph-read" id="ph-read"></div><div class="ph-sec ph-eq" id="ph-eq"></div>';
+panel.addEventListener('click', e=>{ const b = e.target.closest('button'); if(!b) return;
+  if(b.dataset.i!==undefined) setMode(+b.dataset.i);
+  else if(b.dataset.k!==undefined){ S.pk=+b.dataset.k; build(); sync(); }
+  else if(b.dataset.nm){ wl(+b.dataset.nm); }
+  else if(b.dataset.h){ S.helic=+b.dataset.h; uniforms(); sync(); }
+  else if(b.dataset.d){ S.dens=+b.dataset.d; build(); sync(); }
+  else if(b.id==='ph-fire'){ for(let i=0;i<100;i++) click(); sync(); }
+  else if(b.id==='ph-clr'){ clearDet(); sync(); }
+  else if(b.id==='ph-pause'){ S.paused=!S.paused; sync(); }
+  else if(b.id==='ph-nm-m'||b.id==='ph-nm-p'){ wl(S.nm+(b.id==='ph-nm-p'?5:-5)); } });
+$('ph-nm').addEventListener('input', e=>wl(+e.target.value));
+$('ph-ell').addEventListener('input', e=>{ S.ell=+e.target.value; uniforms(); sync(); later(build,140); });
+$('ph-br').addEventListener('input', e=>{ S.bright=Math.pow(4,+e.target.value); $('ph-br-val').textContent=S.bright.toFixed(1)+'×'; uniforms(); });
+$('ph-sp').addEventListener('input', e=>{ S.speed=Math.pow(4,+e.target.value); $('ph-sp-val').textContent=S.speed.toFixed(1)+'×'; });
+
+$('ph-w').addEventListener('input', e=>{ S.w0=+e.target.value; clearDet(); uniforms(); sync(); });
+$('ph-N').addEventListener('input', e=>{ S.N=+e.target.value; uniforms(); sync(); later(build,140); });
+$('ph-zd').addEventListener('input', e=>{ S.zd=+e.target.value; uniforms(); sync(); });
+$('ph-tau').addEventListener('input', e=>{ S.tau=Math.pow(10,+e.target.value); sync(); });
+/* ---------- activation, input, loop ---------- */
+function activate(on){
+  active = on; document.body.classList.toggle('mph', on); chip.classList.toggle('active', on);
+  const pt = document.querySelector('#panel-toggle .pt-l'); if(pt) pt.textContent = on ? 'PHOTON' : 'ELEMENTS';
+  if(on){ ['mode-atoms','mode-4d','mode-nd'].forEach(id=>$(id)&&$(id).classList.remove('active')); fit(); if(!core) build(); sync(); }
+  else { const s=$('hud-scale'); if(s && s.textContent===hudStr) s.textContent=''; }
+}
+chip.addEventListener('click', ()=>activate(true));
+['mode-atoms','mode-molecules','mode-4d','mode-nd'].forEach(id=>{ const b=$(id); if(b) b.addEventListener('click', ()=>{ if(active) activate(false); }); });
+window.addEventListener('resize', ()=>{ if(active) fit(); });
+new MutationObserver(()=>{ if(active) fit(); }).observe(document.body,{attributes:true,attributeFilter:['class']});
+canvas.addEventListener('wheel', e=>{ e.preventDefault(); zoom=Math.max(.35,Math.min(2.6,zoom*Math.exp(Math.max(-300,Math.min(300,e.deltaY))*.0012))); },{passive:false});
+let pinch=null; const pd = t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+canvas.addEventListener('touchstart', e=>{ if(e.touches.length===2) pinch={d:pd(e.touches),z:zoom}; },{passive:true});
+canvas.addEventListener('touchmove', e=>{ if(e.touches.length===2&&pinch) zoom=Math.max(.35,Math.min(2.6,pinch.z*pinch.d/pd(e.touches))); },{passive:true});
+canvas.addEventListener('touchend', e=>{ if(e.touches.length<2) pinch=null; });
+/* touch / phone: touching the scene folds the control panel away so the photon gets the whole screen (re-open via the dock or the edge tab) */
+const mqNarrow = matchMedia('(max-width:900px)');
+canvas.addEventListener('pointerdown', e=>{
+  if(!active || (e.pointerType==='mouse' && !mqNarrow.matches)) return;      // desktop mouse keeps the side panel open
+  const lp=$('left-panel'), tg=$('panel-toggle');
+  if(lp && tg && !lp.classList.contains('collapsed')) tg.click();
+  const q=$('search'); if(q && document.activeElement===q) q.blur();
+},{passive:true});
+canvas.addEventListener('webglcontextlost', e=>e.preventDefault());
+canvas.addEventListener('webglcontextrestored', ()=>{ if(active) build(); });
+QA.renderLoop.push(dt=>{
+  if(!active) return;
+  if(!S.paused) S.t += dt*S.speed; U.uTime.value = S.t;
+  drag.apply(dt);
+  camera.position.z += (fitD*zoom - camera.position.z)*Math.min(1,dt*8);
+  if(MODES[S.mode].real){ const LT=U.uLT.value, zc=(((S.t*U.uC.value)%LT)+LT)%LT-LH, tr=ZD-1.2;
+    if(zcPrev!==null && zcPrev<tr && zc>=tr){ click(); sync(); } zcPrev=zc; }
+  updLines(); hud(); renderer.render(scene, camera);
+});
+camera.position.set(0,0,fitD);
+sync();
+}catch(err){ console.error('[photon] init failed', err); chip.style.display='none'; }
+})();
+
+</script>
+<script>
+(function(){ const b=document.body, hide=()=>b.classList.contains('m4d')||b.classList.contains('mND')||b.classList.contains('mph');
+  const fix=()=>{ if(hide() && document.querySelector('#tab-data.active')){ const e=document.querySelector('.ptab[data-tab="explore"]'); if(e) e.click(); } };
+  new MutationObserver(fix).observe(b,{attributes:true,attributeFilter:['class']}); fix(); })();
 </script>
 </body>
 </html>
