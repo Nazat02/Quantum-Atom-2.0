@@ -98,6 +98,22 @@ nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:60;he
 .tab-content.active{display:flex;}
 
 .mode-switch{display:flex;gap:6px;padding:3px;border:1px solid var(--glass-border);border-radius:9px;background:rgba(0,0,0,.25);margin-bottom:10px;flex-shrink:0;}
+.emsw{display:inline-block;width:22px;height:7px;border-radius:3px;margin-right:4px;vertical-align:middle;border:1px solid rgba(255,255,255,.18)}
+#em-picker{grid-column:1/-1;padding:2px 4px 8px;}
+#em-picker .ex-chips{margin-bottom:2px}
+#em-legend{position:fixed;left:50%;transform:translateX(-50%);bottom:104px;z-index:20;width:max-content;max-width:min(420px,calc(100vw - 32px));padding:10px 12px;border-radius:10px;border:1px solid var(--glass-border);background:var(--glass-bg);color:var(--mid);font-family:var(--mono);font-size:.6rem;line-height:1.55;letter-spacing:.03em;pointer-events:none;backdrop-filter:blur(8px)}
+#em-legend.inline{position:static;transform:none;width:auto;max-width:none;margin:12px 0 2px;bottom:auto;pointer-events:auto;backdrop-filter:none;background:rgba(0,0,0,.28)}
+#em-legend .em-more{display:none}
+@media(max-width:900px){
+  /* phones: floating legend collapses to a one-line pill under the top bar (tap to expand) so it never covers the atom */
+  #em-legend:not(.inline){top:calc(env(safe-area-inset-top,0px) + 66px);bottom:auto;pointer-events:auto;cursor:pointer;padding:6px 12px;max-width:calc(100vw - 24px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:rgba(10,6,3,.72)}
+  #em-legend:not(.inline) .em-more{display:inline;color:var(--cx2);margin-left:6px}
+  #em-legend:not(.inline) .em-det{display:none}
+  #em-legend:not(.inline).open{white-space:normal;padding:10px 12px;max-height:calc(100vh - 220px);overflow-y:auto}
+  #em-legend:not(.inline).open .em-det{display:inline}
+  #em-legend:not(.inline).open .em-more{display:none}
+}
+#em-legend b{color:#fff;font-weight:600}#em-legend i{color:var(--lo);font-style:normal}
 #ex-picker{grid-column:1/-1;padding:2px 4px 6px;}
 .ex-chips{display:flex;flex-wrap:wrap;gap:6px;}
 .exchip{height:30px;min-width:40px;padding:0 10px;border-radius:8px;border:1px solid var(--glass-border);background:rgba(0,0,0,.25);color:var(--mid);font-family:var(--mono);font-size:.72rem;cursor:pointer;transition:all .15s;}
@@ -199,6 +215,12 @@ a.brand:hover .brand-dot{box-shadow:0 0 18px var(--cx);}
 #hud .nm.scale{color:var(--cx2);letter-spacing:.2em;}
 
 /* ============ DEEP ZOOM: inside the nucleus, down to the Planck length ============ */
+.onND{display:none;margin:0 0 10px;padding:10px 12px;border:1px solid var(--glass-border);border-radius:12px;background:var(--glass-bg);}
+body.mND .onND{display:block;}
+.ndrow{display:flex;justify-content:space-between;align-items:baseline;font-size:.64rem;letter-spacing:.16em;color:var(--mid);margin-bottom:6px;}
+.ndrow b{color:var(--cx2);font-family:var(--display);font-size:1.15rem;letter-spacing:.06em;}
+#nd-range{width:100%;accent-color:var(--cx);}
+.ndticks{display:flex;justify-content:space-between;font-size:.55rem;color:var(--vlo);margin-top:2px;}
 #deep{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;visibility:hidden;z-index:2;}
 #scale-hud{position:absolute;left:50%;top:60px;transform:translateX(-50%);z-index:18;width:min(600px,calc(100% - 660px));text-align:center;pointer-events:none;opacity:0;transition:opacity .3s;}
 #scale-hud .sh-top{display:flex;align-items:baseline;justify-content:center;gap:14px;flex-wrap:wrap;}
@@ -526,7 +548,7 @@ input[type=range]:focus-visible{outline:none;}
 <symbol id="i-ultra" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></symbol>
 <symbol id="i-surface" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
 <symbol id="i-cube" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12v10M12 12L3 7"/></symbol>
-<symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol><symbol id="i-rad" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><circle cx="12" cy="12" r="1.8"/><path id="i-rad-w" d="M12 10.2L7.5 4.2A9 9 0 0 1 16.5 4.2z"/><use href="#i-rad-w" transform="rotate(120 12 12)"/><use href="#i-rad-w" transform="rotate(240 12 12)"/></symbol>
+<symbol id="i-field" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 9V3M15 12h6M12 15v6M9 12H3"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol><symbol id="i-rad" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><circle cx="12" cy="12" r="1.8"/><path id="i-rad-w" d="M12 10.2L7.5 4.2A9 9 0 0 1 16.5 4.2z"/><use href="#i-rad-w" transform="rotate(120 12 12)"/><use href="#i-rad-w" transform="rotate(240 12 12)"/></symbol>
 <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
 <symbol id="i-ff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5l8 7-8 7zM13 5l8 7-8 7z"/></symbol>
 <symbol id="i-dive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M6 11l6 6 6-6M5 21h14"/></symbol>
@@ -565,11 +587,18 @@ input[type=range]:focus-visible{outline:none;}
           <button class="mchip active" id="mode-atoms">ATOMS</button>
           <button class="mchip" id="mode-molecules" hidden style="display:none" aria-hidden="true" tabindex="-1">MOLECULES</button>
           <button class="mchip" id="mode-4d" title="Atom in spacetime: x, y, z + time">4D</button>
+          <button class="mchip" id="mode-nd" title="N-dimensional atom: 3D, 4D, 5D … 10D">N-D</button>
         </div>
         <div class="mode-switch only4d" id="fd-switch" role="group" aria-label="4D time representation">
           <button class="mchip active" id="fd-discrete" title="Separate snapshots of the atom at distinct moments">DISCRETE</button>
           <button class="mchip" id="fd-continuous" title="A smooth, unbroken worldtube streaming through time">CONTINUOUS</button>
         </div>
+        <div class="onND" id="nd-ctrl">
+          <div class="ndrow"><span>DIMENSIONS</span><b id="nd-val">5D</b></div>
+          <input type="range" id="nd-range" min="3" max="10" step="1" value="5" aria-label="Number of dimensions">
+          <div class="ndticks"><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+        </div>
+        <div class="only4d" id="dim-note" style="font-size:.6rem;line-height:1.6;color:var(--lo);margin:-4px 2px 10px"></div>
         <div class="search-wrap"><input id="search" type="search" placeholder="Search name, symbol, group…" autocomplete="off" enterkeyhint="go" aria-label="Search"><span class="kbd">/</span></div>
         <div class="tile-scroll">
           <div class="tile-grid" id="element-grid"></div>
@@ -601,6 +630,24 @@ input[type=range]:focus-visible{outline:none;}
       <div class="cnote" id="ex-orb-h" style="display:none">Orbital the electron lands in</div>
       <div class="ex-chips" id="ex-orbs"></div>
       <div class="cnote" id="ex-note"></div>
+    </div>
+    <button class="tbtn tg" id="btn-emfield" type="button"><svg class="ti" aria-hidden="true"><use href="#i-field"/></svg><span class="tl">EM field</span><small class="td">Electric and magnetic field</small><span class="dot"></span></button>
+    <div id="em-picker" role="group" aria-label="Electromagnetic field options" style="display:none">
+      <div class="cnote">Field</div>
+      <div class="ex-chips" data-g="show"><button type="button" class="exchip on" data-k="E" aria-pressed="true">Electric E</button><button type="button" class="exchip on" data-k="B" aria-pressed="true">Magnetic B</button></div>
+      <div class="cnote">Source</div>
+      <div class="ex-chips" data-g="src"><button type="button" class="exchip on" data-k="total" aria-pressed="true">Total</button><button type="button" class="exchip" data-k="nucleus" aria-pressed="false">Nucleus</button><button type="button" class="exchip" data-k="electrons" aria-pressed="false">Electrons</button></div>
+      <div class="cnote">Colour scale</div>
+      <div class="ex-chips" data-g="scale"><button type="button" class="exchip on" data-k="abs" aria-pressed="true">Absolute</button><button type="button" class="exchip" data-k="auto" aria-pressed="false">Auto</button></div>
+      <div class="clabel" style="margin-top:12px"><span>Field density</span><b id="em-dens-val">1.5×</b></div>
+      <div class="cline"><button class="cbtn" id="em-dens-minus" type="button" aria-label="Decrease field density">−</button><input type="range" id="em-dens" min="0.5" max="4" step="0.1" value="1.5" aria-label="Field line density"><button class="cbtn" id="em-dens-plus" type="button" aria-label="Increase field density">+</button></div>
+      <div class="cnote">More field lines, more rings. Higher = denser, heavier on weak devices.</div>
+      <div class="clabel" style="margin-top:12px"><span>Line thickness</span><b id="em-thick-val">1.0×</b></div>
+      <div class="cline"><button class="cbtn" id="em-thick-minus" type="button" aria-label="Thinner field lines">−</button><input type="range" id="em-thick" min="0.25" max="4" step="0.05" value="1" aria-label="Field line thickness"><button class="cbtn" id="em-thick-plus" type="button" aria-label="Thicker field lines">+</button></div>
+      <div class="cnote">Thinner = crisp, fine lines. Thicker = bold, solid ribbons.</div>
+      <div class="clabel" style="margin-top:12px"><span>Neon glow</span><b id="em-neon-val">100%</b></div>
+      <div class="cline"><button class="cbtn" id="em-neon-minus" type="button" aria-label="Decrease neon glow">−</button><input type="range" id="em-neon" min="0" max="200" step="5" value="100" aria-label="Neon glow strength"><button class="cbtn" id="em-neon-plus" type="button" aria-label="Increase neon glow">+</button></div>
+      <div class="cnote">White-hot core, soft halo, and weak fields lifted so they stay visible.</div>
     </div>
     <button class="tbtn tg" id="btn-grid" type="button"><svg class="ti" aria-hidden="true"><use href="#i-grid"/></svg><span class="tl">Cartesian grid</span><small class="td">x, y, z reference grid</small><span class="dot"></span></button>
     <div class="tg-h only4d">4D time</div>
@@ -644,6 +691,26 @@ input[type=range]:focus-visible{outline:none;}
           </div>
           <div class="cnote">Living shimmer — points wobble, the orbital shape holds.</div>
         </div>
+        <div id="br-row" style="margin:12px 0 4px">
+          <div class="clabel"><span>Brightness</span><b id="br-val">1.00×</b></div>
+          <div class="cline">
+            <button class="cbtn" id="br-minus" type="button" aria-label="Dimmer">−</button>
+            <input type="range" id="br" min="0" max="100" step="0.5" value="67.7" aria-label="Overall brightness">
+            <button class="cbtn" id="br-plus" type="button" aria-label="Brighter">+</button>
+          </div>
+          <div class="clabel" style="margin-top:12px"><span>Center glare limiter</span><b id="brgl-val">Auto</b></div>
+          <div class="cline">
+            <button class="cbtn" id="brgl-minus" type="button" aria-label="Less glare limiting">−</button>
+            <input type="range" id="brgl" min="0" max="200" step="1" value="100" aria-label="Center glare limiter">
+            <button class="cbtn" id="brgl-plus" type="button" aria-label="More glare limiting">+</button>
+          </div>
+          <div class="cbtns" style="margin-top:8px">
+            <button class="cbtn wide" id="br-zoom" type="button" aria-pressed="true">ZOOM BALANCE: ON</button>
+            <button class="cbtn wide" id="br-reset" type="button">RESET</button>
+          </div>
+          <div class="cnote">Fixes the white-out in the middle: Auto dims the centre in proportion to how many orbitals stack there. Works in cloud, surface and mesh modes.</div>
+        </div>
+        <div class="only4d" id="fd-ctrl" style="flex-direction:column;gap:10px;margin:12px 0 4px"></div>
         <div class="dens-row" id="pg-row" style="display:none">
           <div class="clabel"><span>Real image parameters</span><b><button class="cbtn" id="pg-reset" type="button" title="Back to the landing look (all colour types)" style="height:22px;font-size:.6rem;letter-spacing:.1em">RESET</button></b></div>
           <div class="pg-row" id="pg-body"></div>
@@ -703,7 +770,284 @@ input[type=range]:focus-visible{outline:none;}
   });
 })();
 </script>
+<div id="em-legend" role="status" aria-live="polite" style="display:none"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/**
+ * em_field.js — Electric and magnetic field of a single atom (SI units).
+ *
+ * Pure module: no DOM, no three.js. Works in the browser (window.EMField) and Node (require).
+ * See EM_FIELD_SPEC.md for the physics, assumptions and test targets.
+ *
+ * Coordinates: metres, nucleus at the origin, quantisation axis (spin / m_l) along +z.
+ * Returns: E in V/m, B in tesla.
+ *
+ *   const atom = EMField.createAtomFields({ Z, A, subshells:[{n,l,count}], nuclearSpin:'1/2',
+ *                                           nuclearG:5.58569, antimatter:false });
+ *   atom.E(x,y,z)      -> [Ex,Ey,Ez]
+ *   atom.B(x,y,z)      -> [Bx,By,Bz]
+ *   atom.parts(x,y,z)  -> { E:{nucleus,cloud}, B:{nucleus,spin,orbital} }   (each a 3-vector)
+ *   atom.info          -> term symbol, g_J, moments, accuracy flags
+ */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.EMField = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  /* CODATA 2018 */
+  const C = {
+    e: 1.602176634e-19, eps0: 8.8541878128e-12, mu0: 1.25663706212e-6,
+    hbar: 1.054571817e-34, me: 9.1093837015e-31, a0: 5.29177210903e-11,
+    muB: 9.2740100783e-24, muN: 5.0507837461e-27, gs: 2.00231930436, r0fm: 1.2e-15
+  };
+  const KE = 1 / (4 * Math.PI * C.eps0);
+  const TERM_L = 'SPDFGHIKLMNO';
+
+  /* ---------------- small numeric helpers ---------------- */
+  function laguerre(k, alpha, x) {                       // generalised Laguerre L_k^alpha(x)
+    if (k === 0) return 1;
+    let l0 = 1, l1 = 1 + alpha - x;
+    for (let i = 1; i < k; i++) { const l2 = ((2 * i + 1 + alpha - x) * l1 - (i + alpha) * l0) / (i + 1); l0 = l1; l1 = l2; }
+    return l1;
+  }
+  function agmKE(m) {                                    // complete elliptic integrals K(m), E(m); m = k^2 in [0,1)
+    if (m >= 1) m = 1 - 1e-15;
+    let a = 1, b = Math.sqrt(1 - m), c = Math.sqrt(m), sum = 0.5 * c * c, p = 0.5;
+    for (let i = 0; i < 32 && Math.abs(c) > 1e-16; i++) {
+      const an = 0.5 * (a + b); c = 0.5 * (a - b); b = Math.sqrt(a * b); a = an; p *= 2; sum += p * c * c;                          // E = K (1 - sum_n 2^(n-1) c_n^2), c_0^2 = m
+    }
+    const K = Math.PI / (2 * a);
+    return [K, K * (1 - sum)];
+  }
+  function ringField(a, I, rho, z) {                     // field of a circular current loop (radius a, in plane z=0, current I) at (rho,z)
+    const pre = C.mu0 * I / (2 * Math.PI);
+    if (rho < 1e-12 * a) return [0, C.mu0 * I * a * a / (2 * Math.pow(a * a + z * z, 1.5))];
+    const q = (a + rho) * (a + rho) + z * z, d = (a - rho) * (a - rho) + z * z;
+    const m = 4 * a * rho / q, KE_ = agmKE(m), K = KE_[0], E = KE_[1], sq = Math.sqrt(q);
+    const Bz = pre / sq * (K + (a * a - rho * rho - z * z) / Math.max(d, 1e-300) * E);
+    const Br = pre * z / (rho * sq) * (-K + (a * a + rho * rho + z * z) / Math.max(d, 1e-300) * E);
+    return [Br, Bz];
+  }
+  function Y2(l, m, x) {                                 // |Y_lm|^2 at cos(theta)=x, normalised over the sphere (l <= 3)
+    m = Math.abs(m); const s = Math.sqrt(Math.max(0, 1 - x * x)); let P;
+    if (l === 0) P = 1;
+    else if (l === 1) P = m === 0 ? x : s;
+    else if (l === 2) P = m === 0 ? (3 * x * x - 1) / 2 : m === 1 ? 3 * x * s : 3 * s * s;
+    else P = m === 0 ? (5 * x * x * x - 3 * x) / 2 : m === 1 ? 1.5 * (5 * x * x - 1) * s : m === 2 ? 15 * x * s * s : 15 * s * s * s;
+    let f = 1; for (let i = l - m + 1; i <= l + m; i++) f *= i;      // (l+m)!/(l-m)!
+    return (2 * l + 1) / (4 * Math.PI) / f * P * P;
+  }
+
+  /* ---------------- quantum bookkeeping ---------------- */
+  function parseSpin(v) {
+    if (v == null) return 0;
+    if (typeof v === 'number') return v;
+    const t = String(v).trim().split('/'); const x = t.length === 2 ? parseFloat(t[0]) / parseFloat(t[1]) : parseFloat(t[0]);
+    return isFinite(x) ? x : 0;
+  }
+  const fracStr = j => Number.isInteger(j) ? String(j) : (2 * j) + '/2';
+
+  /** Slater's rules: effective nuclear charge for subshell idx. */
+  function slaterZeff(subs, idx, Z) {
+    const t = subs[idx], n = t.n, l = t.l; let S = 0;
+    for (let j = 0; j < subs.length; j++) {
+      const o = subs[j], c = o.count - (j === idx ? 1 : 0); if (c <= 0) continue;
+      if (l <= 1) {
+        if (o.n === n && o.l <= 1) S += c * (n === 1 ? 0.30 : 0.35);
+        else if (o.n === n - 1) S += c * 0.85;
+        else if (o.n < n - 1) S += c;
+      } else {
+        if (o.n === n && o.l === l) S += c * 0.35;
+        else if (o.n < n || (o.n === n && o.l < l)) S += c;
+      }
+    }
+    return Math.max(Z - S, 1);
+  }
+
+  /** Hund's-rule ground term from the open subshells. m_l assignment: spin-up m=l..-l, then spin-down. */
+  function groundTerm(subs) {
+    const open = subs.filter(s => s.count > 0 && s.count < 2 * (2 * s.l + 1));
+    let S = 0, L = 0, half = true; const occ = [];
+    open.forEach(s => {
+      const cap = 2 * s.l + 1, up = Math.min(s.count, cap), dn = s.count - up; let Lz = 0;
+      for (let k = 0; k < up; k++) { const m = s.l - k; Lz += m; occ.push({ n: s.n, l: s.l, m }); }
+      for (let k = 0; k < dn; k++) { const m = s.l - k; Lz += m; occ.push({ n: s.n, l: s.l, m }); }
+      S += 0.5 * (up - dn); L += Math.abs(Lz); if (s.count > cap) half = false;
+    });
+    let J = L === 0 ? S : (half ? Math.abs(L - S) : L + S);
+    if (!open.length) { S = 0; L = 0; J = 0; }
+    const JJ = J * (J + 1), SS = S * (S + 1), LL = L * (L + 1);
+    const gJ = JJ > 0 ? (JJ - SS + LL) / (2 * JJ) + C.gs * (JJ + SS - LL) / (2 * JJ) : 0;
+    const Sz = JJ > 0 ? ((JJ + SS - LL) / 2) / (J + 1) : 0;      // <S_z> in |J, m_J=J>
+    const Lz = JJ > 0 ? ((JJ + LL - SS) / 2) / (J + 1) : 0;
+    return {
+      S, L, J, gJ, Sz, Lz, occ, openCount: open.length, open,
+      exact: open.length <= 1,                                    // several open subshells: sums of S and L, approximate coupling
+      symbol: open.length ? (2 * S + 1) + (TERM_L[Math.round(L)] || '?') + fracStr(J) : '¹S₀ (closed shell)'
+    };
+  }
+
+  /* ---------------- the model ---------------- */
+  function createAtomFields(opts) {
+    const Z = opts.Z, A = opts.A || Math.round(2.5 * Z) || 1, subs = opts.subshells.filter(s => s.count > 0);
+    const sgn = opts.antimatter ? -1 : 1;                          // CPT: every source flips sign
+    const aSc = C.a0 * (opts.nucleusMassKg ? 1 + C.me / opts.nucleusMassKg : 1);
+    const Rn = C.r0fm * Math.cbrt(A);
+    const I = parseSpin(opts.nuclearSpin), gI = opts.nuclearG || 0;
+    const muNuc = gI * C.muN * I;                                  // nuclear moment along +z (sign carried by g)
+    const term = groundTerm(subs);
+    const fs = term.S > 0 ? term.Sz / term.S : 0, fl = term.L > 0 ? term.Lz / term.L : 0;
+
+    /* radial grid (log spaced) shared by monopole and spin-magnetisation profiles */
+    const N = 3000, rmin = 1e-5 * aSc, rmax = 400 * aSc, dl = Math.log(rmax / rmin) / (N - 1);
+    const r = new Float64Array(N); for (let i = 0; i < N; i++) r[i] = rmin * Math.exp(i * dl);
+    const Ncum = new Float64Array(N), Mr = new Float64Array(N), Menc = new Float64Array(N);
+    const openKey = new Set(term.open.map(s => s.n + ',' + s.l));
+    const subshellRadii = [];                                       // <r> of every occupied subshell (m), used to anchor visual radial maps
+
+    subs.forEach((s, idx) => {
+      const Ze = slaterZeff(subs, idx, Z), k = s.n - s.l - 1, sc = Ze / (s.n * aSc);
+      const P = new Float64Array(N);                              // radial probability density R^2 r^2 (1/m)
+      for (let i = 0; i < N; i++) { const x = 2 * sc * r[i], R = Math.pow(x, s.l) * Math.exp(-x / 2) * laguerre(k, 2 * s.l + 1, x); P[i] = R * R * r[i] * r[i]; }
+      let tot = 0; for (let i = 1; i < N; i++) tot += 0.5 * (P[i] + P[i - 1]) * (r[i] - r[i - 1]);
+      tot += P[0] * r[0] / 3; for (let i = 0; i < N; i++) P[i] /= tot;
+      let rMean = P[0] * r[0] * r[0] / 3; for (let i = 1; i < N; i++) rMean += 0.5 * (P[i] * r[i] + P[i - 1] * r[i - 1]) * (r[i] - r[i - 1]);
+      subshellRadii.push({ n: s.n, l: s.l, count: s.count, rMean });
+      let cum = P[0] * r[0] / 3; const cumP = new Float64Array(N); cumP[0] = cum;
+      for (let i = 1; i < N; i++) { cum += 0.5 * (P[i] + P[i - 1]) * (r[i] - r[i - 1]); cumP[i] = cum; }
+      const isOpen = openKey.has(s.n + ',' + s.l);
+      const upMinusDn = isOpen ? (Math.min(s.count, 2 * (2 * s.l + 1)) - Math.max(0, s.count - (2 * s.l + 1))) : 0;
+      const Si = 0.5 * upMinusDn * fs;                           // spin carried by this subshell (coupled-state share)
+      for (let i = 0; i < N; i++) {
+        Ncum[i] += s.count * cumP[i];
+        if (Si) { Mr[i] += -C.gs * C.muB * Si * P[i] / (4 * Math.PI * r[i] * r[i]); Menc[i] += -C.gs * C.muB * Si * cumP[i]; }
+      }
+    });
+    const Ntot = Ncum[N - 1];
+
+    const at = (arr, rr) => { const f = Math.log(rr / rmin) / dl; if (f <= 0) return arr[0]; if (f >= N - 1) return arr[N - 1]; const i = Math.floor(f), t = f - i; return arr[i] * (1 - t) + arr[i + 1] * t; };
+    const nEnc = rr => rr < rmin ? Ncum[0] * Math.pow(rr / rmin, 3) : (rr > rmax ? Ntot : at(Ncum, rr));
+    const mEnc = rr => rr < rmin ? Menc[0] * Math.pow(rr / rmin, 3) : (rr > rmax ? Menc[N - 1] : at(Menc, rr));
+    const mDen = rr => rr < rmin ? Mr[0] : (rr > rmax ? 0 : at(Mr, rr));
+
+    /* orbital current rings for every occupied m_l != 0 orbital of the open shell(s) */
+    const rings = [];
+    if (fl !== 0) {
+      const w = {}; term.occ.forEach(o => { if (o.m !== 0) { const key = o.n + ',' + o.l + ',' + o.m; w[key] = (w[key] || 0) + 1; } });
+      const NR = 56, NT = 36;
+      Object.keys(w).forEach(key => {
+        const [n, l, m] = key.split(',').map(Number), idx = subs.findIndex(s => s.n === n && s.l === l), Ze = slaterZeff(subs, idx, Z);
+        const sc = Ze / (n * aSc), kk = n - l - 1, r0 = 0.01 * aSc / Ze, r1 = 30 * n * n * aSc / Ze, dlo = Math.log(r1 / r0) / (NR - 1);
+        const rr = [], R2 = []; let nrm = 0;
+        for (let i = 0; i < NR; i++) { const ri = r0 * Math.exp(i * dlo), x = 2 * sc * ri, R = Math.pow(x, l) * Math.exp(-x / 2) * laguerre(kk, 2 * l + 1, x); rr.push(ri); R2.push(R * R); nrm += R * R * ri * ri * ri * dlo; }
+        const ang = []; let an = 0; for (let j = 0; j < NT; j++) { const th = (j + 0.5) * Math.PI / NT, y = Y2(l, m, Math.cos(th)); ang.push(y); an += y * Math.sin(th) * Math.PI / NT; }
+        const wt = w[key]; let mu = 0; const tmp = [];
+        for (let i = 0; i < NR; i++) for (let j = 0; j < NT; j++) {
+          const th = (j + 0.5) * Math.PI / NT, st = Math.sin(th);
+          const dI = (-C.e) * C.hbar * m / C.me * wt * fl * (R2[i] / nrm) * (ang[j] / (2 * Math.PI * an)) / st * (rr[i] * dlo) * (Math.PI / NT);
+          const a = rr[i] * st; tmp.push([a, rr[i] * Math.cos(th), dI]); mu += dI * Math.PI * a * a;
+        }
+        const want = -C.muB * m * wt * fl, k2 = mu !== 0 ? want / mu : 1;   // pin the total moment to exactly -mu_B * m
+        tmp.forEach(t => rings.push([t[0], t[1], t[2] * k2]));
+      });
+    }
+
+    /* ---------------- field evaluators ---------------- */
+    const rr3 = (x, y, z) => Math.max(Math.sqrt(x * x + y * y + z * z), 1e-30);
+    function Enucleus(x, y, z) {
+      const R = rr3(x, y, z), q = R < Rn ? Z * Math.pow(R / Rn, 3) : Z, f = sgn * KE * C.e * q / (R * R * R);
+      return [f * x, f * y, f * z];
+    }
+    function Ecloud(x, y, z) {
+      const R = rr3(x, y, z), f = -sgn * KE * C.e * nEnc(R) / (R * R * R);
+      return [f * x, f * y, f * z];
+    }
+    function dipole(mu, x, y, z) {                                  // point dipole mu*z_hat
+      const R = rr3(x, y, z), c = z / R, k = C.mu0 * mu / (4 * Math.PI * R * R * R);
+      return [k * 3 * c * x / R, k * 3 * c * y / R, k * (3 * c * z / R - 1)];
+    }
+    function Bnucleus(x, y, z) {
+      if (!muNuc) return [0, 0, 0];
+      const R = rr3(x, y, z);
+      if (R < Rn) return [0, 0, sgn * C.mu0 * muNuc / (2 * Math.PI * Rn * Rn * Rn)];   // uniformly magnetised sphere: (2/3) mu0 M
+      const d = dipole(muNuc, x, y, z); return [sgn * d[0], sgn * d[1], sgn * d[2]];
+    }
+    function Bspin(x, y, z) {
+      if (!Menc[N - 1] && !Mr[0]) return [0, 0, 0];
+      const R = rr3(x, y, z), c = z / R, M = mDen(R), m = mEnc(R), k = C.mu0 * m / (4 * Math.PI * R * R * R);
+      // B = mu0 M (z_hat - cos(theta) r_hat) + mu0 m_enc/(4 pi r^3) (3 cos(theta) r_hat - z_hat)   [spherical magnetisation M(r) z_hat]
+      const ux = x / R, uy = y / R, uz = z / R;
+      return [sgn * (C.mu0 * M * (-c * ux) + k * 3 * c * ux), sgn * (C.mu0 * M * (-c * uy) + k * 3 * c * uy), sgn * (C.mu0 * M * (1 - c * uz) + k * (3 * c * uz - 1))];
+    }
+    function Borbital(x, y, z) {
+      if (!rings.length) return [0, 0, 0];
+      const rho = Math.sqrt(x * x + y * y); let Br = 0, Bz = 0;
+      for (let i = 0; i < rings.length; i++) { const g = ringField(rings[i][0], rings[i][2], rho, z - rings[i][1]); Br += g[0]; Bz += g[1]; }
+      const px = rho > 1e-30 ? x / rho : 0, py = rho > 1e-30 ? y / rho : 0;
+      return [sgn * Br * px, sgn * Br * py, sgn * Bz];
+    }
+    const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+
+    /** Axisymmetric sampling: every field here depends only on (r, theta), so one meridional plane (phi = 0) is enough.
+     *  rs: radii (m); cosT: cos(theta) values. E arrays are radial components (V/m), length rs.length.
+     *  B arrays hold (B_x, B_z) pairs in the phi=0 plane, index (i*nt + j)*2, in tesla. */
+    function meridional(rs, cosT) {
+      const nr = rs.length, nt = cosT.length, mk = n => new Float64Array(n);
+      const out = { nr, nt, E: { nucleus: mk(nr), cloud: mk(nr) }, B: { nucleus: mk(nr * nt * 2), spin: mk(nr * nt * 2), orbital: mk(nr * nt * 2) } };
+      for (let i = 0; i < nr; i++) {
+        out.E.nucleus[i] = Enucleus(rs[i], 0, 0)[0]; out.E.cloud[i] = Ecloud(rs[i], 0, 0)[0];
+        for (let j = 0; j < nt; j++) {
+          const st = Math.sqrt(Math.max(0, 1 - cosT[j] * cosT[j])), x = rs[i] * st, z = rs[i] * cosT[j], k = (i * nt + j) * 2;
+          let v = Bnucleus(x, 0, z); out.B.nucleus[k] = v[0]; out.B.nucleus[k + 1] = v[2];
+          v = Bspin(x, 0, z); out.B.spin[k] = v[0]; out.B.spin[k + 1] = v[2];
+          v = Borbital(x, 0, z); out.B.orbital[k] = v[0]; out.B.orbital[k + 1] = v[2];
+        }
+      }
+      return out;
+    }
+
+    return {
+      E: (x, y, z) => add(Enucleus(x, y, z), Ecloud(x, y, z)),
+      B: (x, y, z) => add(add(Bnucleus(x, y, z), Bspin(x, y, z)), Borbital(x, y, z)),
+      meridional,
+      parts: (x, y, z) => ({ E: { nucleus: Enucleus(x, y, z), cloud: Ecloud(x, y, z) }, B: { nucleus: Bnucleus(x, y, z), spin: Bspin(x, y, z), orbital: Borbital(x, y, z) } }),
+      info: {
+        Z, A, antimatter: !!opts.antimatter, term: term.symbol, S: term.S, L: term.L, J: term.J, gJ: term.gJ,
+        atomMomentJ: sgn * (-term.gJ * C.muB * term.J),            // z-component of the atom's electronic moment, J/T
+        nuclearMoment: sgn * muNuc, electrons: Ntot, nuclearRadiusM: Rn, aScaleM: aSc,
+        termExact: term.exact, ringCount: rings.length, subshellRadii, nuclearSpinI: I, nuclearMomentKnown: !(I > 0 && !gI),
+        accuracy: ['hydrogenic orbitals with Slater Z_eff', 'cloud E is the spherical average (monopole)', term.exact ? 'single open subshell: exact Hund term' : 'several open subshells: S and L summed (approximate)']
+      }
+    };
+  }
+
+  /** Map |field| to [0,1] on a log scale, for colour/opacity in the renderer. */
+  function logNorm(v, vmin, vmax) { if (!(v > 0)) return 0; const t = (Math.log10(v) - Math.log10(vmin)) / (Math.log10(vmax) - Math.log10(vmin)); return Math.min(1, Math.max(0, t)); }
+
+  /** Monotone log-log interpolation through anchors [{phys, world}] (both strictly increasing).
+   *  Used only to place field samples in a stylised scene: the field VALUES are always evaluated at the true physical radius.
+   *  Beyond the ends the end-segment power law is extended. slope(r) = d ln(world) / d ln(phys). */
+  function makeRadialMap(anchors) {
+    const a = []; anchors.slice().sort((p, q) => p.world - q.world).forEach(t => {
+      const last = a[a.length - 1];
+      if (t.phys > 0 && t.world > 0 && (!last || (t.phys > last.phys * 1.0001 && t.world > last.world * 1.0001))) a.push(t);
+    });
+    if (a.length < 2) throw new Error('makeRadialMap needs at least two monotone anchors');
+    const lp = a.map(t => Math.log(t.phys)), lw = a.map(t => Math.log(t.world)), n = a.length;
+    const seg = (arr, v) => { let i = 0; while (i < n - 2 && v > arr[i + 1]) i++; return i; };
+    return {
+      anchors: a,
+      toWorld(r) { const x = Math.log(r), i = seg(lp, x); return Math.exp(lw[i] + (x - lp[i]) * (lw[i + 1] - lw[i]) / (lp[i + 1] - lp[i])); },
+      toPhys(w)  { const x = Math.log(w), i = seg(lw, x); return Math.exp(lp[i] + (x - lw[i]) * (lp[i + 1] - lp[i]) / (lw[i + 1] - lw[i])); },
+      slope(r)   { const i = seg(lp, Math.log(r)); return (lw[i + 1] - lw[i]) / (lp[i + 1] - lp[i]); }
+    };
+  }
+
+  return { C, createAtomFields, makeRadialMap, groundTerm, slaterZeff, parseSpin, logNorm, _ringField: ringField, _Y2: Y2 };
+});
+
+</script>
 <script>
 (function(){
 "use strict";
@@ -1277,19 +1621,73 @@ function buildSubshellMesh(n, l, color, orb, surface){
     const lg = new THREE.BufferGeometry();
     lg.setAttribute('position', geo.getAttribute('position'));
     lg.setIndex(lines);
-    const lm = new THREE.LineBasicMaterial({color:new THREE.Color(color), transparent:true, opacity:0.5, depthWrite:false, blending:THREE.AdditiveBlending});
+    const lm = brLinePatch(new THREE.LineBasicMaterial({color:new THREE.Color(color), transparent:true, opacity:0.5, depthWrite:false, blending:THREE.AdditiveBlending}));
     grp.add(new THREE.LineSegments(lg, lm));
     return grp;
   }
   return new THREE.Mesh(geo, fresnelMaterial(color));
 }
+/* =====================================================================
+   BRIGHTNESS SYSTEM
+   Additive blending sums every overlapping orbital, so the middle of a big atom (Oganesson has ~59
+   orbitals stacked on the nucleus) clips to white, and zooming out piles the same points into fewer
+   pixels. Three controls, all live (shader uniforms, no rebuild):
+     master  - overall brightness multiplier
+     glare   - centre-glare limiter. Per atom we count how many orbitals cover each radius and dim
+               that radius in proportion (1 orbital = untouched). 0 = off, 1 = auto, 2 = strong
+     zoomBal - keeps the on-screen brightness of the cloud constant while zooming out
+   ===================================================================== */
+const BR = { master:1, glare:1, zoomBal:true };
+const BR_C0 = 4, BR_P = 0.6;                       // orbitals tolerated before dimming starts / dimming strength
+const BRU = {
+  uBrK:{value:1}, uBrGl:{value:1}, uBrZ:{value:-0.5}, uBrN:{value:0.625}, uOne:{value:1},
+  uBrProf:{value:new Float32Array(16).fill(1)},     // glare factor sampled at 16 radii, 0 .. cloud extent
+  uBrExt:{value:10}                                 // cloud extent; the main script's JIT.uExt is this same object
+};
+const BR_VS = 'uniform float uBrK;\nuniform float uBrGl;\nuniform float uBrExt;\nuniform float uBrProf[16];\n' +
+  'float brGlare(float r){\n' +
+  '  float t = clamp(r/max(uBrExt,1e-3), 0.0, 1.0)*15.0;\n' +
+  '  float fl = floor(t); int i = int(fl); int j = int(min(fl+1.0, 15.0));\n' +
+  '  float v = mix(uBrProf[i], uBrProf[j], t-fl);\n' +
+  '  return pow(max(v,1e-3), uBrGl);\n}\n';
+function brUniforms(){ return { uBrK:BRU.uBrK, uBrGl:BRU.uBrGl, uBrProf:BRU.uBrProf, uBrExt:BRU.uBrExt }; }
+function setGlareProfile(radii, ext){
+  const P = BRU.uBrProf.value;
+  for(let k=0;k<16;k++){
+    const r = ext*k/15; let c = 0;
+    for(let i=0;i<radii.length;i++) if(radii[i] > r) c++;
+    P[k] = Math.pow(Math.min(1, BR_C0/Math.max(1,c)), BR_P);
+  }
+}
+// Sprites (nucleus halo, molecule atoms): fragment-only scale. nuc=true also applies the nucleus glare cut.
+function brSpritePatch(mat, nuc){
+  mat.onBeforeCompile = sh=>{
+    sh.uniforms.uBrK = BRU.uBrK; sh.uniforms.uBrN = nuc ? BRU.uBrN : BRU.uOne;
+    sh.fragmentShader = 'uniform float uBrK;\nuniform float uBrN;\n' + sh.fragmentShader.replace('#include <fog_fragment>','gl_FragColor.a *= uBrK*uBrN;\n#include <fog_fragment>');
+  };
+  return mat;
+}
+// Line materials with a radius-based glare factor (surface-mode θ/φ grid)
+function brLinePatch(mat){
+  mat.onBeforeCompile = sh=>{
+    Object.assign(sh.uniforms, brUniforms());
+    sh.vertexShader = BR_VS + 'varying float vBrG;\n' + sh.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n      vBrG = uBrK*brGlare(length(position));');
+    sh.fragmentShader = 'varying float vBrG;\n' + sh.fragmentShader.replace('#include <fog_fragment>','gl_FragColor.a *= vBrG;\n#include <fog_fragment>');
+  };
+  return mat;
+}
+
+// This block lives inside the QA2 engine IIFE, but the main script (nucleus, cloud, UI) needs it too: publish it globally.
+Object.assign(window, { BR, BRU, BR_VS, brUniforms, setGlareProfile, brSpritePatch, brLinePatch });
+
 // Surface mode body: soft lit fill (brighter facing the camera) with a rim glow.
 function surfaceMaterial(color){
   return new THREE.ShaderMaterial({
-    uniforms:{ uColor:{value:new THREE.Color(color)}, uOpacity:{value:1.0} },
-    vertexShader:`
-      varying vec3 vNormal; varying vec3 vViewDir;
+    uniforms:Object.assign({ uColor:{value:new THREE.Color(color)}, uOpacity:{value:1.0} }, brUniforms()),
+    vertexShader:BR_VS + `
+      varying vec3 vNormal; varying vec3 vViewDir; varying float vBrG;
       void main(){
+        vBrG = uBrK*brGlare(length(position));
         vNormal = normalize(normalMatrix*normal);
         vec4 mv = modelViewMatrix*vec4(position,1.0);
         vViewDir = normalize(-mv.xyz);
@@ -1297,12 +1695,12 @@ function surfaceMaterial(color){
       }`,
     fragmentShader:`
       uniform vec3 uColor; uniform float uOpacity;
-      varying vec3 vNormal; varying vec3 vViewDir;
+      varying vec3 vNormal; varying vec3 vViewDir; varying float vBrG;
       void main(){
         float facing = abs(dot(normalize(vNormal), normalize(vViewDir)));
         float rim = pow(1.0 - facing, 2.0);
         vec3 col = uColor * (0.18 + 0.35*facing + 0.9*rim);
-        gl_FragColor = vec4(col, (0.10 + 0.45*rim + 0.08*facing)*uOpacity);
+        gl_FragColor = vec4(col, (0.10 + 0.45*rim + 0.08*facing)*uOpacity*vBrG);
       }`,
     transparent:true, depthWrite:false, side:THREE.DoubleSide, blending:THREE.AdditiveBlending
   });
@@ -1310,10 +1708,11 @@ function surfaceMaterial(color){
 function fresnelMaterial(color){
   const c = new THREE.Color(color);
   return new THREE.ShaderMaterial({
-    uniforms:{ uColor:{value:c}, uPower:{value:2.0}, uOpacity:{value:0.92} },
-    vertexShader:`
-      varying vec3 vNormal; varying vec3 vViewDir;
+    uniforms:Object.assign({ uColor:{value:c}, uPower:{value:2.0}, uOpacity:{value:0.92} }, brUniforms()),
+    vertexShader:BR_VS + `
+      varying vec3 vNormal; varying vec3 vViewDir; varying float vBrG;
       void main(){
+        vBrG = uBrK*brGlare(length(position));
         vNormal = normalize(normalMatrix*normal);
         vec4 mv = modelViewMatrix*vec4(position,1.0);
         vViewDir = normalize(-mv.xyz);
@@ -1321,12 +1720,12 @@ function fresnelMaterial(color){
       }`,
     fragmentShader:`
       uniform vec3 uColor; uniform float uPower; uniform float uOpacity;
-      varying vec3 vNormal; varying vec3 vViewDir;
+      varying vec3 vNormal; varying vec3 vViewDir; varying float vBrG;
       void main(){
         // abs(): with DoubleSide a back face has a negative dot, which used to read as "fully edge-on"
         // and painted every back face at full brightness (the main cause of the white-out).
         float fres = pow(1.0 - abs(dot(normalize(vNormal), normalize(vViewDir))), uPower);
-        float a = clamp(fres*uOpacity*0.55 + 0.03, 0.0, 1.0);   // glassy: faint faces, brighter rims
+        float a = clamp((fres*0.55 + 0.03)*uOpacity*vBrG, 0.0, 1.0);   // glassy: faint faces, brighter rims
         vec3 col = uColor * (0.35 + fres*0.9);
         gl_FragColor = vec4(col*a, a);                          // premultiplied, for the screen blend below
       }`,
@@ -2217,14 +2616,15 @@ renderLoop.push(dt=>{
    ===================================================================== */
 /* Jitter: every cloud point wobbles on its own bounded, looping path (no drift, so the
    orbital silhouette never deforms). Wobble is mostly tangential to the shell. */
-const JIT = { uJit:{value:0}, uTime:{value:0}, uExt:{value:10}, uZoom:{value:1} };   // uZoom = camera distance / fit distance (>=1)
+const JIT = { uJit:{value:0}, uTime:{value:0}, uExt:BRU.uBrExt, uZoom:{value:1} };   // uZoom = camera distance / fit distance (>=1)
 function tagShell(p, n){ p.userData.n = n; return p; }
 function jitterPatch(mat, zoomExp){
   const zExp = { value: zoomExp!==undefined ? zoomExp : -1.5 };   // opacity falloff vs zoom; sparse outer shells use a gentler one
   mat.onBeforeCompile = sh=>{
     sh.uniforms.uZoomExp = zExp;
     sh.uniforms.uJit = JIT.uJit; sh.uniforms.uTime = JIT.uTime; sh.uniforms.uExt = JIT.uExt; sh.uniforms.uZoom = JIT.uZoom;
-    sh.vertexShader = 'uniform float uZoomExp;\nuniform float uJit;\nuniform float uTime;\nuniform float uExt;\nuniform float uZoom;\n' + sh.vertexShader.replace('#include <begin_vertex>',`
+    Object.assign(sh.uniforms, brUniforms(), { uBrZ:BRU.uBrZ });
+    sh.vertexShader = BR_VS + 'uniform float uBrZ;\nuniform float uZoomExp;\nuniform float uJit;\nuniform float uTime;\nuniform float uExt;\nuniform float uZoom;\n' + sh.vertexShader.replace('#include <begin_vertex>',`
       vec3 transformed = vec3(position);
       if(uJit>0.0){
         float h1 = fract(sin(dot(position,vec3(12.9898,78.233,37.719)))*43758.5453);
@@ -2243,7 +2643,7 @@ function jitterPatch(mat, zoomExp){
       float zf = max(uZoom, 1.0);
       float rawPx = gl_PointSize * zf;
       gl_PointSize = max(rawPx, MIN_PX);
-      vSizeK = clamp((rawPx*rawPx)/(MIN_PX*MIN_PX), 0.35, 1.0) * pow(zf, uZoomExp);
+      vSizeK = clamp((rawPx*rawPx)/(MIN_PX*MIN_PX), 0.35, 1.0) * pow(zf, uZoomExp + uBrZ) * uBrK * brGlare(length(position));
       #include <fog_vertex>`);
     sh.vertexShader = 'varying float vSizeK;\n' + sh.vertexShader;
     sh.fragmentShader = 'varying float vSizeK;\n' + sh.fragmentShader.replace('#include <fog_fragment>','gl_FragColor.a *= vSizeK;\n#include <fog_fragment>');
@@ -2255,6 +2655,8 @@ renderLoop.push(dt=>{ if(JIT.uJit.value>0) JIT.uTime.value += dt*(0.6+2.4*Math.m
 const state = {
   isoA: 0,            // mass number of the radioactive-chain isotope being shown (0 = the element's standard isotope)
   mode:'atom',        // 'atom' | 'molecule'
+  dim:3,              // dimensions shown: 3 atom, 4 +time, 5..10 = + extra axes (4..10 all run on the 4D engine)
+  ndMode:false,       // N-D chip active (shows the dimension slider)
   fourD:false,        // 4D view of the atom (x, y, z + time); only meaningful while mode === 'atom'
   Z: 1,
   moleculeIndex: 0,
@@ -2281,6 +2683,8 @@ function clearGroup(){
     if(d.material){ if(Array.isArray(d.material)) d.material.forEach(m=>m.dispose()); else d.material.dispose(); }
   });
   disposables = [];
+  if(typeof FOURD !== 'undefined'){ FOURD.slices = []; FOURD.live = null; FOURD.root = null; FOURD._tpl = null; FOURD.axisObjs = []; }   // no stale 4D / N-D state after a rebuild or leaving 4D
+  if(typeof ND_G !== 'undefined'){ ND_G.list = []; ND_G.shells = []; ND_G.sprites = []; }
 }
 function track(obj){
   obj.traverse && obj.traverse(o=>{ if(o.geometry || o.material) disposables.push({geometry:o.geometry, material:o.material}); });
@@ -2414,7 +2818,7 @@ function buildNucleusGroup(Z, N, mode, density){
   const haloColors = QA2.ANTIMATTER ? [0xb400ff, 0xff6ad5, 0xff2fa8, 0xb45bff] : [0xff4400, 0xffaa55, 0xffcf9e, 0xff3300];
   [ {tex:GLOW_TEX_HAZE, opacity:.42, mul:2.3}, {tex:GLOW_TEX_CORE, opacity:1, mul:0.16},
     {tex:GLOW_TEX, opacity:1, mul:0.42}, {tex:GLOW_TEX_SOFT, opacity:.75, mul:1.5} ].forEach((cfg,idx)=>{
-    const spr = new THREE.Sprite(new THREE.SpriteMaterial({ map:cfg.tex, color:haloColors[idx], transparent:true, opacity:cfg.opacity, blending:THREE.AdditiveBlending, depthWrite:false }));
+    const spr = new THREE.Sprite(brSpritePatch(new THREE.SpriteMaterial({ map:cfg.tex, color:haloColors[idx], transparent:true, opacity:cfg.opacity, blending:THREE.AdditiveBlending, depthWrite:false }), true));
     spr.scale.set(cfg.mul*scale, cfg.mul*scale, 1);
     g.add(spr);
   });
@@ -2494,6 +2898,8 @@ function nucJitterPatch(mat){
       float _w2 = uTime*49.0 + dot(_dn, vec3(12.9898,78.233,37.719));
       transformed += _isQ*uZit*uZAmp*_bt*(cos(_w2)*_e1 + sin(_w2)*_e2);
     `);
+    sh.uniforms.uBrK = BRU.uBrK;
+    sh.fragmentShader = 'uniform float uBrK;\n' + sh.fragmentShader.replace('#include <fog_fragment>','gl_FragColor.a *= uBrK;\n#include <fog_fragment>');
   };
 }
 const _off = {x:0,y:0,z:0};
@@ -2632,6 +3038,7 @@ function buildAtom(Z){
   const ddSorted = plan.map(p=>p.dd).sort((a,b)=>a-b);
   const refDD = ddSorted.length ? ddSorted[Math.floor(ddSorted.length*0.5)] : 1;
 
+  setGlareProfile(plan.map(p=>subshellOuterRadius(p.s.n,p.s.l)), extent);   // centre-glare limiter: how many orbitals stack at each radius
   let warmIdx = 0;
   plan.forEach(({s, oi, count, dd})=>{
     const wi = warmIdx++;
@@ -2649,13 +3056,13 @@ function buildAtom(Z){
     if(isExcitedTarget) color = 0xffffff;   // white: the orbital the electron arrives in
     const orb = orbitalDefs(s.l)[oi];
     if(state.surface){
-      g.add(buildSubshellMesh(s.n, s.l, color, orb, true));
+      g.add(tagShell(buildSubshellMesh(s.n, s.l, color, orb, true), s.n));
       return;
     }
     if(state.ultra){
       const mesh = buildSubshellMesh(s.n, s.l, color, orb);
       if(isExcitedTarget) mesh.material.uniforms.uPower.value = 1.2;
-      g.add(mesh);
+      g.add(tagShell(mesh, s.n));
       return;
     }
     const n = Math.max(500, Math.round(count*budgetScale));   // same value as plan.n
@@ -2701,11 +3108,11 @@ function atomVisual(symbol){
   const style = MOL_STYLE[symbol] || {color:0xffcf9e, r:0.45};
   const g = new THREE.Group();
   const color = QA2.ANTIMATTER ? PALETTE.antimatter.cx2 : style.color;
-  const core = new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW_TEX_CORE, color:0xfff6dd, transparent:true, opacity:1, blending:THREE.AdditiveBlending, depthWrite:false}));
+  const core = new THREE.Sprite(brSpritePatch(new THREE.SpriteMaterial({map:GLOW_TEX_CORE, color:0xfff6dd, transparent:true, opacity:1, blending:THREE.AdditiveBlending, depthWrite:false}), false));
   core.scale.set(style.r*0.9, style.r*0.9, 1);
-  const glow = new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW_TEX, color, transparent:true, opacity:.95, blending:THREE.AdditiveBlending, depthWrite:false}));
+  const glow = new THREE.Sprite(brSpritePatch(new THREE.SpriteMaterial({map:GLOW_TEX, color, transparent:true, opacity:.95, blending:THREE.AdditiveBlending, depthWrite:false}), false));
   glow.scale.set(style.r*2.6, style.r*2.6, 1);
-  const haze = new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW_TEX_SOFT, color, transparent:true, opacity:.5, blending:THREE.AdditiveBlending, depthWrite:false}));
+  const haze = new THREE.Sprite(brSpritePatch(new THREE.SpriteMaterial({map:GLOW_TEX_SOFT, color, transparent:true, opacity:.5, blending:THREE.AdditiveBlending, depthWrite:false}), false));
   haze.scale.set(style.r*4.4, style.r*4.4, 1);
   g.add(haze, glow, core);
   return { group:g, radius:style.r };
@@ -2763,7 +3170,11 @@ function buildMolecule(mol){
    This visualises phase evolution of the stylised shells; it is not a full solution
    of the time-dependent Schroedinger equation. Time runs in slow motion (1 s = 145 as).
    ===================================================================== */
-const FOURD = { slices:[], t:0, vt:0, running:true, speed:1, tex:null, kind:'discrete', span:1, half:0, fade:[], root:null, blur:true, blurK:0, moveK:0, nucGhosts:[], foamGhosts:[] };   // vt: vacuum clock (follows pause / speed / reverse)
+const FOURD = { slices:[], t:0, vt:0, running:true, speed:1, tex:null, kind:'discrete', span:1, half:0, fade:[], root:null, blur:true, blurK:0, moveK:0, nucGhosts:[], foamGhosts:[],
+  gapK:1, histK:1, spinK:1, axisOn:true, vacOn:true, axisObjs:[], vacObjs:[], live:null, syncUI:null };   // 4D panel: slice spacing, history fade, shell motion, axis / vacuum visibility   // vt: vacuum clock (follows pause / speed / reverse)
+/* Radioactive decay and the EM field live in the atom's own space. In 4D that is the live atom (FOURD.live), not the scene root,
+   so they ride along with it when the view glides onto the newest nucleus. */
+function attachLive(o){ const P = (state.fourD && FOURD.live) ? FOURD.live : mainGroup; if(o.parent !== P) P.add(o); }
 const FD_N = 5, FD_NC = 20, FD_AU_PER_S = 6, FD_AS_PER_AU = 24.1888, FD_LAG = 2.4, FD_PERIOD = 40;   // FD_PERIOD: a.u. of history the continuous tube spans
 const FD_FADE = [1, .62, .42, .28, .18], FD_SPEEDS = [1, 2, 4, 0.5, -1];
 const fdOmega = n => 0.5/((n||1)*(n||1));
@@ -2778,7 +3189,162 @@ function fdLabelTex(){
 function fdDisposeUnused(g){
   g.traverse(o=>{ if(o.material) [].concat(o.material).forEach(m=>m.dispose()); if(o.geometry && !o.isPoints) o.geometry.dispose(); });
 }
+/* ---- 4D shells: point clouds, Surface groups and Ultra meshes are cloned and faded the same way ---- */
+const fdIsShell = c => !!c.userData && c.userData.n !== undefined;       // orbital shells carry their principal quantum number (tagShell)
+function fdCloneMat(m){
+  const n = m.clone();
+  if(m.isShaderMaterial) Object.assign(n.uniforms, brUniforms());          // clone() deep-copies uniforms: re-link the shared brightness ones
+  else n.onBeforeCompile = m.onBeforeCompile;
+  return n;
+}
+function fdCloneShell(c, k, lite){                                          // k = opacity factor; lite = skip the θ/φ grid lines (cheap history slices)
+  if(c.isPoints){
+    const m = fdCloneMat(c.material); m.opacity = c.material.opacity*k;
+    const pt = new THREE.Points(c.geometry, m); pt.userData.n = c.userData.n; return pt;
+  }
+  const o = c.clone(true);                                                  // geometry is shared; materials are not
+  if(lite) o.children.filter(x=>x.isLineSegments).forEach(x=>o.remove(x));
+  o.traverse(x=>{
+    if(!x.material) return;
+    x.material = fdCloneMat(x.material);
+    if(x.material.isShaderMaterial && x.material.uniforms.uOpacity) x.material.uniforms.uOpacity.value *= k; else x.material.opacity *= k;
+  });
+  return o;
+}
+function fdShellRec(o){
+  const tg = [];
+  o.traverse(x=>{ const m = x.material; if(!m) return; const u = m.isShaderMaterial && m.uniforms.uOpacity; tg.push(u ? {u, b:u.value} : {m, b:m.opacity}); });
+  return { obj:o, n:o.userData.n, tg };
+}
+function fdShellSet(s, k){ const t = s.tg; for(let i=0;i<t.length;i++){ const e = t[i]; if(e.u) e.u.value = e.b*k; else e.m.opacity = e.b*k; } }
 /* ---- 4D: a nucleus in every moment + Planck-scale vacuum fluctuations on the t-axis ---- */
+/* =====================================================================
+   N-DIMENSIONAL ATOM  (dim = 3 … 10)
+   3D = the ordinary atom.  4D = + time t: snapshots / worldtube along the t-axis (the original 4D engine).
+   Every further axis (5D, 6D, … ND) repeats that whole 4D lattice along a new direction. The copies sit in the
+   y-z plane; each extra axis varies ONE parameter of the atom across its copies (alternative histories, orientation,
+   tilt, roll, …). With many axes the layout is a cross (centre + both ends of each axis) to stay fast.
+   Copies share point geometry; their nucleus is a glow, not the full quark model.
+   ===================================================================== */
+const ND_AXES = [['w','alternative histories'],['v','orientation about t'],['u','tilt'],['s','roll'],['r','history family 2'],['q','history family 3']];
+const ND_MIN = 3, ND_MAX = 10;
+let ND_OP = 1;                                                            // opacity boost that keeps the lattice readable as you zoom out (1 in 3D, and at the framing distance)
+const ND_G = { list:[], shells:[], sprites:[], blur:1, move:1, bfK:1 };  // dimension "motion blur" ghosts + zoom-compensated items
+function ndLayout(dim){                      // positions in units of the copy spacing; c[e] in {-1,0,1} on extra axis e
+  const E = Math.max(0, Math.min(ND_MAX, dim) - 4);
+  if(E < 1) return { E:0, R:0, rmax:0, copies:[{c:[], w:0, y:0, z:0}] };
+  const R = Math.max(1, 0.9/(2*Math.sin(Math.PI/(2*E)))), W = E <= 3 ? 2 : 1, dirs = [];
+  for(let e=0;e<E;e++) dirs.push([Math.cos(e*Math.PI/E), Math.sin(e*Math.PI/E)]);
+  const list = [], tot = Math.pow(3, E);
+  for(let k=0;k<tot;k++){
+    const c = []; let n = k, w = 0;
+    for(let e=0;e<E;e++){ const d = (n%3)-1; n = Math.floor(n/3); c.push(d); if(d) w++; }
+    if(w <= W) list.push({c, w});
+  }
+  list.sort((a,b)=>a.w-b.w);
+  const seen = new Set(), copies = []; let rmax = 0;
+  for(const {c,w} of list){
+    let y = 0, z = 0; c.forEach((d,e)=>{ y += d*R*dirs[e][0]; z += d*R*dirs[e][1]; });
+    const key = Math.round(y*100)+','+Math.round(z*100);
+    if(seen.has(key)) continue; seen.add(key);                           // skip copies that land on the same spot
+    copies.push({c, w, y, z}); rmax = Math.max(rmax, Math.hypot(y, z));
+  }
+  return { E, R, rmax, dirs, copies };
+}
+const _axTex = {};
+function fdAxisTex(ch){
+  if(_axTex[ch]) return _axTex[ch];
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const x = c.getContext('2d'); x.fillStyle = '#fff'; x.font = 'italic 700 96px Rajdhani, serif';
+  x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(ch, 64, 70);
+  return (_axTex[ch] = new THREE.CanvasTexture(c));
+}
+function ndGhostShell(c, frac){                                           // a cheap sub-sample of a shell: same buffers, shorter draw range
+  if(!c.isPoints) return fdCloneShell(c, 1, true);
+  const g = new THREE.BufferGeometry(), A = c.geometry.attributes;
+  for(const k in A) g.setAttribute(k, A[k]);
+  g.setDrawRange(0, Math.max(60, Math.floor(A.position.count*frac)));      // points are in random order, so a prefix is a uniform subsample
+  const pt = new THREE.Points(g, fdCloneMat(c.material)); pt.userData.n = c.userData.n; pt.frustumCulled = false; return pt;
+}
+function fdAddBranches(root, base, cont, extent, gap, half, tint){
+  const L = ndLayout(state.dim), G = extent*2.7, x0 = -half-gap*0.7, x1 = half+gap*0.95;
+  const tplN = Math.max(1, ((cont ? FOURD._tpl : base.children.filter(fdIsShell)) || []).length);
+  const nCopies = Math.max(0, L.copies.length - 1);
+  const BUDGET = 900;                                                     // max cloned shell objects for all branch copies (heavy atoms x many copies would otherwise explode)
+  const perCopy = Math.max(1, Math.floor(BUDGET / Math.max(1, nCopies * tplN)));
+  const NB = Math.max(2, Math.min(L.copies.length > 9 ? 6 : 12, perCopy));
+  const NJ = Math.max(1, Math.min(FD_N, perCopy));
+  ND_G.list = []; ND_G.shells = []; ND_G.sprites = []; ND_G.bfK = Math.pow(Math.max(0.35, 1/Math.sqrt(L.copies.length)), -0.4);
+  const tpl = (cont ? FOURD._tpl : base.children.filter(fdIsShell)) || [];
+  const track = o => { FOURD.axisObjs.push(o); o.visible = FOURD.axisOn; root.add(o); return o; };
+  const lineMat = op => { const m = new THREE.LineBasicMaterial({color:tint, transparent:true, opacity:op, blending:THREE.AdditiveBlending, depthWrite:false}); fdFadeItem(m); return m; };
+  const glow = (x,y,z,sc,op) => { const d = new THREE.Sprite(brSpritePatch(new THREE.SpriteMaterial({map:GLOW_TEX, color:tint, transparent:true, opacity:op, blending:THREE.AdditiveBlending, depthWrite:false}), false)); d.scale.setScalar(sc); d.position.set(x,y,z); root.add(d); ND_G.sprites.push({o:d, s0:sc}); fdFadeItem(d.material); return d; };
+  for(const cp of L.copies){
+    if(cp.w === 0) continue;                                              // the centre copy is the original 4D lattice
+    const wy = cp.y*G, wz = cp.z*G, bk = 1/(1+0.5*cp.w);
+    let ph = 0, rx = 0, ry = 0, rz = 0;
+    cp.c.forEach((d,e)=>{ if(!d) return; const t = e%5; if(t===1) rx += 0.9*d; else if(t===2) ry += 0.9*d; else if(t===3) rz += 0.9*d; else ph += d*(9+7*e); });
+    track(new THREE.Line(new THREE.BufferGeometry().setFromPoints([V(x0,wy,wz), V(x1,wy,wz)]), lineMat(0.3*bk+0.12)));   // this copy's nucleus worldline
+    if(!cont){
+      for(let j=0;j<NJ;j++){
+        const sl = new THREE.Group();
+        tpl.forEach(c=>sl.add(fdCloneShell(c, FD_FADE[j], true)));
+        sl.position.set(half - j*gap, wy, wz); sl.scale.setScalar(1 - 0.06*j); sl.rotation.set(rx, ry, rz);
+        root.add(sl); glow(half - j*gap, wy, wz, extent*0.16, 0.9*FD_FADE[j]*bk);
+        FOURD.slices.push({j, nuc:null, nucK:0, ph, bk, shells: sl.children.filter(fdIsShell).map(fdShellRec)});
+      }
+    } else {
+      for(let i=0;i<NB;i++){
+        const sl = new THREE.Group();
+        const shells = tpl.map(c=>{ const o = fdCloneShell(c, 1, true); sl.add(o); return fdShellRec(o); });
+        sl.position.set(0, wy, wz); sl.rotation.set(rx, ry, rz); root.add(sl);
+        FOURD.slices.push({j:i*FD_NC/NB + 0.37*(cp.y+1) + 0.19*(cp.z+1), grp:sl, shells, nuc:null, ph, bk});
+      }
+      glow(half, wy, wz, extent*0.2, 0.9*bk);                             // the "now" tip of this copy
+    }
+  }
+  /* Dimensional motion blur (the 5D+ counterpart of 4D's time blur): the live atom is smeared along every extra axis by
+     trailing, fading ghosts that slide back and forth through that dimension. More axes = more directions of smear. */
+  const frac = Math.min(0.3, 1.2/(3*Math.max(1,L.E)));
+  const shellsOf = base.children.filter(fdIsShell);
+  const NK = Math.max(1, Math.min(3, Math.floor(400 / Math.max(1, L.E * shellsOf.length))));   // ghost trails per axis, capped by shell count
+  for(let e=0;e<L.E;e++) for(let k=0;k<NK;k++){
+    const grp = new THREE.Group();
+    const shells = shellsOf.map(c=>{ const o = ndGhostShell(c, frac); grp.add(o); return fdShellRec(o); });
+    grp.position.set(half, 0, 0); root.add(grp);
+    ND_G.list.push({grp, shells, half, dy:L.dirs[e][0], dz:L.dirs[e][1], A:0.5*L.R*G, w:0.30+0.10*e, lag:0.22*(k+1), wt:[0.5,0.32,0.18][k]*0.6, ph0:e*1.7});
+  }
+  for(let e=0;e<L.E;e++){                                                 // one labelled axis per extra dimension, through the live nucleus
+    const dy = L.dirs[e][0], dz = L.dirs[e][1], len = (L.R + 0.85)*G, d = V(0,dy,dz);
+    track(new THREE.Line(new THREE.BufferGeometry().setFromPoints([V(half,-dy*len,-dz*len), V(half,dy*len,dz*len)]), lineMat(0.7)));
+    const head = new THREE.Mesh(new THREE.ConeGeometry(extent*0.07, extent*0.22, 12), new THREE.MeshBasicMaterial({color:tint, transparent:true}));
+    head.position.set(half, dy*len, dz*len); head.quaternion.setFromUnitVectors(V(0,1,0), d); fdFadeItem(head.material); track(head);
+    const lab = new THREE.Sprite(new THREE.SpriteMaterial({map:fdAxisTex(ND_AXES[e][0]), color:tint, transparent:true, depthWrite:false}));
+    ND_G.sprites.push({o:lab, s0:extent*0.5}); lab.scale.setScalar(extent*0.5); lab.position.set(half + extent*0.25, dy*len + extent*0.25, dz*len); fdFadeItem(lab.material); track(lab);
+  }
+  root.traverse(o=>{ if(o.isPoints && fdIsShell(o) && o.material.isPointsMaterial) ND_G.shells.push({m:o.material, s0:o.material.size}); });
+  FOURD.fitK = Math.max(1, (L.rmax*G + extent*1.2)/(3.7*extent))*1.1;     // keep the whole lattice in view
+}
+
+/* every frame (4D and up): ghosts slide along their axes; points, glows and labels grow with distance so the lattice stays readable zoomed out */
+renderLoop.push(dt=>{
+  if(!state.fourD || state.dim < 4 || !FOURD.slices.length){ ND_OP = 1; return; }
+  const zc = camera.position.z, ease = 1-Math.exp(-dt*6), fade = 1 - sstepD(fitZ*0.03, fitZ*0.002, zc);
+  const k = Math.min(4, Math.max(1, Math.pow(zc/(fitZ/(FOURD.fitK||1)), 0.75)));   // 1 at the 4D framing distance, grows as you zoom out
+  ND_OP = Math.min(2, 1 + 0.45*(k-1));
+  ND_G.blur += ((FOURD.blur ? 1 : 0) - ND_G.blur)*ease;                  // follows the "Motion blur" tool
+  ND_G.move += ((FOURD.running ? 1 : 0.3) - ND_G.move)*ease;
+  const sz = Math.min(5, k*ND_G.bfK), sp = Math.min(3, k);
+  ND_G.shells.forEach(r=>{ r.m.size = r.s0*sz; });
+  ND_G.sprites.forEach(r=>r.o.scale.setScalar(r.s0*sp));
+  ND_G.list.forEach(g=>{
+    const s = Math.sin(FOURD.t*g.w - g.lag + g.ph0);
+    g.grp.position.set(g.half, g.dy*g.A*s, g.dz*g.A*s);
+    g.grp.visible = ND_G.blur > 0.01 && fade > 0.01;
+    if(!g.grp.visible) return;
+    g.shells.forEach(r=>{ r.obj.rotation.y = 0.35*FOURD.spinK*fdOmega(r.n)*FOURD.t; fdShellSet(r, g.wt*ND_G.blur*ND_G.move*fade*ND_OP); });
+  });
+});
 const FD_FOAM = { uT:{value:0} };
 /* CONTINUOUS motion blur = a true sub-frame shutter. Fast things (quark orbits and Zitterbewegung at ~40 rad/s,
    vacuum sparks, the Planck grid) are drawn FD_BLUR_N extra times at slightly EARLIER moments and blended at falling
@@ -2841,58 +3407,52 @@ function fdBuildFoam(x0, x1, extent, size, color){
 }
 function build4D(Z){
   const cont = FOURD.kind==='continuous';
-  FOURD.fade = []; FOURD.nucGhosts = []; FOURD.foamGhosts = [];
-  // Thin clouds per slice keep every slice inside the GPU budget; mesh modes do not apply.
+  FOURD.fitK = 1; FOURD.fade = []; FOURD.nucGhosts = []; FOURD.foamGhosts = []; FOURD.axisObjs = []; FOURD.vacObjs = [];
+  // Thin clouds per slice keep every slice inside the GPU budget. Surface / Ultra shells share one geometry across all slices.
   // Continuous mode builds a live "now" atom plus one very thin shared cloud for the streaming past.
-  const sd = state.density, su = state.ultra, ss = state.surface, sv = state.volumetric;
-  state.ultra = false; state.surface = false; state.volumetric = false;
+  const sd = state.density, bf = Math.max(0.35, 1/Math.sqrt(ndLayout(state.dim).copies.length)), meshMode = !!(state.ultra || state.surface);   // Surface / Ultra / Volumetric / Smooth all work in 4D now
   let res, trail = null;
   try{
-    if(cont){ state.density = sd*0.3*FD_N/FD_NC; trail = buildAtom(Z).group; }   // same total point count as discrete mode
-    state.density = sd*0.3; res = buildAtom(Z);                                  // built last so densityScale reflects the live atom
-  } finally { state.density = sd; state.ultra = su; state.surface = ss; state.volumetric = sv; }
-  const base = res.group, extent = JIT.uExt.value, gap = extent*1.35, half = (FD_N-1)/2*gap, span = (FD_N-1)*gap;
+    if(cont && !meshMode){ state.density = sd*bf*0.3*FD_N/FD_NC; trail = buildAtom(Z).group; }   // same total point count as discrete mode
+    state.density = sd*bf*0.3; res = buildAtom(Z);                                  // built last so densityScale reflects the live atom
+    if(cont && meshMode) trail = res.group;                                      // meshes share geometry between slices: no second build needed
+  } finally { state.density = sd; }
+  const base = res.group, extent = JIT.uExt.value, gap = extent*1.35*FOURD.gapK, half = (FD_N-1)/2*gap, span = (FD_N-1)*gap;
   const tint = QA2.ANTIMATTER ? 0x9fd4ff : 0xffcf9e;
   const root = new THREE.Group();
   FOURD.slices = []; FOURD.span = span; FOURD.half = half;
-  const livePts = () => base.children.filter(c=>c.isPoints).map(c=>({obj:c, n:c.userData.n, op:c.material.opacity}));
+  const livePts = () => base.children.filter(fdIsShell).map(fdShellRec);
   if(!cont){
     // DISCRETE: FD_N separate snapshots at distinct moments
     for(let j=0;j<FD_N;j++){
       let sl = base, nuc = null;
       if(j>0){
         sl = new THREE.Group();
-        base.children.forEach(c=>{
-          if(!c.isPoints) return;
-          const m = c.material.clone(); m.opacity = c.material.opacity*FD_FADE[j]; m.onBeforeCompile = c.material.onBeforeCompile;
-          const pt = new THREE.Points(c.geometry, m); pt.userData.n = c.userData.n; sl.add(pt);
-        });
-        const dot = new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW_TEX, color:tint, transparent:true, opacity:.9*FD_FADE[j], blending:THREE.AdditiveBlending, depthWrite:false}));
+        base.children.forEach(c=>{ if(fdIsShell(c)) sl.add(fdCloneShell(c, FD_FADE[j], false)); });
+        const dot = new THREE.Sprite(brSpritePatch(new THREE.SpriteMaterial({map:GLOW_TEX, color:tint, transparent:true, opacity:.9*FD_FADE[j], blending:THREE.AdditiveBlending, depthWrite:false}), false));
         dot.scale.setScalar(extent*0.16); sl.add(dot); fdFadeItem(dot.material);
         nuc = fdCloneNucleus(NUC.group); sl.add(nuc.group);   // the full nucleus (nucleons, quarks, gluons, pions) at every moment
       }
       sl.position.x = half - j*gap; sl.scale.setScalar(1 - 0.06*j);
       if(j>0) root.add(sl);
-      FOURD.slices.push({j, nuc, nucK:FD_FADE[j], shells: sl.children.filter(c=>c.isPoints).map(c=>({obj:c, n:c.userData.n, op:c.material.opacity}))});
+      FOURD.slices.push({j, nuc, nucK:FD_FADE[j], shells: sl.children.filter(fdIsShell).map(fdShellRec)});
     }
   } else {
     // CONTINUOUS: the live atom sits at the tip of the t-axis; behind it, FD_NC densely packed past
     // states stream smoothly away, forming an unbroken worldtube. A slice keeps the state it had
     // when it was "born" at the tip, so the tube is a true record of the atom's history.
-    const pts = trail.children.filter(c=>c.isPoints);
+    const pts = FOURD._tpl = trail.children.filter(fdIsShell);
     for(let j=0;j<FD_NC;j++){
       const sl = new THREE.Group();
-      const shells = pts.map(c=>{
-        const m = c.material.clone(); m.onBeforeCompile = c.material.onBeforeCompile;
-        const pt = new THREE.Points(c.geometry, m); pt.userData.n = c.userData.n; sl.add(pt);
-        return {obj:pt, n:c.userData.n, op:c.material.opacity};
-      });
+      const shells = pts.map(c=>{ const o = fdCloneShell(c, 1, true); sl.add(o); return fdShellRec(o); });
       const nuc = fdCloneNucleus(NUC.group); sl.add(nuc.group);   // the nucleus worldline: one nucleus per tube sample
       root.add(sl);
       FOURD.slices.push({j, grp:sl, shells, nuc});
     }
-    pts.forEach(c=>c.parent && c.parent.remove(c));
-    fdDisposeUnused(trail);   // the trail template's own materials/nucleus are unused
+    if(!meshMode){
+      pts.forEach(c=>c.parent && c.parent.remove(c));
+      fdDisposeUnused(trail);   // the trail template's own materials/nucleus are unused
+    }
     base.position.x = half;
     FOURD.slices.push({j:-1, live:true, shells: livePts()});
     // motion blur for the live nucleus: time-lagged ghosts of nucleons, quarks, gluons and halos
@@ -2913,13 +3473,23 @@ function build4D(Z){
   const lab = new THREE.Sprite(new THREE.SpriteMaterial({map:fdLabelTex(), color:tint, transparent:true, depthWrite:false}));
   lab.scale.setScalar(extent*0.5); lab.position.set(x1 + extent*0.1, extent*0.3, 0); root.add(lab);
   fdFadeItem(axis.material); fdFadeItem(head.material); fdFadeItem(lab.material);
-  const shellMat = (base.children.find(c=>c.isPoints)||{}).material;
+  const shellMat = (base.children.find(c=>c.isPoints)||{}).material;   // none in mesh modes: the vacuum sparks fall back to their default size
   const foam = fdBuildFoam(x0, x1, extent, shellMat && shellMat.size ? shellMat.size : 0.07, tint);
   root.add(foam.points); fdFadeItem(foam.mat);
   if(cont) for(let k=1; k<=FD_BLUR_N; k++){      // motion blur for the vacuum sparks: time-lagged copies of the same cloud
     const timeU = {value:0}, g = foam.make(timeU, 0.7*FD_BLUR_W[k-1]);
-    root.add(g.points); fdFadeItem(g.mat, true); FOURD.foamGhosts.push({k, timeU});
+    root.add(g.points); fdFadeItem(g.mat, true); FOURD.foamGhosts.push({k, timeU}); FOURD.vacObjs.push(g.points);
   }
+  FOURD.axisObjs = [axis, head, lab]; FOURD.vacObjs.unshift(foam.points);
+  FOURD.axisObjs.forEach(o=>{ o.visible = FOURD.axisOn; }); FOURD.vacObjs.forEach(o=>{ o.visible = FOURD.vacOn; });
+  if(state.dim>=5) fdAddBranches(root, base, cont, extent, gap, half, tint);
+  else {                                                                  // plain 4D: register the same zoom-out compensation the 5D+ lattice uses
+    ND_G.list = []; ND_G.shells = []; ND_G.sprites = []; ND_G.bfK = 1;
+    root.traverse(o=>{ if(o.isPoints && fdIsShell(o) && o.material.isPointsMaterial) ND_G.shells.push({m:o.material, s0:o.material.size}); });
+    ND_G.sprites.push({o:lab, s0:extent*0.5});
+    FOURD.fitK = 1;
+  }
+  FOURD.live = base;
   FOURD.root = root;
   return { group:root, excitedInfo:res.excitedInfo };
 }
@@ -2947,16 +3517,17 @@ renderLoop.push(dt=>{
   FOURD.slices.forEach(sl=>{
     if(cont && !sl.live){
       const a = fdMod(FOURD.t*rate + sl.j*span/FD_NC, span), u = a/span;   // age along the tube, 0 = tip (now) .. 1 = oldest
-      const tb = FOURD.t - a/rate;                                        // moment this slice was born
+      const tb = FOURD.t - a/rate + (sl.ph||0);                                        // moment this slice was born
       sl.grp.position.x = FOURD.half - a; sl.grp.scale.setScalar(1 - 0.3*u);
       const env = Math.min(u/0.1, 1)*Math.pow(1-u, 1.4)*0.6;             // fade in near the tip, fade out into the past
-      sl.shells.forEach(s=>{ const w = fdOmega(s.n); s.obj.rotation.y = 0.35*w*tb; s.obj.scale.setScalar(1 + 0.06*Math.sin(w*tb + s.n)); s.obj.material.opacity = s.op*env*fade; });
-      fdSyncNucleus(sl.nuc, Math.min(1, env*1.6));
+      sl.shells.forEach(s=>{ const w = fdOmega(s.n); s.obj.rotation.y = 0.35*FOURD.spinK*w*tb; s.obj.scale.setScalar(1 + 0.06*FOURD.spinK*Math.sin(w*tb + s.n)); fdShellSet(s, env*fade*FOURD.histK*(sl.bk||1)*ND_OP); });
+      fdSyncNucleus(sl.nuc, Math.min(1.5, env*1.6*FOURD.histK));
       return;
     }
-    const T = sl.live ? FOURD.t : FOURD.t - sl.j*FD_LAG;
-    sl.shells.forEach(s=>{ const w = fdOmega(s.n); s.obj.rotation.y = 0.35*w*T; s.obj.scale.setScalar(1 + 0.06*Math.sin(w*T + s.n)); if(s.op!==undefined) s.obj.material.opacity = s.op*fade; });
-    fdSyncNucleus(sl.nuc, sl.nucK);
+    const T = (sl.live ? FOURD.t : FOURD.t - sl.j*FD_LAG) + (sl.ph||0);
+    const hk = (sl.live || sl.j===0) ? 1 : FOURD.histK;                 // the present stays at full strength; only the past is scaled
+    sl.shells.forEach(s=>{ const w = fdOmega(s.n); s.obj.rotation.y = 0.35*FOURD.spinK*w*T; s.obj.scale.setScalar(1 + 0.06*FOURD.spinK*Math.sin(w*T + s.n)); fdShellSet(s, fade*hk*(sl.bk||1)*ND_OP); });
+    fdSyncNucleus(sl.nuc, Math.min(1.5, sl.nucK*hk));
   });
   const el = document.getElementById('hud-t'), txt = 't = ' + (FOURD.t*FD_AS_PER_AU).toFixed(0) + ' as' + (FOURD.speed<0 ? '  ◂ reversed' : '');
   if(el && el.textContent!==txt) el.textContent = txt;
@@ -2998,7 +3569,7 @@ function pageTex(soft){
   if(!_pgTex.has(k)) _pgTex.set(k, QA2.makeGlowTexture(k, Math.max(0.22, Math.min(0.6, 0.6-(k-0.09)*1.6))));
   return _pgTex.get(k);
 }
-function pageOpacity(){ return Math.min(1, PAGE.opacity * Math.min(1, Math.pow(Math.max(0.05, PAGE_RT.effDens), -PAGE.compExp)) * (state.volumetric ? 0.7 : 1)); }
+function pageOpacity(){ return Math.min(1, Math.max(0.3, PAGE.opacity * Math.min(1, Math.pow(Math.max(0.05, PAGE_RT.effDens), -PAGE.compExp)) * (state.volumetric ? 0.7 : 1))); }
 function isPageTheme(){ return state.realImage && state.mode==='atom' && !state.fourD && !state.ultra && !state.surface; }
 function densMax(){ return isPageTheme() ? 1000 : 10; }
 function pointBudget(){ return isPageTheme() ? PAGE.budgetM*1e6 : POINT_BUDGET; }
@@ -3055,8 +3626,8 @@ function updatePageLive(){
 // per screen area. Optional jitter reuses the Jitter slider. All tunables are shared uniforms.
 function pagePointPatch(mat){
   mat.onBeforeCompile = sh=>{
-    Object.assign(sh.uniforms, PGU, { uJit:JIT.uJit, uTime:JIT.uTime, uExt:JIT.uExt });
-    sh.vertexShader = 'uniform float uPgMin;\nuniform float uPgMax;\nuniform float uPgZC;\nuniform float uPgJ;\nuniform float uJit;\nuniform float uTime;\nuniform float uExt;\nvarying float vPgK;\n' + sh.vertexShader.replace('#include <begin_vertex>',`
+    Object.assign(sh.uniforms, PGU, brUniforms(), { uJit:JIT.uJit, uTime:JIT.uTime, uExt:JIT.uExt });
+    sh.vertexShader = BR_VS + 'varying float vPgG;\nuniform float uPgMin;\nuniform float uPgMax;\nuniform float uPgZC;\nuniform float uPgJ;\nuniform float uJit;\nuniform float uTime;\nuniform float uExt;\nvarying float vPgK;\n' + sh.vertexShader.replace('#include <begin_vertex>',`
       vec3 transformed = vec3(position);
       float pgJ = uJit*uPgJ;
       if(pgJ>0.0){
@@ -3070,8 +3641,9 @@ function pagePointPatch(mat){
       float pgRaw = gl_PointSize;
       gl_PointSize = clamp(pgRaw, uPgMin, max(uPgMax, uPgMin));
       vPgK = pow(clamp(pgRaw/uPgMin, 0.0001, 1.0), 2.0*uPgZC);
+      vPgG = uBrK*brGlare(length(position));
       #include <fog_vertex>`);
-    sh.fragmentShader = 'uniform float uPgOp;\nuniform float uPgGain;\nvarying float vPgK;\n' + sh.fragmentShader.replace('#include <fog_fragment>','gl_FragColor.rgb *= uPgGain;\ngl_FragColor.a *= vPgK*uPgOp;\n#include <fog_fragment>');
+    sh.fragmentShader = 'uniform float uPgOp;\nuniform float uPgGain;\nvarying float vPgK;\nvarying float vPgG;\n' + sh.fragmentShader.replace('#include <fog_fragment>','gl_FragColor.rgb *= uPgGain;\ngl_FragColor.a *= vPgK*uPgOp*vPgG;\n#include <fog_fragment>');
   };
   return mat;
 }
@@ -3138,9 +3710,9 @@ function render(opts){
     mainGroup.add(group);
     document.getElementById('hud').classList.toggle('excited', !!excitedInfo);
     document.getElementById('hud-sym').textContent = el.symbol;   // the bar comes from CSS (html.antimatter #hud-sym)
-    document.getElementById('hud-name').textContent = (QA2.ANTIMATTER?'ANTI-':'') + el.name.toUpperCase() + (state.isoA>0 ? '-'+state.isoA : '') + (state.fourD ? ' · 4D ' + FOURD.kind.toUpperCase() : '');
+    document.getElementById('hud-name').textContent = (QA2.ANTIMATTER?'ANTI-':'') + el.name.toUpperCase() + (state.isoA>0 ? '-'+state.isoA : '') + (state.fourD ? ' · '+state.dim+'D ' + FOURD.kind.toUpperCase() : '');
     const fitSubs = excitedInfo ? excitedInfo.subs : el.config;
-    fitZ = Math.max(9, Math.max(...fitSubs.map(c=>subshellOuterRadius(c.n,c.l)))*1.9) * ATOM_BIG * (state.fourD ? 2.9 : 1);   // gigantic: the cloud fills the screen; 4D needs room for the time axis
+    fitZ = Math.max(9, Math.max(...fitSubs.map(c=>subshellOuterRadius(c.n,c.l)))*1.9) * ATOM_BIG * (state.fourD ? 2.9*(FOURD.fitK||1) : 1);   // gigantic: the cloud fills the screen; 4D needs room for the time axis
   } else {
     lastExcitedInfo = null;
     refreshExPicker();
@@ -3343,14 +3915,31 @@ const btnMolecules = document.getElementById('mode-molecules');
 const btnExcited = document.getElementById('btn-excited');
 const btn4D = document.getElementById('mode-4d');
 const MOLECULES_ENABLED = false;   // flip to true to bring the Molecules section back
+let ND_LAST = 5, ndTimer = null;
+function ndNote(d){
+  const b = t => '<b style="color:var(--cx2)">'+t+'</b>';
+  if(d < 4) return '';
+  let t = b('t')+' time'; for(let e=0; e<d-4; e++) t += ' · '+b(ND_AXES[e][0])+' '+ND_AXES[e][1];
+  return t;
+}
+function syncDimUI(){
+  const d = state.dim, nd = state.ndMode;
+  document.body.classList.toggle('m4d', state.fourD);
+  document.body.classList.toggle('mND', nd);
+  btnAtoms.classList.toggle('active', state.mode==='atom' && !state.fourD && !nd);
+  btn4D.classList.toggle('active', d===4 && !nd);
+  document.getElementById('mode-nd').classList.toggle('active', nd);
+  document.getElementById('nd-val').textContent = d+'D';
+  document.getElementById('nd-range').value = d;
+  const ft = document.getElementById('fd-title'); if(ft) ft.textContent = d+'D · Spacetime';
+  document.getElementById('dim-note').innerHTML = ndNote(d);
+}
 function setMode(mode){
   if(mode === 'molecule' && !MOLECULES_ENABLED) mode = 'atom';
-  state.fourD = (mode === '4d');                       // '4d' is the atom view with time as a fourth axis
-  if(mode === '4d') mode = 'atom';
+  state.ndMode = (mode === 'nd'); state.dim = mode==='nd' ? ND_LAST : mode==='4d' ? 4 : 3; state.fourD = state.dim >= 4;                       // '4d' is the atom view with time as a fourth axis
+  if(mode === '4d' || mode === 'nd') mode = 'atom';
   state.mode = mode;
-  btnAtoms.classList.toggle('active', mode==='atom' && !state.fourD);
-  btn4D.classList.toggle('active', state.fourD);
-  document.body.classList.toggle('m4d', state.fourD);
+  syncDimUI();
   btnMolecules.classList.toggle('active', mode==='molecule');
   elementGrid.parentElement.style.display = 'block';
   elementGrid.style.display = mode==='atom' ? 'grid' : 'none';
@@ -3367,6 +3956,12 @@ function setMode(mode){
 btnAtoms.addEventListener('click', ()=>setMode('atom'));
 btnMolecules.addEventListener('click', ()=>setMode('molecule'));
 btn4D.addEventListener('click', ()=>setMode('4d'));
+document.getElementById('mode-nd').addEventListener('click', ()=>setMode('nd'));
+document.getElementById('nd-range').addEventListener('input', e=>{
+  ND_LAST = Math.max(ND_MIN, Math.min(ND_MAX, +e.target.value));
+  state.dim = ND_LAST; state.fourD = state.dim >= 4; syncDimUI();
+  clearTimeout(ndTimer); ndTimer = setTimeout(()=>render(), 120);          // debounce: rebuild once the slider settles
+});
 [['fd-discrete','discrete'],['fd-continuous','continuous']].forEach(([id,kind])=>{
   document.getElementById(id).addEventListener('click', ()=>{
     if(FOURD.kind===kind) return;
@@ -3410,10 +4005,11 @@ toggleBtn('btn-surface', on=>{ state.surface = on; if(on){ state.ultra = false; 
 toggleBtn('btn-volumetric', on=>{ state.volumetric = on; if(on){ state.ultra = false; state.surface = false; $('btn-ultra').classList.remove('on'); $('btn-surface').classList.remove('on'); } render(); });
 toggleBtn('btn-excited', on=>{ state.excited = on; render(); refreshExPicker(); });
 toggleBtn('btn-4d-blur', on=>{ FOURD.blur = on; });
-toggleBtn('btn-4d-play', on=>{ FOURD.running = on; document.querySelector('#btn-4d-play span').textContent = on ? 'TIME FLOWING' : 'TIME FROZEN'; });
+toggleBtn('btn-4d-play', on=>{ FOURD.running = on; document.querySelector('#btn-4d-play span').textContent = on ? 'TIME FLOWING' : 'TIME FROZEN'; if(FOURD.syncUI) FOURD.syncUI(); });
 document.getElementById('btn-4d-speed').addEventListener('click', ()=>{
   FOURD.speed = FD_SPEEDS[(FD_SPEEDS.indexOf(FOURD.speed)+1) % FD_SPEEDS.length];
   document.querySelector('#btn-4d-speed span').textContent = 'TIME SPEED ' + (FOURD.speed<0 ? '◂ ' : '') + Math.abs(FOURD.speed) + '×';
+  if(FOURD.syncUI) FOURD.syncUI();
 });
 
 /* =====================================================================
@@ -3457,7 +4053,7 @@ const PG_DMIN = 0.25, PG_DMAX = 1000;   // Page theme density range, log slider
 const densToEl = d => isPageTheme() ? 1000*Math.log(Math.max(PG_DMIN,d)/PG_DMIN)/Math.log(PG_DMAX/PG_DMIN) : d;
 const densFromEl = () => { const v = parseFloat(densEl.value); return isPageTheme() ? PG_DMIN*Math.pow(PG_DMAX/PG_DMIN, v/1000) : v; };
 function updateCtrlUI(){
-  const cloud = state.mode==='atom' && (state.fourD || (!state.ultra && !state.surface));
+  const cloud = state.mode==='atom' && !state.ultra && !state.surface;
   ctrlEl.classList.toggle('off-density', !cloud);
   densEl.disabled = !cloud;
   { const dl = isPageTheme(); densEl.min = dl?0:0.25; densEl.max = dl?1000:10; densEl.step = dl?1:0.05; }
@@ -3491,6 +4087,86 @@ document.getElementById('zoom-in').addEventListener('click',  ()=>{ zoomBy(1/1.2
 document.getElementById('zoom-out').addEventListener('click', ()=>{ zoomBy(1.25); });
 document.getElementById('zoom-fit').addEventListener('click', ()=>{ camZ = fitZ; });
 document.getElementById('ctrl-reset').addEventListener('click', ()=>{ camZ = fitZ; if(Q.mode==='custom') setDensity(1, true); else Q.sync(true); });
+
+/* ---- 4D parameter panel ---- */
+(function(){
+  const box = document.getElementById('fd-ctrl'); if(!box) return;
+  const fmtX = v => (v<0 ? '◂ ' : '') + Math.abs(v).toFixed(2).replace(/\.?0+$/,'') + '×';
+  const rows = [
+    {k:'speed', label:'Time speed',     min:-4,   max:4,   step:0.05, fmt:fmtX,                          get:()=>FOURD.speed, set:v=>{ FOURD.speed = Math.abs(v)<0.05 ? 0 : v; }},
+    {k:'gapK',  label:'Slice spacing',  min:0.5,  max:2,   step:0.05, fmt:v=>v.toFixed(2)+'×', rebuild:1, get:()=>FOURD.gapK,  set:v=>{ FOURD.gapK = v; }},
+    {k:'histK', label:'History fade',   min:0,    max:2,   step:0.05, fmt:v=>v===0 ? 'Now only' : v.toFixed(2)+'×', get:()=>FOURD.histK, set:v=>{ FOURD.histK = v; }},
+    {k:'spinK', label:'Shell motion',   min:0,    max:3,   step:0.05, fmt:v=>v===0 ? 'Still' : v.toFixed(2)+'×',   get:()=>FOURD.spinK, set:v=>{ FOURD.spinK = v; }}
+  ];
+  box.innerHTML = '<div class="clabel" style="margin:0"><span id="fd-title">4D · Spacetime</span><b><button class="cbtn" id="fd-reset" type="button" style="height:22px;font-size:.6rem;letter-spacing:.1em">RESET</button></b></div>';
+  const refs = {}; let timer = null;
+  rows.forEach(r=>{
+    const d = document.createElement('div');
+    d.innerHTML = '<div class="clabel"><span>'+r.label+'</span><b></b></div><div class="cline"><input type="range" min="'+r.min+'" max="'+r.max+'" step="'+r.step+'" aria-label="'+r.label+'"></div>';
+    box.appendChild(d);
+    const inp = d.querySelector('input'), out = d.querySelector('b'); refs[r.k] = {inp, out, r};
+    inp.addEventListener('input', ()=>{
+      r.set(+inp.value); out.textContent = r.fmt(r.get());
+      if(r.k==='speed') syncUI();
+      if(r.rebuild){ clearTimeout(timer); timer = setTimeout(()=>{ if(state.fourD) render({keepView:true}); }, 180); }
+    });
+  });
+  const tg = document.createElement('div'); tg.className = 'cbtns';
+  tg.innerHTML = '<button class="cbtn wide" id="fd-t-play" type="button"></button><button class="cbtn wide" id="fd-t-axis" type="button"></button><button class="cbtn wide" id="fd-t-vac" type="button"></button>';
+  box.appendChild(tg);
+  const note = document.createElement('div'); note.className = 'cnote';
+  note.textContent = 'Surface, Ultra, Volumetric, Smooth, Radioactive and the EM field all work here. Spacing rebuilds the slices; the rest is live.';
+  box.appendChild(note);
+  const bPlay = tg.children[0], bAxis = tg.children[1], bVac = tg.children[2];
+  function syncUI(){
+    rows.forEach(r=>{ const e = refs[r.k]; e.inp.value = r.get(); e.out.textContent = r.fmt(r.get()); });
+    bPlay.textContent = FOURD.running ? 'TIME: FLOWING' : 'TIME: FROZEN'; bPlay.classList.toggle('on', FOURD.running);
+    bAxis.textContent = 'AXIS: ' + (FOURD.axisOn ? 'ON' : 'OFF'); bAxis.classList.toggle('on', FOURD.axisOn);
+    bVac.textContent = 'VACUUM: ' + (FOURD.vacOn ? 'ON' : 'OFF'); bVac.classList.toggle('on', FOURD.vacOn);
+    const sp = document.querySelector('#btn-4d-speed span'); if(sp) sp.textContent = 'TIME SPEED ' + (FOURD.speed<0 ? '◂ ' : '') + Math.abs(FOURD.speed).toFixed(2).replace(/\.?0+$/,'') + '×';
+  }
+  FOURD.syncUI = syncUI;
+  bPlay.addEventListener('click', ()=>document.getElementById('btn-4d-play').click());   // one source of truth: the toolbar toggle
+  bAxis.addEventListener('click', ()=>{ FOURD.axisOn = !FOURD.axisOn; FOURD.axisObjs.forEach(o=>{ o.visible = FOURD.axisOn; }); syncUI(); });
+  bVac.addEventListener('click',  ()=>{ FOURD.vacOn  = !FOURD.vacOn;  FOURD.vacObjs.forEach(o=>{ o.visible = FOURD.vacOn; });  syncUI(); });
+  document.getElementById('fd-reset').addEventListener('click', ()=>{
+    const gap = FOURD.gapK;
+    FOURD.speed = 1; FOURD.gapK = 1; FOURD.histK = 1; FOURD.spinK = 1; FOURD.axisOn = true; FOURD.vacOn = true;
+    FOURD.axisObjs.forEach(o=>{ o.visible = true; }); FOURD.vacObjs.forEach(o=>{ o.visible = true; });
+    syncUI(); if(gap !== 1 && state.fourD) render({keepView:true});
+  });
+  syncUI();
+})();
+
+/* ---- Brightness controls ---- */
+(function(){
+  const $b = id=>document.getElementById(id);
+  const brIn=$b('br'), brVal=$b('br-val'), glIn=$b('brgl'), glVal=$b('brgl-val'), zb=$b('br-zoom');
+  const tFromM = m => 100*Math.log(m/0.1)/Math.log(30), mFromT = t => 0.1*Math.pow(30, t/100);
+  function apply(){
+    BRU.uBrK.value = BR.master; BRU.uBrGl.value = BR.glare;
+    BRU.uBrZ.value = BR.zoomBal ? -0.5 : 0;
+    BRU.uBrN.value = 1/(1+0.6*BR.glare);               // nucleus halo gets a matching cut
+    brVal.textContent = BR.master.toFixed(2)+'×';
+    const g = Math.round(BR.glare*100);
+    glVal.textContent = g===0 ? 'Off' : g===100 ? 'Auto' : g+'%';
+    zb.textContent = 'ZOOM BALANCE: '+(BR.zoomBal?'ON':'OFF'); zb.setAttribute('aria-pressed', String(BR.zoomBal));
+  }
+  function setMaster(m, fromSlider){
+    m = Math.max(0.1, Math.min(3, m)); if(Math.abs(m-1)<0.03) m = 1;
+    BR.master = m; if(!fromSlider) brIn.value = tFromM(m); apply();
+  }
+  function setGlare(g, fromSlider){ BR.glare = Math.max(0, Math.min(2, g)); if(!fromSlider) glIn.value = Math.round(BR.glare*100); apply(); }
+  brIn.addEventListener('input', ()=>setMaster(mFromT(+brIn.value), true));
+  glIn.addEventListener('input', ()=>setGlare(+glIn.value/100, true));
+  $b('br-minus').addEventListener('click', ()=>setMaster(BR.master/1.2));
+  $b('br-plus').addEventListener('click',  ()=>setMaster(BR.master*1.2));
+  $b('brgl-minus').addEventListener('click', ()=>setGlare(BR.glare-0.1));
+  $b('brgl-plus').addEventListener('click',  ()=>setGlare(BR.glare+0.1));
+  zb.addEventListener('click', ()=>{ BR.zoomBal = !BR.zoomBal; apply(); });
+  $b('br-reset').addEventListener('click', ()=>{ BR.zoomBal = true; setMaster(1); setGlare(1); });
+  apply();
+})();
 
 // Keep the zoom slider in sync with wheel / pinch / button zooming.
 renderLoop.push(()=>{
@@ -3577,7 +4253,7 @@ function setRainbow(t, save){
   if(state.realImage) render({keepView:true});
 }
 rbBtns.forEach(b=>b.addEventListener('click', ()=>setRainbow(b.dataset.rb)));
-document.addEventListener('click', e=>{ if(e.target.closest('#btn-realimage,#btn-ultra,#btn-surface,#mode-atoms,#mode-molecules,#mode-4d')) setTimeout(updateRainbowUI,0); });
+document.addEventListener('click', e=>{ if(e.target.closest('#btn-realimage,#btn-ultra,#btn-surface,#mode-atoms,#mode-molecules,#mode-4d,#mode-nd')) setTimeout(updateRainbowUI,0); });
 { const sv = store.get(); if(sv.rainbow && RAINBOW_TYPES[sv.rainbow]) state.rainbow = sv.rainbow; updateRainbowUI(); }
 /* -- Page theme parameter panel -- */
 const PG_PARAMS = [
@@ -3625,8 +4301,8 @@ function resetPageTheme(){
     d.innerHTML = '<div class="clabel"><span>'+p.label+'</span><input type="number" step="any" min="'+p.min+'" max="'+p.max+'" aria-label="'+p.label+'"></div><input type="range" min="0" max="1000" step="1" aria-label="'+p.label+' slider">';
     const num = d.querySelector('input[type=number]'), rng = d.querySelector('input[type=range]');
     const show = ()=>{ num.value = +PAGE[p.k].toPrecision(4); rng.value = pgToSlider(p, Math.max(p.min, Math.min(p.max, PAGE[p.k]||p.min))); };
-    rng.addEventListener('input', ()=>{ PAGE[p.k] = pgFromSlider(p, parseFloat(rng.value)); num.value = +PAGE[p.k].toPrecision(4); pgApply(p.rebuild); });
-    num.addEventListener('change', ()=>{ let v = parseFloat(num.value); if(!isFinite(v)) v = PAGE_DEF[p.k]; PAGE[p.k] = Math.max(p.min, Math.min(p.max, v)); show(); pgApply(p.rebuild); });
+    rng.addEventListener('input', ()=>{ Q.touch(); PAGE[p.k] = pgFromSlider(p, parseFloat(rng.value)); num.value = +PAGE[p.k].toPrecision(4); pgApply(p.rebuild); });
+    num.addEventListener('change', ()=>{ Q.touch(); let v = parseFloat(num.value); if(!isFinite(v)) v = PAGE_DEF[p.k]; PAGE[p.k] = Math.max(p.min, Math.min(p.max, v)); show(); pgApply(p.rebuild); });
     pgRefs[p.k] = show; body.appendChild(d); show();
   });
   const tg = document.createElement('div'); tg.className = 'cbtns'; tg.style.flexWrap = 'wrap';
@@ -3720,7 +4396,7 @@ updateDataPanel = function(){
   const el = ELEMENT_BY_Z[state.Z], box = $('data-content');
   if(state.fourD){
     const shells = [...new Set((lastExcitedInfo ? lastExcitedInfo.subs : el.config).map(c=>c.n))].sort((a,b)=>a-b);
-    box.insertAdjacentHTML('beforeend','<div class="dsect">4D · Spacetime</div><div class="dgrid">'+stat('Time model',FOURD.kind==='continuous'?'Continuous':'Discrete')+(FOURD.kind==='continuous' ? stat('History shown',(FD_PERIOD*FD_AS_PER_AU).toFixed(0)+' as')+stat('Tube samples',FD_NC) : stat('Time slices',FD_N)+stat('Slice spacing',(FD_LAG*FD_AS_PER_AU).toFixed(0)+' as'))+stat('Playback','1 s = '+(FD_AU_PER_S*FD_AS_PER_AU).toFixed(0)+' as')+stat('Slow-motion','≈ 7×10¹⁵ ×')+stat('Nucleus','In every moment')+stat('Vacuum','Planck foam · dive to 1.6×10⁻³⁵ m')+'</div><div class="dsect">Shell phase rates (ω = ½n⁻² Ha)</div><div class="dconfig">'+shells.map(n=>n+': '+fdOmega(n).toFixed(3)+' rad/a.u.').join(' · ')+'</div><div class="dnote">The 4th dimension is time. The arrow is the t-axis through the nucleus. Discrete: five separate snapshots, the newest at the tip and older ones fading behind it. Continuous: the live atom sits at the tip while its past streams smoothly backwards as one unbroken worldtube, each layer keeping the state it had when it was the present. Each shell breathes and twists at its own hydrogen-like phase rate, so inner shells (large ω) wind quickly and outer ones slowly, tracing a helix through spacetime. This animates the stylised orbital shells\' phase evolution rather than solving the full time-dependent Schrödinger equation. Use Time Flowing / Time Speed (including reversed) in the tools panel.</div>');
+    box.insertAdjacentHTML('beforeend','<div class="dsect">'+state.dim+'D · Spacetime</div><div class="dgrid">'+stat('Time model',FOURD.kind==='continuous'?'Continuous':'Discrete')+(FOURD.kind==='continuous' ? stat('History shown',(FD_PERIOD*FD_AS_PER_AU).toFixed(0)+' as')+stat('Tube samples',FD_NC) : stat('Time slices',FD_N)+stat('Slice spacing',(FD_LAG*FD_AS_PER_AU).toFixed(0)+' as'))+stat('Playback','1 s = '+(FD_AU_PER_S*FD_AS_PER_AU).toFixed(0)+' as')+stat('Slow-motion','≈ 7×10¹⁵ ×')+stat('Nucleus','In every moment')+stat('Vacuum','Planck foam · dive to 1.6×10⁻³⁵ m')+(state.dim>=5?stat('Extra axes',(state.dim-4)+' ('+ND_AXES.slice(0,state.dim-4).map(a=>a[0]).join(', ')+')')+stat('Parallel copies',ndLayout(state.dim).copies.length-1):'')+'</div><div class="dsect">Shell phase rates (ω = ½n⁻² Ha)</div><div class="dconfig">'+shells.map(n=>n+': '+fdOmega(n).toFixed(3)+' rad/a.u.').join(' · ')+'</div><div class="dnote">The 4th dimension is time. The arrow is the t-axis through the nucleus. Discrete: five separate snapshots, the newest at the tip and older ones fading behind it. Continuous: the live atom sits at the tip while its past streams smoothly backwards as one unbroken worldtube, each layer keeping the state it had when it was the present. Each shell breathes and twists at its own hydrogen-like phase rate, so inner shells (large ω) wind quickly and outer ones slowly, tracing a helix through spacetime. '+(state.dim>=5?'Dimensions 5+ add one labelled axis each (w alternative histories, v/u/s rotations about t, r/q more history families); the atom is repeated along them as parallel copies, and fading ghosts smear the live atom along each axis. ':'')+'This animates the stylised orbital shells\' phase evolution rather than solving the full time-dependent Schrödinger equation. Use Time Flowing / Time Speed (including reversed) in the tools panel.</div>');
   }
   const rel = ELEMENTS.filter(x=>x.category===el.category && x.Z!==el.Z).sort((a,b)=>Math.abs(a.Z-el.Z)-Math.abs(b.Z-el.Z)).slice(0,6);
   const nb = [ELEMENT_BY_Z[el.Z-1], ELEMENT_BY_Z[el.Z+1]].filter(Boolean);
@@ -3833,13 +4509,19 @@ $('data-content').addEventListener('pointermove',e=>{
    A level sets: cloud density, max points (Real Image + normal), and the render resolution cap.
    ===================================================================== */
 const Q = (function(){
+  /* Presets are SHORTCUTS: each one just writes real parameters (density, max points, and the Real Image
+     look: dot size, opacity, brightness-vs-density, softness, min pixel size, gain). The sliders then show
+     those values, and touching any of them switches to Custom. The look values are chosen so the levels
+     are obviously different on screen: Eco = few, big, bright dots; Ultra = a dense, fine, smooth cloud. */
   const LV = [
-    { name:'Eco',    densR:1,  densN:0.5, budgetR:1.5, budgetN:1,   dpr:1    },
-    { name:'Low',    densR:2,  densN:0.8, budgetR:4,   budgetN:2.5, dpr:1.25 },
-    { name:'Medium', densR:4,  densN:1,   budgetR:8,   budgetN:4,   dpr:1.5  },
-    { name:'High',   densR:8,  densN:1.5, budgetR:15,  budgetN:6,   dpr:2    },
-    { name:'Ultra',  densR:16, densN:2.5, budgetR:25,  budgetN:10,  dpr:2    }
+    { name:'Eco',    densR:1,  densN:0.5, budgetR:1.5, budgetN:1,   dpr:1,    pg:{ px:5.0, minPx:4.0, maxPx:30, opacity:0.90, compExp:0, soft:0.60, gain:1.2 } },
+    { name:'Low',    densR:2,  densN:0.8, budgetR:4,   budgetN:2.5, dpr:1.25, pg:{ px:4.0, minPx:3.2, maxPx:24, opacity:0.90, compExp:0, soft:0.50, gain:1.25 } },
+    { name:'Medium', densR:4,  densN:1,   budgetR:8,   budgetN:4,   dpr:1.5,  pg:{ px:3.2, minPx:2.6, maxPx:18, opacity:0.92, compExp:0, soft:0.42, gain:1.3 } },
+    { name:'High',   densR:8,  densN:1.5, budgetR:15,  budgetN:6,   dpr:2,    pg:{ px:2.6, minPx:2.2, maxPx:14, opacity:0.95, compExp:0, soft:0.36, gain:1.4 } },
+    { name:'Ultra',  densR:16, densN:2.5, budgetR:25,  budgetN:10,  dpr:2,    pg:{ px:2.1, minPx:1.8, maxPx:12, opacity:1.0,  compExp:0, soft:0.30, gain:1.5 } }
   ];
+  /* pg.px / minPx / maxPx are in CSS pixels (so levels look the same on any screen); converted to the
+     renderer's device pixels and to the Point-size multiplier below. */
   const MAXL = LV.length-1, clampL = v => Math.max(0, Math.min(MAXL, v|0));
   const SMOOTH = 50, LAGGING = 27, WINDOW = 90, MAX_CHANGES = 12;
 
@@ -3884,7 +4566,12 @@ const Q = (function(){
   function pushValues(L){
     const l = LV[L];
     POINT_BUDGET = Math.round(l.budgetN*1e6*bk);
-    PAGE.budgetM = Math.max(0.5, +(l.budgetR*bk).toFixed(2)); if(pgRefs.budgetM) pgRefs.budgetM();
+    PAGE.budgetM = Math.max(0.5, +(l.budgetR*bk).toFixed(2));
+    { const d = Math.min(window.devicePixelRatio||1, l.dpr), H = renderer.domElement.clientHeight || 800, g = l.pg;
+      Object.assign(PAGE, { opacity:g.opacity, compExp:g.compExp, soft:g.soft, gain:g.gain,
+        size: +(g.px/(d*H*PAGE_LOOK.sizeOther/28)).toFixed(3), minPx: +(g.minPx*d).toFixed(2), maxPx: +(g.maxPx*d).toFixed(2) }); }   // the Real Image look this level stands for
+    Object.values(pgRefs).forEach(f=>f());           // sliders show the preset's real values
+    try{ updatePageLive(); }catch(e){}
     const dpr = Math.min(window.devicePixelRatio||1, l.dpr);
     if(renderer.getPixelRatio()!==dpr){ renderer.setPixelRatio(dpr); fit(); }
   }
@@ -4518,6 +5205,7 @@ function renderDossier(){
 updateDataPanel = function(){ _prevDP.apply(this, arguments); renderDossier(); };
 renderDossier();   // bootstrap already ran updateDataPanel() before this wrapper existed
 window.__isoMass = (Z,A)=>{ const d=DET[Z], i=d&&d.iso&&d.iso.find(x=>x.a===A); return i?i.m:null; };
+window.__isoNuc = (Z,A)=>{ const d=DET[Z], i=d&&d.iso&&d.iso.find(x=>x.a===A); return i?{m:i.m,sp:i.sp,g:i.g}:null; };   // nuclear spin / g-factor / mass for the EM-field overlay
 window.__isoMassEst = (Z,A)=>{ try{ return Z*1.00782503 + (A-Z)*1.00866492 - nuclearProps(Z,A-Z).binding/931.494; }catch(e){ return null; } };   // semi-empirical estimate for isotopes missing from the table   // exact isotope mass (u) for the details panel
 })();
 
@@ -5175,20 +5863,20 @@ const RAD = (function(){
   }
   function clearAll(){ S.parts.forEach(P=>dispose(P.cloud)); S.fx.forEach(f=>dispose(f.o)); S.parts=[]; S.fx=[]; S.q=[]; S.fis=false; S.pend=false; S.rv.set(0,0,0); }
   function sync(){
-    const el=ELEMENT_BY_Z[state.Z], cA=el?shownA(el):0, dt=el?DT(state.Z,cA):null, rec=(state.mode==='atom'&&!state.fourD&&dt)?dt[1]:null;
+    const el=ELEMENT_BY_Z[state.Z], cA=el?shownA(el):0, dt=el?DT(state.Z,cA):null, rec=(state.mode==='atom'&&dt)?dt[1]:null;
     const btn=$q('btn-radio'), td=btn.querySelector('.td');
-    btn.classList.toggle('disabled',!rec); btn.setAttribute('aria-disabled',String(!rec)); btn.title=rec?'':'Select Tc, Pm or an element with Z ≥ 83 (atom view, not 4D)'; td.textContent=rec?'α · β · γ · fission':'Radioactive elements only';
+    btn.classList.toggle('disabled',!rec); btn.setAttribute('aria-disabled',String(!rec)); btn.title=rec?'':'Select Tc, Pm or an element with Z ≥ 83 (atom view)'; td.textContent=rec?'α · β · γ · fission':'Radioactive elements only';
     if(!rec&&S.on){ S.on=false; btn.classList.remove('on'); }
     if(!rec) S.carry=null;   // chain ended on a stable nuclide: drop the hand-over, otherwise a stale carry kept the button disabled for every other element
     const sameNuc = S.on&&rec&&!S.carry&&S.rec&&S.Z===state.Z&&(!S.A||S.A===cA)&&S.shown;   // a plain re-render of the same nucleus (settings change etc.)
-    if(sameNuc){ S.rec=rec; if(!grp.parent) mainGroup.add(grp); card.classList.add('show');
+    if(sameNuc){ S.rec=rec; attachLive(grp); card.classList.add('show');
       if(S.anti!==anti()){ S.anti=anti(); mirrorParts(); fill(); }   // antimatter toggled: refresh every label/legend/colour without losing in-flight state
       return; }   // keep in-flight particles, the queue and the pending daughter swap
     clearAll(); S.shown=false; S.ended=false;
     if(S.on&&rec){
       const cy=S.carry; S.carry=null; const same=S.Z===state.Z&&S.A===cA; if(cy){ S.n=cy.n; S.last=cy.last; S.clk=cy.clk||0; S.path=cy.path||[]; } else if(!same){ S.n=0; S.last=null; S.clk=0; S.path=[]; }
       S.W=null; S.el=0; S.ffT=0;
-      S.Z=state.Z; S.A=cA; S.noData=false; S.rec=rec; S.wait=0.8; S.shown=true; S.anti=anti(); mainGroup.add(grp); card.classList.add('show'); fill();
+      S.Z=state.Z; S.A=cA; S.noData=false; S.rec=rec; S.wait=0.8; S.shown=true; S.anti=anti(); attachLive(grp); card.classList.add('show'); fill();
     } else { S.rec=null; S.shown=false; if(grp.parent) grp.parent.remove(grp); card.classList.remove('show'); }
   }
   toggleBtn('btn-radio',on=>{ S.on=on; if(on){ S.Z=0; S.A=0; } if(on) toast('Radioactive mode — zoom into the nucleus to see each decay'); sync(); });
@@ -5215,6 +5903,279 @@ const RAD = (function(){
   window.__chain={ status:(z,a)=>{ if(isStable(z,a)) return 'Stable'; const d=DT(z,a); return d?'Radioactive · t½ '+d[0]:null; }, info:chainInfo, modeText:MODE_TXT };
   return {sync,decay,state:S};
 })();
+
+/* =====================================================================
+   ELECTROMAGNETIC FIELD OVERLAY  (needs em_field.js; see EM_FIELD notes there)
+   Physics comes entirely from EMField (quantum expectation values: Gauss-law E from the
+   screened nucleus, spin magnetisation + m_l current rings + nuclear dipole for B). This block
+   only samples it and draws it. Fields are axisymmetric about the spin axis (+z), so ONE
+   meridional plane is evaluated and replicated around z.
+   Radial placement: the scene is stylised (nucleus and shells are drawn on a compressed ladder),
+   so sample positions are placed with a monotone log-log map anchored on the nucleus radius
+   and every occupied subshell's <r>. Field VALUES are always evaluated at the true physical
+   radius, and ribbon DIRECTIONS follow the mapped field lines (radial component scaled by the map slope).
+   ===================================================================== */
+const EMO = (function(){
+  const EM = window.EMField;
+  const btn = document.getElementById('btn-emfield'), picker = document.getElementById('em-picker'), legend = document.getElementById('em-legend');
+  if(!EM || !btn || !picker || !legend){ if(btn){ btn.classList.add('disabled'); btn.title = 'em_field.js not loaded'; } return { refresh(){} }; }
+
+  const S = { on:false, E:true, B:true, src:'total', scale:'abs', dens:1.5, neon:1, thick:1 };
+  const GR = 28, GT = 37, U_KG = 1.66053906660e-27;
+  const WIN = { E:[1e8,1e21], B:[1e-5,1e8] };          // absolute log windows (V/m, T)
+  const COL = { Ep:[1.0,0.72,0.18], En:[0.20,0.78,1.0], Bp:[0.35,1.0,0.55], Bn:[0.78,0.40,1.0] };
+  const cache = new Map(), U = { uTime:{ value:0 }, uNeon:{ value:1 }, uHalo:{ value:3.2 } };
+  let haloMat = null;
+  let group = null, geos = [], mat = null, cur = null;
+  renderLoop.push(dt=>{ U.uTime.value += dt; });
+
+  /* Neon ribbon material: white-hot core + saturated colour, with a pulse that travels along the field direction.
+     A second, wider, soft-edged pass (HALO) reuses the same geometry (vertices pushed out along the normal) for the glow. */
+  const VS = [
+    'attribute vec4 aCol;attribute vec4 aFlow;attribute float aRad;uniform float uHalo;',
+    'varying vec4 vC;varying vec4 vF;varying vec3 vN;varying vec3 vV;',
+    'void main(){vC=aCol;vF=aFlow;vec3 p=position;',
+    '#ifdef HALO',
+    'p+=normal*aRad*uHalo;',
+    '#endif',
+    'vec4 mv=modelViewMatrix*vec4(p,1.0);vN=normalize(normalMatrix*normal);vV=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}'
+  ].join('\n');
+  /* aCol = (brightness, polarity 0..1, kind 0=E 1=B, field strength 0..1); aFlow = (flow phase, pulse amount, taper param, position along ribbon 0..1).
+     Colour is a 3-stop neon gradient per polarity family, driven mostly by field strength (weak = deep, strong = hot) plus a slow shimmer travelling along the flow. */
+  const FS = [
+    'uniform float uTime;uniform float uNeon;varying vec4 vC;varying vec4 vF;varying vec3 vN;varying vec3 vV;',
+    'vec3 g3(vec3 a,vec3 b,vec3 c,float g){g=clamp(g,0.0,1.0);return g<0.5?mix(a,b,smoothstep(0.0,0.5,g)):mix(b,c,smoothstep(0.5,1.0,g));}',
+    'void main(){',
+    'float f=clamp(dot(normalize(vN),normalize(vV)),0.0,1.0);',
+    'float tp=smoothstep(0.0,0.1,vF.z)*smoothstep(1.0,0.9,vF.z);',
+    'float pulse=1.0-vF.y*0.6*(0.5-0.5*sin(vF.x-uTime*2.5));',
+    'float g=clamp(0.7*vC.w+0.3*vF.w+0.07*sin(vF.x*0.7-uTime*1.4),0.0,1.0);',
+    'bool bk=vC.z>0.5;',
+    'vec3 pp=bk?g3(vec3(0.0,0.75,0.45),vec3(0.25,1.0,0.40),vec3(0.75,1.0,0.80),g):g3(vec3(0.85,0.10,0.55),vec3(1.0,0.45,0.10),vec3(1.0,0.95,0.35),g);',
+    'vec3 pn=bk?g3(vec3(0.35,0.12,1.0),vec3(0.80,0.25,1.0),vec3(1.0,0.55,0.95),g):g3(vec3(0.20,0.25,1.0),vec3(0.0,0.75,1.0),vec3(0.55,1.0,0.95),g);',
+    'vec3 neon=mix(pn,pp,vC.y);',
+    'float lift=pow(max(vC.x,1e-4),1.0-0.45*min(uNeon,1.6));',   /* neon lifts weak fields so they stay visible */
+    'vec3 base=neon*lift;',
+    '#ifdef HALO',
+    'float h=pow(f,1.7);gl_FragColor=vec4(base*h*pulse*tp*(0.10+0.34*uNeon),1.0);',
+    '#else',
+    'float core=pow(f,1.5);',
+    'vec3 hot=base*(0.25+0.9*core)*1.3+mix(neon,vec3(1.0),0.65)*lift*pow(f,5.0)*uNeon*0.55;',
+    'hot*=pulse*tp*(1.0+0.35*uNeon);',
+    'hot=(vec3(1.0)-exp(-hot*1.6))*1.12;',                          /* soft tonemap: overlapping additive tubes keep their hue instead of clipping to white */
+    'hot+=(fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453)-0.5)/255.0*step(0.004,hot.r+hot.g+hot.b);',   /* dither: no gradient banding */
+    'gl_FragColor=vec4(max(hot,0.0),1.0);',
+    '#endif',
+    '}'
+  ].join('\n');
+  function mkMat(halo){
+    const u = { uTime:U.uTime, uNeon:U.uNeon, uHalo:U.uHalo };
+    return new THREE.ShaderMaterial({ uniforms:u, transparent:true, depthWrite:false, blending:THREE.AdditiveBlending, defines: halo ? { HALO:1 } : {}, vertexShader:VS, fragmentShader:FS });
+  }
+  function getMat(){ return mat || (mat = mkMat(false)); }
+  function getHaloMat(){ return haloMat || (haloMat = mkMat(true)); }
+
+  /* Smooth tube builder (parallel-transport frames, 6 sides). Per point: radius, colour, [phase, pulse amount, end param]. */
+  function TB(){
+    const P = [], N = [], C = [], F = [], R = [], I = [], SIDES = 8;
+    const nz = v=>{ const l = Math.hypot(v[0],v[1],v[2]) || 1; return [v[0]/l, v[1]/l, v[2]/l]; };
+    const cr = (a,b)=>[a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
+    function add(pts, rad, col, fl, closed){
+      const n = pts.length; if(n < 2) return;
+      const T = pts.map((p,i)=>{ const a = pts[closed ? (i+n-1)%n : Math.max(0,i-1)], b = pts[closed ? (i+1)%n : Math.min(n-1,i+1)]; return nz([b[0]-a[0], b[1]-a[1], b[2]-a[2]]); });
+      const ref = Math.abs(T[0][1]) < 0.9 ? [0,1,0] : [1,0,0]; let nr = nz(cr(T[0], ref)); const base = P.length/3;
+      for(let i=0;i<n;i++){
+        const t = T[i], d = nr[0]*t[0]+nr[1]*t[1]+nr[2]*t[2]; nr = nz([nr[0]-t[0]*d, nr[1]-t[1]*d, nr[2]-t[2]*d]); const bn = cr(t, nr);
+        for(let s=0;s<SIDES;s++){ const a = 2*Math.PI*s/SIDES, cx = Math.cos(a), sx = Math.sin(a), x = nr[0]*cx+bn[0]*sx, y = nr[1]*cx+bn[1]*sx, z = nr[2]*cx+bn[2]*sx;
+          P.push(pts[i][0]+x*rad[i], pts[i][1]+y*rad[i], pts[i][2]+z*rad[i]); N.push(x,y,z); R.push(rad[i]); C.push(col[i][0],col[i][1],col[i][2],col[i][3]||0); F.push(fl[i][0],fl[i][1],fl[i][2],fl[i][3]||0); }
+      }
+      const segs = closed ? n : n-1;
+      for(let i=0;i<segs;i++){ const i2 = (i+1)%n; for(let s=0;s<SIDES;s++){ const s2 = (s+1)%SIDES, a = base+i*SIDES+s, b = base+i2*SIDES+s, c = base+i2*SIDES+s2, d = base+i*SIDES+s2; I.push(a,b,d,b,c,d); } }
+    }
+    function mesh(){
+      if(!I.length) return null;
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(P),3)); g.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(N),3));
+      g.setAttribute('aRad', new THREE.BufferAttribute(new Float32Array(R),1)); g.setAttribute('aCol', new THREE.BufferAttribute(new Float32Array(C),4)); g.setAttribute('aFlow', new THREE.BufferAttribute(new Float32Array(F),4));
+      g.setIndex(new THREE.BufferAttribute(new Uint32Array(I),1)); geos.push(g);
+      const grp = new THREE.Group(), core = new THREE.Mesh(g, getMat()), halo = new THREE.Mesh(g, getHaloMat());
+      core.frustumCulled = false; halo.frustumCulled = false; halo.renderOrder = 1; grp.add(halo); grp.add(core); return grp;
+    }
+    return { add, mesh };
+  }
+
+  const dirCache = {};
+  function dirsFor(n){ if(dirCache[n]) return dirCache[n]; const d = [], ga = Math.PI*(3-Math.sqrt(5)); for(let i=0;i<n;i++){ const y = 1-(i+0.5)*2/n, r = Math.sqrt(1-y*y), a = i*ga; d.push([r*Math.cos(a), r*Math.sin(a), y]); } return dirCache[n] = d; }
+  const RING_N = [[0,0,1],[0,1,0],[1,0,0],[1,1,0],[1,-1,0],[0,1,1],[0,1,-1]].map(v=>{ const l = Math.hypot(v[0],v[1],v[2]); return [v[0]/l, v[1]/l, v[2]/l]; });
+  const ringBasis = n=>{ const ref = Math.abs(n[2]) < 0.9 ? [0,0,1] : [1,0,0]; let u = [n[1]*ref[2]-n[2]*ref[1], n[2]*ref[0]-n[0]*ref[2], n[0]*ref[1]-n[1]*ref[0]]; const l = Math.hypot(u[0],u[1],u[2]); u = [u[0]/l,u[1]/l,u[2]/l]; return [u, [n[1]*u[2]-n[2]*u[1], n[2]*u[0]-n[0]*u[2], n[0]*u[1]-n[1]*u[0]]]; };
+  const RING_B = RING_N.map(ringBasis);
+
+  function sampleFor(el){
+    const A = shownA(el), iso = window.__isoNuc ? window.__isoNuc(el.Z, A) : null;
+    const spin = iso && iso.sp ? iso.sp : '0', g = iso && iso.g!=null ? iso.g : 0, anti = !!state.antimatter;
+    const nucR = NUC && NUC.nucRadius ? NUC.nucRadius : 0.04;
+    const key = [el.Z, A, anti?1:0, spin, g, nucR.toFixed(5), fitZ.toFixed(2)].join('|');
+    let c = cache.get(key); if(c) return c;
+    const atom = EM.createAtomFields({ Z:el.Z, A, subshells: el.config.map(s=>({n:s.n,l:s.l,count:s.count})), nuclearSpin:spin, nuclearG:g, antimatter:anti, nucleusMassKg:((iso && iso.m) || A)*U_KG });
+    const anchors = [{ phys:atom.info.nuclearRadiusM, world:nucR }].concat(atom.info.subshellRadii.map(s=>({ phys:s.rMean, world:subshellOuterRadius(s.n,s.l) })));
+    const map = EM.makeRadialMap(anchors), outer = map.anchors[map.anchors.length-1].world;
+    const rw0 = Math.max(nucR*2.5, 0.05), rw1 = Math.max(rw0*8, Math.min(outer*1.35, fitZ*0.8)), q = Math.pow(rw1/rw0, 1/(GR-1));
+    const rW = [], rP = [], cosT = [];
+    for(let i=0;i<GR;i++){ rW.push(rw0*Math.pow(q,i)); rP.push(map.toPhys(rW[i])); }
+    for(let j=0;j<GT;j++) cosT.push(Math.cos(j*Math.PI/(GT-1)));   // theta grid incl. both poles
+    c = { key, atom, map, rW, rP, cosT, q, m:atom.meridional(rP, cosT), spin, gKnown: !!(iso && iso.g!=null), A };
+    cache.set(key, c); if(cache.size>12) cache.delete(cache.keys().next().value);
+    return c;
+  }
+
+  const eAt = (c,i)=>{ const e = c.m.E; return S.src==='nucleus' ? e.nucleus[i] : S.src==='electrons' ? e.cloud[i] : e.nucleus[i]+e.cloud[i]; };
+  const bAt = (c,k)=>{ const b = c.m.B; return S.src==='nucleus' ? [b.nucleus[k], b.nucleus[k+1]]
+    : S.src==='electrons' ? [b.spin[k]+b.orbital[k], b.spin[k+1]+b.orbital[k+1]]
+    : [b.nucleus[k]+b.spin[k]+b.orbital[k], b.nucleus[k+1]+b.spin[k+1]+b.orbital[k+1]]; };
+  function windowFor(kind, mags){
+    if(S.scale==='abs') return WIN[kind];
+    let mx = 0; for(let i=0;i<mags.length;i++) if(mags[i]>mx) mx = mags[i];
+    return mx>0 ? [mx*1e-6, mx] : WIN[kind];
+  }
+  const tOf = (v, w)=>EM.logNorm(v, w[0], w[1]);
+  const mix3 = (a,b,s,k)=>[(a[0]+(b[0]-a[0])*s)*k, (a[1]+(b[1]-a[1])*s)*k, (a[2]+(b[2]-a[2])*s)*k];
+
+  function build(c){
+    const g = new THREE.Group(), notes = [], info = c.atom.info, stat = {}, rW0 = c.rW[0], rW1 = c.rW[GR-1], lq = Math.log(c.q),
+      dn = S.dens, NSPOKE = Math.max(8, Math.round(26*dn)), NSEED = Math.max(3, Math.round(9*Math.sqrt(dn))), NPHI = Math.max(4, Math.round(8*Math.sqrt(dn))),
+      thick = Math.pow(dn, -0.2)*S.thick, ringStep = dn >= 1.8 ? 1 : 2, nRing = Math.min(RING_N.length, Math.max(3, Math.round(3*dn)));   // thin the tubes a little as density rises so additive blending does not wash out
+    if(S.E){
+      const eG = [], mags = []; for(let i=0;i<GR;i++){ eG.push(eAt(c,i)); mags.push(Math.abs(eG[i])); }
+      const w = windowFor('E', mags), tb = TB(); stat.E = { w, max:Math.max.apply(null,mags) };
+      const NS = 56;                                                     // radial rays: pulse flows outward (amber) or inward (cyan)
+      dirsFor(NSPOKE).forEach(d=>{
+        const pts = [], rad = [], col = [], fl = []; let ph = 0, mt = 0, prev = rW0;
+        for(let k=0;k<NS;k++){ const f = k/(NS-1)*(GR-1), i = Math.min(GR-2, Math.floor(f)), a = f-i, rw = rW0*Math.exp(f*lq), e = eG[i]*(1-a)+eG[i+1]*a, t = tOf(Math.abs(e), w), sg = e>=0 ? 1 : -1;
+          ph += sg*(rw-prev)/(0.06*rw); prev = rw; mt = Math.max(mt,t);
+          pts.push([d[0]*rw, d[1]*rw, d[2]*rw]); rad.push((0.0035*rw+0.0012)*(0.4+0.6*t)*thick); col.push([0.08+0.92*t, sg>0?1:0, 0, t]); fl.push([ph, 1, k/(NS-1), k/(NS-1)]); }
+        if(mt > 0.03) tb.add(pts, rad, col, fl, false);
+      });
+      for(let i=0;i<GR;i+=ringStep){                                     // smooth shell rings: great circles per shell (more at higher density)
+        const t = tOf(mags[i], w); if(t <= 0.03) continue; const rw = c.rW[i], sg = eG[i]>=0, NC = 72;
+        for(let p=0;p<nRing;p++){ const pts = [], rad = [], col = [], fl = [], bu = RING_B[p][0], bv = RING_B[p][1];
+          for(let k=0;k<NC;k++){ const a = 2*Math.PI*k/NC, ca = Math.cos(a)*rw, sa = Math.sin(a)*rw; pts.push([bu[0]*ca+bv[0]*sa, bu[1]*ca+bv[1]*sa, bu[2]*ca+bv[2]*sa]); rad.push((0.0028*rw+0.001)*(0.5+0.5*t)*thick); col.push([0.05+0.55*t, sg?1:0, 0, t]); fl.push([0,0,0.5, 1-Math.abs(2*k/NC-1)]); }
+          tb.add(pts, rad, col, fl, true); }
+      }
+      const m = tb.mesh(); if(m) g.add(m);
+      if(!(stat.E.max>0)) notes.push('No electric field from this source.');
+    }
+    if(S.B){
+      const DX = new Float32Array(GR*GT), DZ = new Float32Array(GR*GT), LM = new Float32Array(GR*GT), mags = [];
+      for(let i=0;i<GR;i++){ const s = c.map.slope(c.rP[i]); for(let j=0;j<GT;j++){ const n = i*GT+j, b = bAt(c,n*2), th = j*Math.PI/(GT-1), st = Math.sin(th), ct = Math.cos(th),
+          vr = b[0]*st+b[1]*ct, vt = b[0]*ct-b[1]*st, wr = s*vr, wx = wr*st+vt*ct, wz = wr*ct-vt*st, wn = Math.hypot(wx,wz) || 1, mg = Math.hypot(b[0],b[1]);
+          DX[n] = wx/wn; DZ[n] = wz/wn; LM[n] = Math.log10(mg+1e-300); mags.push(mg); } }
+      const w = windowFor('B', mags); stat.B = { w, max:Math.max.apply(null,mags) };
+      const samp = (rho,z)=>{ const rw = Math.hypot(rho,z); if(rw<rW0 || rw>rW1) return null;
+        const fi = Math.min(GR-1.0001, Math.log(rw/rW0)/lq), fj = Math.min(GT-1.0001, Math.atan2(rho,z)/(Math.PI/(GT-1))), i = fi|0, j = fj|0, a = fi-i, b = fj-j,
+          n00 = i*GT+j, n01 = n00+1, n10 = n00+GT, n11 = n10+1, bl = A=>(A[n00]*(1-b)+A[n01]*b)*(1-a)+(A[n10]*(1-b)+A[n11]*b)*a;
+        const dx = bl(DX), dz = bl(DZ), l = Math.hypot(dx,dz) || 1; return [dx/l, dz/l, bl(LM)]; };
+      const trace = (r0,z0,sg)=>{ let rho = r0, z = z0, closed = false; const pts = [[rho,z]];
+        for(let st=0; st<420; st++){ const s0 = samp(rho,z); if(!s0) break; const h = Math.max(0.045*Math.hypot(rho,z), 0.002)*sg, m1 = samp(rho+s0[0]*h*0.5, z+s0[1]*h*0.5); if(!m1) break;
+          rho += m1[0]*h; z += m1[1]*h; if(rho<0){ rho = 0; pts.push([rho,z]); break; } pts.push([rho,z]);
+          if(st>8 && Math.hypot(rho-r0, z-z0) < Math.abs(h)*0.9){ closed = true; break; } }
+        return { pts, closed }; };
+      const tb = TB(), a0 = rW0*1.6, a1 = rW1*0.55;
+      for(let si=0; si<NSEED; si++){
+        const seed = a0*Math.pow(a1/a0, si/(NSEED-1)), f = trace(seed,0,1); let pts, closed = f.closed;
+        if(closed) pts = f.pts.slice(0,-1); else { const b = trace(seed,0,-1); pts = b.pts.reverse().concat(f.pts.slice(1)); }
+        if(pts.length < 8) continue;
+        for(let i=1;i<pts.length-1;i++) pts[i] = [(pts[i-1][0]+2*pts[i][0]+pts[i+1][0])/4, (pts[i-1][1]+2*pts[i][1]+pts[i+1][1])/4];   // light smoothing
+        const n = pts.length, rad = [], col = [], fl = []; let ph = 0, mt = 0;
+        for(let i=0;i<n;i++){ const p = pts[i], rw = Math.hypot(p[0],p[1]) || 1e-6, sm = samp(p[0],p[1]), t = sm ? tOf(Math.pow(10,sm[2]), w) : 0,
+            q0 = pts[Math.max(0,i-1)], q1 = pts[Math.min(n-1,i+1)], tz = (q1[1]-q0[1])/(Math.hypot(q1[0]-q0[0], q1[1]-q0[1]) || 1), s = Math.min(1, Math.max(0, (tz+0.3)/0.6));
+          if(i>0) ph += Math.hypot(p[0]-q0[0], p[1]-q0[1])/(0.06*rw); mt = Math.max(mt,t);
+          rad.push((0.005*rw+0.002)*(0.45+0.55*t)*thick); col.push([0.10+0.90*t, s*s*(3-2*s), 1, t]); fl.push([ph, 1, closed ? 0.5 : i/(n-1), closed ? 1-Math.abs(2*i/n-1) : i/(n-1)]); }
+        if(mt <= 0.03) continue;
+        for(let k=0;k<NPHI;k++){ const a = (k+0.5*(si&1))*2*Math.PI/NPHI, ca = Math.cos(a), sa = Math.sin(a); tb.add(pts.map(p=>[p[0]*ca, p[0]*sa, p[1]]), rad, col, fl, closed); }
+      }
+      const m = tb.mesh(); if(m) g.add(m);
+      if(!(stat.B.max>0)){
+        const nuc = info.nuclearSpinI>0 ? (info.nuclearMomentKnown ? '' : ' (nuclear moment not tabulated for this isotope)') : ' (nuclear spin 0)';
+        notes.push(S.src==='nucleus' ? 'No magnetic field from the nucleus'+nuc+'.' : S.src==='electrons' ? (info.J===0 ? 'Electrons give no net magnetic field: the ground state has J = 0 or a closed shell.' : 'No magnetic field from the electrons.') : 'No magnetic field: no electronic moment (J = 0 or closed shell)'+nuc+'.');
+      }
+    }
+    return { g, stat, notes };
+  }
+
+  const sci = v=>{ const e = Math.floor(Math.log10(v)); return '10<sup>'+e+'</sup>'; };
+  function paint(c, out, el){
+    const info = c.atom.info, anti = state.antimatter, h = [];
+    h.push('<b>'+(anti?'Anti-':'')+el.name+'-'+c.A+'</b> · '+info.term+(info.termExact?'':' (approx.)')+' · m<sub>J</sub> = J along +z');
+    if(out.stat.E) h.push('<span class="emsw" style="background:linear-gradient(90deg,#d9198c,#ff7318,#fff25c)"></span><span class="emsw" style="background:linear-gradient(90deg,#3340ff,#00bfff,#8cfff2)"></span> E · radial rays + shell rings, flowing outward / inward · '+sci(out.stat.E.w[0])+'–'+sci(out.stat.E.w[1])+' V/m');
+    if(out.stat.B) h.push('<span class="emsw" style="background:linear-gradient(90deg,#00bf73,#40ff66,#bfffcc)"></span><span class="emsw" style="background:linear-gradient(90deg,#591fff,#cc40ff,#ff8cf2)"></span> B · closed field-line ribbons, flow follows B (green up, violet down) · '+sci(out.stat.B.w[0])+'–'+sci(out.stat.B.w[1])+' T');
+    h.push('<i>'+(S.scale==='abs'?'Absolute log scale: brightness and thickness track field strength':'Auto scale: top 6 decades of what is shown')+' · density '+S.dens.toFixed(1)+'× · thickness '+S.thick.toFixed(2).replace(/0$/,'')+'×'+(S.neon>0.01?' · neon '+Math.round(S.neon*100)+'%':'')+'. Radial axis is compressed to fit the nucleus and shells in one view.</i>');
+    if(state.excited) h.push('<i>Fields are for the ground state (excited states are not modelled).</i>');
+    if(info.nuclearSpinI>0 && !info.nuclearMomentKnown) h.push('<i>Nuclear magnetic moment not tabulated for this isotope: nuclear B omitted.</i>');
+    out.notes.forEach(n=>h.push('<b>'+n+'</b>'));
+    legend.innerHTML = h[0] + '<span class="em-more">details ▾</span><span class="em-det"><br>' + h.slice(1).join('<br>') + '</span>'; legend.style.display = '';
+  }
+
+  function drop(){ if(group && group.parent) group.parent.remove(group); }
+  function free(){ drop(); geos.forEach(g=>g.dispose()); geos = []; group = null; cur = null; }
+
+  function refresh(){
+    picker.style.display = S.on ? '' : 'none';
+    const avail = state.mode==='atom' && ELEMENT_BY_Z[state.Z];
+    if(!S.on || !avail || (!S.E && !S.B)){
+      free();
+      if(!S.on) legend.style.display = 'none';
+      else { legend.innerHTML = !avail ? '<i>EM field view is available for single atoms (not molecules).</i>' : '<i>Switch on Electric E or Magnetic B to see the field.</i>'; legend.style.display = ''; }
+      return;
+    }
+    const el = ELEMENT_BY_Z[state.Z]; let c;
+    try{
+      c = sampleFor(el);
+      const sig = [c.key, S.E, S.B, S.src, S.scale, S.dens, S.thick].join('#');
+      if(group && cur && cur.sig===sig){ attachLive(group); paint(c, cur.out, el); return; }   // render() detaches the group; reuse it
+      free(); const out = build(c); group = out.g; cur = { sig, out }; attachLive(group); paint(c, out, el);
+    }catch(err){ console.error('[EM field]', err); free(); legend.innerHTML = '<i>EM field could not be computed for this atom.</i>'; legend.style.display = ''; }
+  }
+
+  toggleBtn('btn-emfield', on=>{ S.on = on; refresh(); });
+  picker.addEventListener('click', e=>{
+    const b = e.target.closest('.exchip'); if(!b) return; const grp = b.parentNode.dataset.g, k = b.dataset.k;
+    if(grp==='show'){ S[k] = !S[k]; b.classList.toggle('on', S[k]); b.setAttribute('aria-pressed', S[k]); }
+    else { S[grp] = k; b.parentNode.querySelectorAll('.exchip').forEach(x=>{ const on = x===b; x.classList.toggle('on', on); x.setAttribute('aria-pressed', on); }); }
+    refresh();
+  });
+  /* Density + neon sliders. Neon only drives shader uniforms (live, no rebuild); density rebuilds the lines (throttled to a frame). */
+  const $e = id=>document.getElementById(id);
+  const dIn = $e('em-dens'), nIn = $e('em-neon'), dVal = $e('em-dens-val'), nVal = $e('em-neon-val'), tIn = $e('em-thick'), tVal = $e('em-thick-val');
+  let rebuildQ = 0;
+  const queueRebuild = ()=>{ if(!rebuildQ) rebuildQ = requestAnimationFrame(()=>{ rebuildQ = 0; refresh(); }); };
+  function applyNeon(){ U.uNeon.value = S.neon; U.uHalo.value = 2.4 + 1.6*Math.min(S.neon,2); if(nVal) nVal.textContent = S.neon<=0 ? 'Off' : Math.round(S.neon*100)+'%'; if(haloMat) haloMat.visible = S.neon > 0.01; }
+  function setDens(v){ v = Math.max(0.5, Math.min(4, Math.round(v*10)/10)); S.dens = v; if(dIn) dIn.value = v; if(dVal) dVal.textContent = v.toFixed(1)+'×'; queueRebuild(); }
+  function setThick(v){ v = Math.max(0.25, Math.min(4, Math.round(v*20)/20)); S.thick = v; if(tIn) tIn.value = v; if(tVal) tVal.textContent = v.toFixed(2).replace(/0$/,'')+'×'; queueRebuild(); }
+  function setNeon(v){ v = Math.max(0, Math.min(2, v)); S.neon = v; if(nIn) nIn.value = Math.round(v*100); applyNeon(); }
+  if(dIn) dIn.addEventListener('input', ()=>setDens(+dIn.value));
+  if(nIn) nIn.addEventListener('input', ()=>setNeon(+nIn.value/100));
+  if(tIn) tIn.addEventListener('input', ()=>setThick(+tIn.value));
+  const stepBtn = (id,fn)=>{ const b = $e(id); if(b) b.addEventListener('click', fn); };
+  stepBtn('em-dens-minus', ()=>setDens(S.dens-0.25)); stepBtn('em-dens-plus', ()=>setDens(S.dens+0.25));
+  stepBtn('em-thick-minus', ()=>setThick(S.thick/1.25)); stepBtn('em-thick-plus', ()=>setThick(S.thick*1.25));
+  stepBtn('em-neon-minus', ()=>setNeon(S.neon-0.1));  stepBtn('em-neon-plus', ()=>setNeon(S.neon+0.1));
+  /* On phones the Tools sheet covers the bottom of the screen, so the floating legend would sit on top of the sliders:
+     while that sheet is open the legend lives inside the EM panel (in flow); otherwise it floats above the dock. */
+  const mqL = matchMedia('(max-width:900px)');
+  function placeLegend(){
+    const inSheet = mqL.matches && !document.body.classList.contains('toolbar-collapsed');
+    if(inSheet){ if(legend.parentNode !== picker) picker.appendChild(legend); legend.classList.add('inline'); }
+    else { if(legend.parentNode !== document.body) document.body.appendChild(legend); legend.classList.remove('inline'); }
+  }
+  legend.addEventListener('click', ()=>{ if(!legend.classList.contains('inline')) legend.classList.toggle('open'); });
+  new MutationObserver(placeLegend).observe(document.body, { attributes:true, attributeFilter:['class'] });
+  (mqL.addEventListener ? mqL.addEventListener('change', placeLegend) : mqL.addListener(placeLegend));
+  placeLegend();
+  getHaloMat(); if(dVal) dVal.textContent = S.dens.toFixed(1)+'×'; applyNeon();
+  return { refresh, state:S };
+})();
+const __renderBase = render;
+render = function(){ const r = __renderBase.apply(this, arguments); EMO.refresh(); return r; };
 
 })();
 </script>
