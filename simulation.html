@@ -3,7 +3,7 @@
   Quantum Atom — Copyright (c) 2026 Md. Shaikhul Hadis Nazat. All rights reserved.
   Source-available, non-commercial licence: see LICENSE.
   Copying, re-hosting, or commercial use without written permission is prohibited.
-  Official: https://nazat02.github.io/Quantum-Atom/
+  Official: https://nazat02.github.io/Quantum-Atom-2.0/
 -->
 <html lang="en">
 <head>
@@ -563,6 +563,89 @@ body.mph{--inset-r:16px;}
 #mode-ent{flex:1.3;min-width:0;font-size:.6rem;letter-spacing:.06em;padding-left:0;padding-right:0;}
 body.m4d .ptab[data-tab="data"],body.mND .ptab[data-tab="data"],body.mph .ptab[data-tab="data"]{display:none;}
 </style>
+<style id="qalic-css">
+/* ---------- QUANTUM ATOM · licence · glass ---------- */
+#qalic{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:max(18px,env(safe-area-inset-top,0px)) 18px max(18px,env(safe-area-inset-bottom,0px));overflow:hidden;
+  background:radial-gradient(120% 90% at 50% 0%,rgba(255,85,0,.10),transparent 60%),rgba(6,4,3,.50);
+  backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);animation:qalicFade .25s ease-out;}
+#qalic[hidden]{display:none;}
+.qalic-orb{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;opacity:.7;}
+.qalic-orb.o1{width:46vmax;height:46vmax;left:-12vmax;top:-14vmax;background:radial-gradient(circle,rgba(255,110,20,.55),transparent 68%);}
+.qalic-orb.o2{width:40vmax;height:40vmax;right:-10vmax;bottom:-14vmax;background:radial-gradient(circle,rgba(170,90,255,.38),transparent 68%);}
+.qalic-card{position:relative;isolation:isolate;width:min(660px,100%);max-height:min(90vh,100%);display:flex;flex-direction:column;overflow:hidden;border-radius:26px;outline:none;
+  color:rgba(255,255,255,.9);font-family:var(--display,'Rajdhani',sans-serif);
+  background:linear-gradient(150deg,rgba(255,255,255,.17) 0%,rgba(255,255,255,.07) 38%,rgba(255,255,255,.05) 62%,rgba(255,150,70,.10) 100%),rgba(16,10,7,.36);
+  backdrop-filter:blur(34px) saturate(190%) brightness(1.06);-webkit-backdrop-filter:blur(34px) saturate(190%) brightness(1.06);
+  border:1px solid rgba(255,255,255,.20);
+  box-shadow:0 40px 90px -20px rgba(0,0,0,.65),0 0 0 1px rgba(255,120,40,.10),0 0 80px -10px rgba(255,85,0,.28),inset 0 1.5px 0 rgba(255,255,255,.45),inset 0 -1px 0 rgba(255,255,255,.08),inset 0 0 60px rgba(255,255,255,.035);
+  animation:qalicIn .32s cubic-bezier(.2,.8,.2,1);}
+.qalic-card::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;
+  background:radial-gradient(120% 55% at 12% -8%,rgba(255,255,255,.26),transparent 55%),radial-gradient(70% 50% at 100% 100%,rgba(255,110,30,.16),transparent 60%);}
+.qalic-card.bad{border-color:rgba(255,120,120,.34);box-shadow:0 40px 90px -20px rgba(0,0,0,.65),0 0 80px -10px rgba(255,60,60,.32),inset 0 1.5px 0 rgba(255,255,255,.4);}
+.qalic-card header{display:flex;align-items:center;gap:14px;padding:20px 22px 16px;border-bottom:1px solid rgba(255,255,255,.12);}
+.qalic-ic{flex:none;display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:linear-gradient(145deg,rgba(255,255,255,.20),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.25);box-shadow:0 8px 24px -6px rgba(255,85,0,.55),inset 0 1px 0 rgba(255,255,255,.5);}
+.qalic-dot{display:block;width:20px;height:20px;border-radius:50%;background:var(--cx,#ff5500);box-shadow:0 0 18px var(--cx,#ff5500),0 0 6px var(--cx,#ff5500);}
+.qalic-hd{min-width:0;margin-right:auto;}
+.qalic-card h2{font-weight:700;font-size:1.45rem;line-height:1.05;letter-spacing:.2em;text-transform:uppercase;color:#fff;text-shadow:0 0 22px rgba(255,140,60,.45);}
+.qalic-sub{margin-top:5px;font-family:var(--mono,'Share Tech Mono',monospace);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cx3,#ffcf9e);}
+.qalic-badge{flex:none;display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-family:var(--mono,'Share Tech Mono',monospace);font-size:.62rem;letter-spacing:.1em;white-space:nowrap;color:#a6ffc6;background:rgba(80,230,140,.12);border:1px solid rgba(120,255,175,.38);box-shadow:inset 0 1px 0 rgba(255,255,255,.18);}
+.qalic-badge.bad{color:#ffb0b0;background:rgba(255,80,80,.13);border-color:rgba(255,130,130,.45);}
+.qalic-body{padding:18px 22px 6px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.28) transparent;}
+.qalic-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.qalic-meta span{padding:5px 11px;border-radius:999px;font-family:var(--mono,'Share Tech Mono',monospace);font-size:.64rem;letter-spacing:.1em;color:rgba(255,255,255,.9);background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);}
+.qalic-meta .hot{color:#ffd9b8;background:rgba(255,100,20,.18);border-color:rgba(255,150,70,.5);}
+.qalic-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.qalic-col{padding:14px 15px;border-radius:18px;background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.22);}
+.qalic-col h3{display:flex;align-items:center;gap:9px;margin-bottom:10px;font-weight:700;font-size:.95rem;letter-spacing:.16em;text-transform:uppercase;color:#fff;}
+.qalic-col h3 b{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;}
+.qalic-col.ok h3 b{color:#a6ffc6;background:rgba(80,230,140,.18);border:1px solid rgba(120,255,175,.45);}
+.qalic-col.no h3 b{color:#ffb0b0;background:rgba(255,80,80,.17);border:1px solid rgba(255,130,130,.45);}
+.qalic-col ul{list-style:none;display:grid;gap:8px;}
+.qalic-col li{position:relative;padding-left:17px;font-weight:600;font-size:.97rem;line-height:1.28;color:rgba(255,255,255,.92);}
+.qalic-col li::before{content:'';position:absolute;left:1px;top:.5em;width:6px;height:6px;border-radius:50%;}
+.qalic-col.ok li::before{background:#7dffb0;box-shadow:0 0 8px #7dffb0;} .qalic-col.no li::before{background:#ff8a8a;box-shadow:0 0 8px #ff8a8a;}
+.qalic-credit{margin-bottom:14px;padding:12px 15px 12px 17px;border-radius:14px;position:relative;font-weight:600;font-size:1rem;line-height:1.35;color:#fff;background:linear-gradient(90deg,rgba(255,100,20,.20),rgba(255,255,255,.05));border:1px solid rgba(255,150,70,.35);}
+.qalic-credit::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:3px;background:linear-gradient(var(--cx2,#ff9944),var(--cx,#ff5500));box-shadow:0 0 12px var(--cx,#ff5500);}
+.qalic-credit span{display:block;margin-bottom:3px;font-family:var(--mono,'Share Tech Mono',monospace);font-size:.6rem;letter-spacing:.22em;color:var(--cx3,#ffcf9e);}
+.qalic-warn{margin-bottom:14px;padding:11px 14px;border-radius:14px;font-weight:600;font-size:.95rem;line-height:1.35;color:#ffe3a6;background:rgba(255,200,80,.12);border:1px solid rgba(255,210,110,.45);word-break:break-word;}
+.qalic-full{margin-bottom:14px;border-radius:16px;overflow:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);}
+.qalic-full summary{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;list-style:none;padding:13px 15px;font-weight:700;font-size:.95rem;letter-spacing:.14em;text-transform:uppercase;color:#fff;}
+.qalic-full summary::-webkit-details-marker{display:none;}
+.qalic-chev{transition:transform .2s;color:var(--cx2,#ff9944);} .qalic-full[open] .qalic-chev{transform:rotate(180deg);}
+#qalic-text{padding:4px 16px 16px;border-top:1px solid rgba(255,255,255,.12);font-family:var(--display,'Rajdhani',sans-serif);font-weight:500;font-size:.96rem;line-height:1.5;color:rgba(255,255,255,.88);}
+#qalic-text h3{margin:12px 0 4px;font-size:1.05rem;letter-spacing:.1em;color:#fff;}
+#qalic-text h4{display:flex;align-items:center;gap:9px;margin:16px 0 5px;font-size:.88rem;letter-spacing:.16em;color:var(--cx3,#ffcf9e);}
+#qalic-text h4 i{display:grid;place-items:center;min-width:22px;height:22px;padding:0 5px;border-radius:7px;font-style:normal;font-family:var(--mono,'Share Tech Mono',monospace);font-size:.68rem;color:#fff;background:rgba(255,100,20,.30);border:1px solid rgba(255,150,70,.5);}
+#qalic-text p{margin:5px 0;} #qalic-text p.it{padding-left:10px;} #qalic-text p.it b{display:inline-block;min-width:26px;color:var(--cx2,#ff9944);font-weight:700;}
+#qalic-text p.kv{display:grid;grid-template-columns:132px 1fr;gap:10px;align-items:baseline;word-break:break-word;} #qalic-text p.kv b{color:rgba(255,255,255,.66);font-weight:600;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;}
+.qalic-links{display:flex;flex-wrap:wrap;gap:8px 18px;padding:2px 0 14px;} .qalic-links a{font-weight:700;font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cx3,#ffcf9e);text-decoration:none;} .qalic-links a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px;}
+.qalic-lock{display:grid;place-items:center;width:62px;height:62px;margin:6px auto 14px;border-radius:50%;color:#ffb0b0;background:rgba(255,80,80,.14);border:1px solid rgba(255,130,130,.5);box-shadow:0 0 36px rgba(255,70,70,.35),inset 0 1px 0 rgba(255,255,255,.3);}
+.qalic-lead{margin-bottom:8px;text-align:center;font-weight:700;font-size:1.35rem;letter-spacing:.06em;color:#fff;}
+.qalic-p{max-width:46ch;margin:0 auto 16px;text-align:center;font-weight:500;font-size:1.02rem;line-height:1.45;color:rgba(255,255,255,.86);}
+.qalic-card footer{display:flex;justify-content:flex-end;gap:12px;padding:14px 22px 18px;border-top:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,transparent,rgba(0,0,0,.14));}
+.qalic-b{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;border-radius:14px;cursor:pointer;text-decoration:none;font-family:inherit;font-weight:700;font-size:.95rem;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;color:#fff;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.24);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);transition:transform .15s,background .15s,box-shadow .15s;}
+.qalic-b:hover{background:rgba(255,255,255,.16);transform:translateY(-1px);}
+.qalic-b.pri{border-color:rgba(255,200,150,.65);background:linear-gradient(135deg,#ff6a14,#ff9944);box-shadow:0 10px 28px -6px rgba(255,85,0,.7),inset 0 1px 0 rgba(255,255,255,.5);text-shadow:0 1px 2px rgba(120,30,0,.45);}
+.qalic-b.pri:hover{background:linear-gradient(135deg,#ff7a2a,#ffa95a);box-shadow:0 14px 34px -6px rgba(255,85,0,.85),inset 0 1px 0 rgba(255,255,255,.55);}
+.qalic-b:focus-visible,.qalic-links a:focus-visible,.qalic-full summary:focus-visible,.qalic-btn:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+.qalic-btn{cursor:pointer;font-family:inherit;color:#fff;background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgba(255,255,255,.25);}
+.qalic-btn svg{color:var(--cx2,#ff9944);flex:none;} .qalic-btn:hover{border-color:rgba(255,150,70,.6);background:rgba(255,100,20,.14);}
+.qalic-btn.warn{border-color:rgba(255,210,110,.6);} .qalic-btn.warn svg{color:#ffd37a;}
+.qalic-btn.float{position:fixed;right:12px;bottom:12px;z-index:60;display:flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:10px;}
+@keyframes qalicFade{from{opacity:0}to{opacity:1}} @keyframes qalicIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}} @keyframes qalicSpin{to{transform:rotate(360deg)}}
+@media(max-width:640px){
+  #qalic{align-items:flex-end;padding:0;}
+  .qalic-card{width:100%;max-height:92dvh;border-radius:26px 26px 0 0;border-bottom:none;animation-name:qalicUp;}
+  .qalic-card::after{content:'';position:absolute;top:7px;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:2px;background:rgba(255,255,255,.35);}
+  .qalic-card header{flex-wrap:wrap;padding:24px 18px 14px;gap:12px;} .qalic-badge{order:3;} .qalic-card h2{font-size:1.25rem;}
+  .qalic-body{padding:16px 18px 4px;} .qalic-cols{grid-template-columns:1fr;}
+  .qalic-card footer{padding:12px 18px calc(16px + env(safe-area-inset-bottom,0px));} .qalic-b{flex:1;padding:0 10px;letter-spacing:.08em;font-size:.88rem;} .qalic-b.pri{flex:1.8;} #qalic-text p.kv{grid-template-columns:1fr;gap:0;}
+  @keyframes qalicUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+}
+@media(max-width:640px){.qalic-btn .lbl-s{display:none!important}.qalic-btn{padding:0 11px!important;min-width:40px;justify-content:center}}
+@media(max-width:360px){.qalic-btn{padding:0 9px!important}}
+@media(prefers-reduced-motion:reduce){.qalic-card,#qalic{animation:none!important;}}
+</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
@@ -800,6 +883,249 @@ body.m4d .ptab[data-tab="data"],body.mND .ptab[data-tab="data"],body.mph .ptab[d
       try{ c[k] = (k==='info'||k==='debug'||k==='trace') ? base.bind(c) : noop; }catch(e){}
     }
   });
+})();
+</script>
+<script type="text/plain" id="qa-license">
+QUANTUM ATOM — SOURCE-AVAILABLE NON-COMMERCIAL LICENSE
+Version 1.0
+
+Copyright (c) 2026 Md. Shaikhul Hadis Nazat. All rights reserved.
+
+Project: Quantum Atom (Physicist AI)
+Official source: https://github.com/nazat02/Quantum-Atom-2.0
+Official site:   https://nazat02.github.io/Quantum-Atom-2.0/
+
+"Software" means all files in this repository, including source code, data
+tables, shaders, styles, text, and visual design.
+
+"You" means any person or organization using the Software.
+
+1. PERMITTED USE
+   Subject to the conditions below, You may, free of charge:
+   (a) view and read the source code, for learning and research;
+   (b) run the Software locally for personal, educational, or non-commercial
+       research purposes;
+   (c) link to the official site, and share links to it;
+   (d) fork the repository on GitHub solely to propose changes back to the
+       official repository (pull requests).
+
+2. RESTRICTIONS
+   Without prior written permission from the copyright holder, You may NOT:
+   (a) copy, host, mirror, or redistribute the Software, in whole or in
+       substantial part, on any website, repository, app store, or medium
+       other than the official locations listed above;
+   (b) sell, sublicense, rent, or otherwise use the Software, or anything
+       derived from it, for commercial purposes, including advertising-
+       supported sites, paid products, paid services, or paid courses;
+   (c) publish modified or derivative versions of the Software, or present
+       the Software, or any substantial part of it, as Your own work;
+   (d) remove, alter, or obscure any copyright notice, licence notice, or
+       attribution contained in the Software;
+   (e) use the name "Quantum Atom", "Physicist AI", or the author's name to
+       imply endorsement of, or affiliation with, any other product or work;
+   (f) use the Software, its data, or its outputs to train machine-learning
+       models, or to build datasets, without written permission.
+
+3. ATTRIBUTION
+   Any permitted use, including academic citation or educational display,
+   must credit: "Quantum Atom by Md. Shaikhul Hadis Nazat" and, where
+   practical, link to the official site.
+
+4. THIRD-PARTY COMPONENTS
+   The Software loads three.js (https://threejs.org), which is copyright
+   its authors and licensed under the MIT License. That component remains
+   under its own licence; this licence does not apply to it.
+
+5. OWNERSHIP
+   The Software is licensed, not sold. All rights not expressly granted here
+   are reserved by the copyright holder. No patent or trademark rights are
+   granted.
+
+6. TERMINATION
+   This licence terminates automatically if You breach any of its terms. On
+   termination You must stop using the Software and delete all copies.
+   The copyright holder may also seek removal of infringing copies, including
+   through DMCA takedown notices to hosting providers.
+
+7. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+   PURPOSE, AND NON-INFRINGEMENT. THE SOFTWARE IS A VISUAL AND EDUCATIONAL
+   TOOL AND MUST NOT BE RELIED ON FOR SCIENTIFIC, ENGINEERING, OR SAFETY-
+   CRITICAL DECISIONS.
+
+8. LIMITATION OF LIABILITY
+   IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES,
+   OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT, OR OTHERWISE, ARISING FROM,
+   OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
+
+9. PERMISSIONS AND CONTACT
+   For commercial licensing, redistribution, or any other permission, contact
+   the copyright holder through GitHub: https://github.com/nazat02
+</script>
+<script>
+/* ======================================================================
+   QUANTUM ATOM — LICENSE MODULE
+   Embeds the licence text, verifies its integrity (SHA-256), shows the
+   acceptance / viewer UI, and exposes window.QALicense. The core engine
+   reads QALicense on every frame and on every physics entry point, so a
+   copy with the licence block removed or edited does not run.
+   ====================================================================== */
+(function(){
+'use strict';
+const EXPECT = '5be8a67ce9b34dc623d1aa7d65f514feae3b4bdeaf0e5bf256c3f99a481ecd4d';
+/* ---- compact synchronous SHA-256 (works on file://, no secure context needed) ---- */
+const K = [], H0 = [];
+for(let n = 2, c = 0; c < 64; n++){
+  let p = true; for(let d = 2; d*d <= n; d++) if(n % d === 0){ p = false; break; }
+  if(!p) continue;
+  if(c < 8) H0[c] = (Math.pow(n, .5) % 1) * 4294967296 | 0;
+  K[c++] = (Math.pow(n, 1/3) % 1) * 4294967296 | 0;
+}
+function sha256(bytes){
+  const l = bytes.length, nb = ((l + 9 + 63) >> 6) << 6, p = new Uint8Array(nb), w = new Uint32Array(64), h = H0.slice();
+  p.set(bytes); p[l] = 0x80;
+  const dv = new DataView(p.buffer); dv.setUint32(nb - 8, Math.floor(l / 536870912)); dv.setUint32(nb - 4, (l << 3) >>> 0);
+  for(let o = 0; o < nb; o += 64){
+    for(let i = 0; i < 16; i++) w[i] = dv.getUint32(o + i*4);
+    for(let i = 16; i < 64; i++){ const a = w[i-15], c = w[i-2];
+      w[i] = (w[i-16] + (((a>>>7)|(a<<25)) ^ ((a>>>18)|(a<<14)) ^ (a>>>3)) + w[i-7] + (((c>>>17)|(c<<15)) ^ ((c>>>19)|(c<<13)) ^ (c>>>10))) | 0; }
+    let a = h[0], b = h[1], c = h[2], d = h[3], e = h[4], f = h[5], g = h[6], q = h[7];
+    for(let i = 0; i < 64; i++){
+      const t1 = (q + (((e>>>6)|(e<<26)) ^ ((e>>>11)|(e<<21)) ^ ((e>>>25)|(e<<7))) + ((e & f) ^ (~e & g)) + K[i] + w[i]) | 0;
+      const t2 = ((((a>>>2)|(a<<30)) ^ ((a>>>13)|(a<<19)) ^ ((a>>>22)|(a<<10))) + ((a & b) ^ (a & c) ^ (b & c))) | 0;
+      q = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0; }
+    h[0] = (h[0]+a)|0; h[1] = (h[1]+b)|0; h[2] = (h[2]+c)|0; h[3] = (h[3]+d)|0; h[4] = (h[4]+e)|0; h[5] = (h[5]+f)|0; h[6] = (h[6]+g)|0; h[7] = (h[7]+q)|0;
+  }
+  return Array.from(h, x => (x >>> 0).toString(16).padStart(8, '0')).join('');
+}
+/* ---- read + verify the embedded licence ---- */
+const node = document.getElementById('qa-license');
+const norm = s => String(s).replace(/\r\n?/g, '\n').replace(/[ \t]+$/gm, '').trim();
+const text = node ? norm(node.textContent) : '';
+const sha = text ? sha256(new TextEncoder().encode(text)) : '';
+const cm = text.match(/Copyright \(c\) (\d{4}) (.+?)\. All rights reserved/), vm = text.match(/^Version ([\d.]+)/m);
+const sm = text.match(/Official site:\s+(\S+)/), gm = text.match(/Official source:\s+(\S+)/);
+const valid = !!(sha && sha === EXPECT && cm && vm && sm && gm);
+const info = valid ? { year: cm[1], author: cm[2], version: vm[1], site: sm[1], source: gm[1] } : { year: '', author: '', version: '', site: 'https://nazat02.github.io/Quantum-Atom-2.0/', source: 'https://github.com/nazat02/Quantum-Atom-2.0' };
+const credit = valid ? 'Quantum Atom by ' + info.author : 'Quantum Atom';
+const OK_HOSTS = ['', 'localhost', '127.0.0.1', '[::1]', 'nazat02.github.io'];
+const unofficial = /^https?:$/.test(location.protocol) && OK_HOSTS.indexOf(location.hostname) < 0;
+/* ---- acceptance (persisted per licence version + hash) ---- */
+const KEY = 'qa.licence.accepted', STAMP = info.version + ':' + sha.slice(0, 16);
+let mem = null, declined = false;
+const store = { get(){ try{ return localStorage.getItem(KEY); }catch(e){ return mem; } }, set(v){ try{ localStorage.setItem(KEY, v); }catch(e){ mem = v; } } };
+const isAccepted = () => valid && store.get() === STAMP;
+
+const LIC = {
+  valid, sha, text, credit, unofficial, version: info.version, author: info.author, year: info.year, site: info.site, source: info.source,
+  get accepted(){ return isAccepted(); },
+  get t(){ return valid && !declined ? 1 : 0; },          // frame-time factor read by the core loop
+  px(x){ return valid ? x : 0; },                         // scales render-target sizes
+  guard(fn){ return function(){ return valid && !declined ? fn.apply(this, arguments) : undefined; }; },
+  open(){ show('view'); }
+};
+
+/* ---- UI ---- */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+const I = {
+  shield: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>',
+  check: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  cross: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>',
+  lock: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5M12 14.5v2.5"/></svg>',
+  chev: '<svg class="qalic-chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
+  atom: '<span class="qalic-dot" aria-hidden="true"></span>',
+};
+const CAN = ['Read the source to learn and research', 'Run it locally for personal, educational or non-commercial use', 'Link to and share the official site', 'Fork on GitHub only to send pull requests'];
+const CANT = ['Re-host, mirror or redistribute it', 'Use it commercially: ads, paid products or courses', 'Publish modified versions or claim it as your own', 'Remove licence notices or attribution', 'Imply endorsement using the names', 'Train ML models or build datasets from it'];
+/* reflow the plain-text licence into readable, numbered sections */
+function fmtLic(t){
+  const out = []; let cur = null;
+  t.split('\n').forEach((raw, n) => {
+    const l = raw.trim(); if(!l){ cur = null; return; }
+    let m;
+    if(n === 0) out.push(cur = { c:'t', s:l });
+    else if((m = l.match(/^(\d+)\.\s+([A-Z][A-Z ,&\-]+)$/))) out.push(cur = { c:'h', n:m[1], s:m[2] });
+    else if((m = l.match(/^(Project|Official source|Official site):\s*(.+)$/))) out.push(cur = { c:'k', k:m[1], s:m[2] });
+    else if(/^\([a-z]\)\s/.test(l)) out.push(cur = { c:'i', s:l });
+    else if(cur && cur.c !== 'h' && cur.c !== 't' && cur.c !== 'k') cur.s += (/[A-Za-z]-$/.test(cur.s) ? '' : ' ') + l;   // re-join words hyphen-wrapped in the source text
+    else out.push(cur = { c:'p', s:l });
+  });
+  return out.map(o => o.c === 'h' ? '<h4><i>' + esc(o.n) + '</i>' + esc(o.s) + '</h4>'
+    : o.c === 't' ? '<h3>' + esc(o.s) + '</h3>'
+    : o.c === 'k' ? '<p class="kv"><b>' + esc(o.k) + '</b>' + esc(o.s) + '</p>'
+    : o.c === 'i' ? '<p class="it"><b>' + esc(o.s.slice(0, 3)) + '</b>' + esc(o.s.slice(4)) + '</p>'
+    : '<p>' + esc(o.s) + '</p>').join('');
+}
+let root, box, prevFocus = null, mode = '';
+function build(){
+  root = document.createElement('div'); root.id = 'qalic'; root.hidden = true;
+  root.innerHTML = '<span class="qalic-orb o1"></span><span class="qalic-orb o2"></span><div class="qalic-card" role="dialog" aria-modal="true" aria-labelledby="qalic-title" tabindex="-1"></div>';
+  document.body.appendChild(root); box = root.querySelector('.qalic-card');
+  root.addEventListener('keydown', e => {
+    if(e.key === 'Escape' && mode === 'view'){ e.preventDefault(); hide(); return; }
+    if(e.key !== 'Tab') return;
+    const f = box.querySelectorAll('button,a[href],summary'); if(!f.length) return;
+    const a = f[0], z = f[f.length - 1];
+    if(e.shiftKey && document.activeElement === a){ e.preventDefault(); z.focus(); } else if(!e.shiftKey && document.activeElement === z){ e.preventDefault(); a.focus(); } });
+  root.addEventListener('mousedown', e => { if(e.target === root && mode === 'view') hide(); });
+}
+function render(m){
+  const bad = !valid, sub = bad ? 'Integrity check failed' : m === 'declined' ? 'Not accepted' : 'Licence · v' + esc(info.version);
+  const head = bad ? 'Licence invalid' : m === 'declined' ? 'Licence not accepted' : 'Quantum Atom';
+  const badge = bad ? '<span class="qalic-badge bad">' + I.cross + 'NOT VERIFIED</span>' : '<span class="qalic-badge">' + I.check + 'VERIFIED · ' + esc(sha.slice(0, 8)) + '</span>';
+  let body = '';
+  if(bad){
+    body = '<div class="qalic-lock">' + I.lock + '</div><p class="qalic-lead">This copy cannot run.</p><p class="qalic-p">The licence is part of the application. It is missing from this copy, or its text was changed, so the app will not start. Please use the official, unmodified version.</p>';
+  } else if(m === 'declined'){
+    body = '<p class="qalic-lead">Quantum Atom only runs under its licence.</p><p class="qalic-p">You can review the terms again and accept to continue, or leave the page.</p>';
+  } else {
+    body = '<div class="qalic-meta"><span>© ' + esc(info.year) + '</span><span>' + esc(info.author) + '</span><span class="hot">NON-COMMERCIAL</span><span>SOURCE-AVAILABLE</span></div>' +
+      '<div class="qalic-cols"><section class="qalic-col ok"><h3><b>' + I.check + '</b>You may</h3><ul>' + CAN.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul></section>' +
+      '<section class="qalic-col no"><h3><b>' + I.cross + '</b>You may not</h3><ul>' + CANT.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul></section></div>' +
+      '<div class="qalic-credit"><span>ATTRIBUTION</span>Credit “' + esc(credit) + '” and, where practical, link to the official site.</div>' +
+      (unofficial ? '<div class="qalic-warn">This page is not served from an official location.<br>Official: ' + esc(info.site) + '</div>' : '') +
+      '<details class="qalic-full"><summary><span>Read the full licence</span>' + I.chev + '</summary><div id="qalic-text"></div></details>';
+  }
+  const links = bad ? '' : '<div class="qalic-links"><a href="' + esc(info.site) + '" target="_blank" rel="noopener">Official site ↗</a><a href="' + esc(info.source) + '" target="_blank" rel="noopener">Source on GitHub ↗</a></div>';
+  let act = '';
+  if(m === 'gate') act = '<button type="button" class="qalic-b" data-a="decline">Decline</button><button type="button" class="qalic-b pri" data-a="accept">Accept &amp; continue</button>';
+  else if(m === 'declined') act = '<button type="button" class="qalic-b pri" data-a="review">Review licence</button>';
+  else if(m === 'view') act = '<button type="button" class="qalic-b pri" data-a="close">Close</button>';
+  else if(bad) act = '<a class="qalic-b pri" href="' + esc(info.site) + '" target="_blank" rel="noopener">Get the official version ↗</a>';
+  box.className = 'qalic-card' + (bad ? ' bad' : '');
+  box.innerHTML = '<header><span class="qalic-ic">' + I.atom + '</span><div class="qalic-hd"><h2 id="qalic-title">' + head + '</h2><div class="qalic-sub">' + sub + '</div></div>' + badge + '</header><div class="qalic-body">' + body + links + '</div>' + (act ? '<footer>' + act + '</footer>' : '');
+  const tx = box.querySelector('#qalic-text'); if(tx) tx.innerHTML = fmtLic(text);
+  box.onclick = e => { const b = e.target.closest('[data-a]'); if(!b) return; const a = b.dataset.a;
+    if(a === 'accept'){ store.set(STAMP); declined = false; hide(); }
+    else if(a === 'decline'){ declined = true; show('declined'); }
+    else if(a === 'review'){ show('gate'); }
+    else if(a === 'close'){ hide(); } };
+}
+function setInert(on){ ['app', 'qalic-nav'].forEach(id => { const n = id === 'qalic-nav' ? document.querySelector('nav') : document.getElementById(id); if(n){ if(on) n.setAttribute('inert', ''); else n.removeAttribute('inert'); } }); }
+function show(m){
+  if(!root) build();
+  if(mode === '') prevFocus = document.activeElement;
+  mode = valid ? m : 'invalid'; render(mode === 'invalid' ? 'invalid' : mode);
+  root.hidden = false; setInert(mode !== 'view');
+  const f = box.querySelector('.qalic-b.pri') || box.querySelector('.qalic-b') || box; try{ f.focus({ preventScroll: true }); }catch(e){}
+}
+function hide(){
+  if(!valid) return;
+  root.hidden = true; mode = ''; setInert(false);
+  if(prevFocus && prevFocus.focus) try{ prevFocus.focus({ preventScroll: true }); }catch(e){}
+}
+function mount(){
+  const host = document.querySelector('.nav-right');
+  const btn = document.createElement('button'); btn.type = 'button'; btn.id = 'qalic-btn'; btn.className = 'nav-link-btn qalic-btn' + (!valid || unofficial ? ' warn' : '');
+  btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-label', 'Licence and attribution');
+  btn.innerHTML = I.shield + '<span class="lbl">LICENSE</span><span class="lbl-s">©</span>';
+  btn.addEventListener('click', () => show('view'));
+  if(host) host.appendChild(btn); else { btn.classList.add('float'); document.body.appendChild(btn); }
+  if(!valid) show('invalid'); else if(!isAccepted()) show('gate');
+}
+Object.defineProperty(window, 'QALicense', { value: Object.freeze(LIC), writable: false, configurable: false });
+if(document.body) mount(); else document.addEventListener('DOMContentLoaded', mount);
 })();
 </script>
 <div id="em-legend" role="status" aria-live="polite" style="display:none"></div>
@@ -1280,7 +1606,7 @@ const GLOW_TEX_HAZE  = makeGlowTexture(0.34, 0.22);
 /* ---------- shared renderer / control helpers ---------- */
 const clock = new THREE.Clock();
 const renderLoop = [];
-function tick(){ requestAnimationFrame(tick); const dt = Math.min(clock.getDelta(),0.05); renderLoop.forEach(fn=>fn(dt)); }
+function tick(){ requestAnimationFrame(tick); const dt = Math.min(clock.getDelta(),0.05)*QALicense.t; if(!QALicense.t) return; renderLoop.forEach(fn=>fn(dt)); }   // frame pump is licence-bound
 requestAnimationFrame(tick);
 
 function addDragRotate(canvas, target, opts){
@@ -2191,11 +2517,11 @@ function buildNucleus(protons, neutrons, goldCore){
 }
 
 /* placeholder — atom/molecule assembly, UI wiring and modes continue in part 2 */
-window.__QA2 = { ELEMENTS, ELEMENT_BY_Z, computeConfig, configString, pal, PALETTE, SUBSHELL_CAP,
+window.__QA2 = { ELEMENTS, ELEMENT_BY_Z, computeConfig: QALicense.guard(computeConfig), configString, pal, PALETTE, SUBSHELL_CAP,
   makeGlowTexture, GLOW_TEX, GLOW_TEX_SOFT, GLOW_TEX_CORE, GLOW_TEX_HAZE,
   clock, renderLoop, addDragRotate,
-  subshellLayers, subshellRadiusScale, subshellOuterRadius, orbitalDefs, hundOccupancy, sampleSubshellPoints, sampleVolumePoints, buildSubshellMesh, fresnelMaterial,
-  pointsForSubshell, subshellColor, realModeColor, buildNucleus, CATEGORY_LABEL,
+  subshellLayers, subshellRadiusScale, subshellOuterRadius, orbitalDefs, hundOccupancy, sampleSubshellPoints: QALicense.guard(sampleSubshellPoints), sampleVolumePoints, buildSubshellMesh, fresnelMaterial,
+  pointsForSubshell, subshellColor, realModeColor, buildNucleus: QALicense.guard(buildNucleus), CATEGORY_LABEL,
   NUCLEAR, NUCLEAR_SHAPES, nucleonLayout, nuclearProps, nuclearShape, validateNuclides, mulberry32, TAU,
   RAINBOW_TYPES, rainbowColors, rainbowShellColor, A_SCALE,
   get ANTIMATTER(){ return ANTIMATTER; }, setAntimatter(v){ ANTIMATTER = v; } };
@@ -2547,7 +2873,7 @@ Object.assign(QA2, { MOLECULES, geometryDirections, MOL_STYLE, excitedConfig, ex
    ===================================================================== */
 const canvas = document.getElementById('stage');
 const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true, powerPreference:'high-performance'});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.setPixelRatio(QALicense.px(Math.min(window.devicePixelRatio,2)));
 renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.15;
@@ -6886,7 +7212,7 @@ mount();
 'use strict';
 const QA = window.__QA2, $ = id => document.getElementById(id);
 const canvas = $('photon-stage'), panel = $('photon-panel'), chip = $('mode-photon');
-if(!window.THREE || !QA || !canvas || !panel || !chip) return;
+if(!window.THREE || !QA || !canvas || !panel || !chip || !QALicense.valid) return;
 try{
 const TAU = Math.PI*2, LH = 22, VC = 2.2;                 // scene half-length (units), visual speed of light (units/s)
 const PHYS = { h:6.62607015e-34, c:299792458, eV:1.602176634e-19 };
@@ -7019,7 +7345,7 @@ function pkT(){ const K=PK[S.pk], g=K.id==='glass'?matGlass(S.nm):null;       //
   return (K.id==='atom'?4:S.N)*lamV(S.nm)/(g?g.ng:1)/K.fw; }
 /* ---------- renderer / scene ---------- */
 const renderer = new THREE.WebGLRenderer({ canvas, antialias:false, alpha:true, powerPreference:'high-performance' });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,3)); renderer.setClearColor(0x000000,0);
+renderer.setPixelRatio(QALicense.px(Math.min(window.devicePixelRatio,3))); renderer.setClearColor(0x000000,0);
 const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(50,1,.5,600), group = new THREE.Group();
 scene.add(group);
 const drag = QA.addDragRotate(canvas, group, { startX:.3, startY:1.05, auto:true, autoSpeed:.05 });
@@ -7029,7 +7355,7 @@ const ZOOM_LO=0.04, ZOOM_HI=6;   // zoom factor limits vs. the framing distance 
 const clampZoom = z => Math.max(ZOOM_LO, Math.min(Math.min(ZOOM_HI, 1300/Math.max(1,fitD)), z));
 
 const U = { uSharp:{value:0}, uSharpK:{value:1}, uQ:{value:new THREE.Vector4(.12,1.1,0,0)}, uDel:{value:0}, uOff:{value:0}, uColP:{value:new THREE.Color(0x6644ff)}, uTime:{value:0}, uK:{value:1}, uW:{value:1}, uC:{value:VC}, uSpin:{value:1}, uCirc:{value:0}, uMode:{value:0}, uEll:{value:3},
-  uRW:{value:1.6}, uRZR:{value:5}, uSz:{value:2}, uLT:{value:40}, uZD:{value:ZD}, uStretch:{value:1}, uChirp:{value:0}, uSlip:{value:0}, uPA:{value:1}, uAmp:{value:3.2}, uLH:{value:LH}, uZR:{value:16}, uSize:{value:.22}, uPx:{value:900}, uBright:{value:.5},
+  uRW:{value:1.6}, uRZR:{value:5}, uSz:{value:2}, uLT:{value:40}, uZD:{value:ZD}, uStretch:{value:1}, uChirp:{value:0}, uSlip:{value:0}, uPA:{value:1}, uAmp:{value:3.2}, uLH:{value:LH}, uZR:{value:16}, uSize:{value:.22}, uPx:{value:QALicense.px(900)}, uBright:{value:.5},
   uColE:{value:new THREE.Color(1,.7,.2)}, uColB:{value:new THREE.Color(.3,.6,1)} };
 const VS = `
 attribute vec4 aP;
