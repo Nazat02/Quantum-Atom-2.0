@@ -7009,10 +7009,11 @@ const PK = [
    note:'Gaussian pulse in fused silica (Sellmeier fit). Normal dispersion: red leads, blue lags (up-chirp), so the carrier wavelength changes across the pulse while it broadens. Drag z/L<sub>D</sub>.' }
 
 ];
+const PCOUNT = () => Math.round(DENS[S.dens].n*S.dmul);   // preset count x the continuous density multiplier
 const DENS = [{l:'ECO',n:35000},{l:'MED',n:70000},{l:'HIGH',n:130000},{l:'ULTRA',n:220000}];
 const PRESETS = [['Hα 656',656.3],['Hβ 486',486.1],['Hγ 434',434.0],['Na-D 589',589.0],['Green 532',532],['Violet 405',405],['UV 254',254],['IR 1064',1064]];
 const coarse = matchMedia('(pointer:coarse)').matches;
-const S = { qm:false, bs:0, qa:0, qb:0, w0:1.6, pk:0, N:4, zd:1.5, tau:16, mode:0, nm:656.3, helic:1, ell:3, bright:1, dens: coarse?1:2, speed:1, paused:false, t:0 };
+const S = { qm:false, bs:0, qa:0, qb:0, w0:1.6, pk:0, N:4, zd:1.5, tau:16, mode:0, nm:656.3, helic:1, ell:3, bright:1, dmul:1, sharp:1, dens: coarse?1:2, speed:1, paused:false, t:0 };
 
 function pkT(){ const K=PK[S.pk], g=K.id==='glass'?matGlass(S.nm):null;       // visual 1/e field length of the envelope
   return (K.id==='atom'?4:S.N)*lamV(S.nm)/(g?g.ng:1)/K.fw; }
@@ -7023,12 +7024,16 @@ const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(50,1,.5,60
 scene.add(group);
 const drag = QA.addDragRotate(canvas, group, { startX:.3, startY:1.05, auto:true, autoSpeed:.05 });
 let active=false, fitD=40, zoom=1, core=null, haze=null;
+const ZOOM_LO=0.04, ZOOM_HI=6;   // zoom factor limits vs. the framing distance (was 0.35..2.6)
+// keep the camera inside the far plane (the atom view sets far>=1500) even at the widest fit
+const clampZoom = z => Math.max(ZOOM_LO, Math.min(Math.min(ZOOM_HI, 1300/Math.max(1,fitD)), z));
 
-const U = { uSharp:{value:0}, uQ:{value:new THREE.Vector4(.12,1.1,0,0)}, uDel:{value:0}, uOff:{value:0}, uColP:{value:new THREE.Color(0x6644ff)}, uTime:{value:0}, uK:{value:1}, uW:{value:1}, uC:{value:VC}, uSpin:{value:1}, uCirc:{value:0}, uMode:{value:0}, uEll:{value:3},
+const U = { uSharp:{value:0}, uSharpK:{value:1}, uQ:{value:new THREE.Vector4(.12,1.1,0,0)}, uDel:{value:0}, uOff:{value:0}, uColP:{value:new THREE.Color(0x6644ff)}, uTime:{value:0}, uK:{value:1}, uW:{value:1}, uC:{value:VC}, uSpin:{value:1}, uCirc:{value:0}, uMode:{value:0}, uEll:{value:3},
   uRW:{value:1.6}, uRZR:{value:5}, uSz:{value:2}, uLT:{value:40}, uZD:{value:ZD}, uStretch:{value:1}, uChirp:{value:0}, uSlip:{value:0}, uPA:{value:1}, uAmp:{value:3.2}, uLH:{value:LH}, uZR:{value:16}, uSize:{value:.22}, uPx:{value:900}, uBright:{value:.5},
   uColE:{value:new THREE.Color(1,.7,.2)}, uColB:{value:new THREE.Color(.3,.6,1)} };
 const VS = `
 attribute vec4 aP;
+uniform float uSharpK;
 uniform float uMode,uTime,uK,uW,uC,uSpin,uCirc,uEll,uAmp,uLH,uZR,uSize,uPx,uBright,uSzK,uAK,uStretch,uChirp,uSlip,uPA,uRW,uRZR,uSz,uLT,uZD;
 uniform vec3 uColE,uColB,uColP;
 uniform vec4 uQ;
@@ -7088,7 +7093,7 @@ void main(){
   }
   vec4 mv = modelViewMatrix*vec4(p,1.0);
   gl_Position = projectionMatrix*mv;
-  gl_PointSize = clamp(uSize*uSzK*(0.55 + 1.1*h*h)*uPx/(-mv.z), 1.0, 90.0);
+  gl_PointSize = clamp(uSize*uSzK*(0.55 + 1.1*h*h)*uPx/(-mv.z)/uSharpK, 1.0, 90.0);
   vCol = mix(uColE, uColB, mc);
   if(uMode > 5.5 && uMode < 6.5 && ty > 1.5 && ty < 2.5) vCol = uColP;
   vA = a*uBright*uAK*(0.7 + 0.6*fract(h*7.7));
@@ -7115,7 +7120,7 @@ function click(){ if(nc>=MAXC) return; const sg=wAt(ZD)/2; dpos[3*nc]=gauss(Math
 /* ---------- build / update ---------- */
 function build(){
   refit();
-  const M = MODES[S.mode], n = DENS[S.dens].n, o = BUILD[M.build](n, mulberry(1337+S.mode*101+S.ell), S);
+  const M = MODES[S.mode], n = PCOUNT(), o = BUILD[M.build](n, mulberry(1337+S.mode*101+S.ell), S);
   if(core){ group.remove(core,haze); core.geometry.dispose(); haze.geometry.dispose(); }
   const g = new THREE.BufferGeometry(), g2 = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(o.pos,3)); g.setAttribute('aP', new THREE.BufferAttribute(o.aP,4));
@@ -7186,13 +7191,13 @@ function uniforms(){
   U.uK.value = k; U.uW.value = k*VC; U.uC.value = uc; U.uMode.value = M.sh; U.uCirc.value = M.circ; U.uEll.value = S.ell; U.uSpin.value = S.helic;
   U.uZR.value = ZR_OAM;
   if(M.qm) qmUniforms();
-  U.uSharp.value = M.qm?1:0; matCore.uniforms.uSzK.value = M.qm?2:1; matHaze.uniforms.uSzK.value = 3.4; matHaze.uniforms.uAK.value = .16; if(haze) haze.visible = !M.qm;
+  U.uSharp.value = M.qm?1:0; matCore.uniforms.uSzK.value = M.qm?2:1; matHaze.uniforms.uSzK.value = 3.4; matHaze.uniforms.uAK.value = .16/(S.sharp*S.sharp); matCore.uniforms.uAK.value = Math.sqrt(S.sharp); U.uSharpK.value = S.sharp; if(haze) haze.visible = !M.qm;
   if(M.real){ const l=lamV(S.nm); U.uRW.value=S.w0; U.uRZR.value=Math.PI*S.w0*S.w0/l; U.uSz.value=S.N*l/1.665/Math.SQRT2; U.uC.value=VC*2.2; U.uLT.value=LH+ZD+3; }
   const s = gl ? Math.sqrt(1+S.zd*S.zd) : 1, T = pk ? pkT() : 1;
   U.uStretch.value = s; U.uPA.value = 1/Math.sqrt(s);
   U.uChirp.value = gl ? Math.sign(g.b2)*S.zd/(2*T*T) : 0;
   U.uSlip.value = gl ? k*VC*(1/g.ng-1/g.n) : 0;                                  // carrier slips through the envelope: v_p ≠ v_g
-  U.uBright.value = M.bright*S.bright*70000/DENS[S.dens].n;
+  U.uBright.value = M.bright*S.bright*70000/(DENS[S.dens].n*Math.sqrt(S.dmul));   // sqrt: denser clouds also read a little brighter/fuller
   if(M.pk) U.uBright.value *= Math.min(1, pkT()/4.5);
   if(M.sh===0 || M.sh===4) U.uBright.value *= Math.min(1, lam/2.6);   // keep apparent brightness constant across particle counts
   const e = spectral(S.nm); U.uColE.value.setRGB(...e); U.uColB.value.setRGB(...comp(e)); det.material.color.setRGB(...e);
@@ -7273,7 +7278,7 @@ function sync(){
   panel.querySelectorAll('[data-k]').forEach(b=>b.classList.toggle('on', +b.dataset.k===S.pk));
   panel.querySelectorAll('[data-h]').forEach(b=>b.classList.toggle('on', +b.dataset.h===S.helic));
   panel.querySelectorAll('[data-d]').forEach(b=>b.classList.toggle('on', +b.dataset.d===S.dens));
-  $('ph-pause').textContent = S.paused ? 'RESUME' : 'PAUSE';
+  $('ph-pause').textContent = S.paused ? 'RESUME' : 'PAUSE'; updDS();
   const J = (M.circ||M.id==='yy' ? S.helic : 0) + (M.ell ? S.ell : 0);
   const rows = [['Energy E = hf', p.eV.toFixed(3)+' eV'],['Frequency f',(p.f/1e12).toFixed(1)+' THz'],['Momentum p = h/λ',fmt(p.p,2)+' kg·m/s'],['J<sub>z</sub> (spin+orbital)',(J>0?'+':'')+J+' ħ']].concat(pk?pkRows(K,p):[]).concat(M.real?realRows():[]).concat(M.qm?qmRows(M,p):[]);
   if(M.qm) rows.splice(3,1);
@@ -7310,6 +7315,8 @@ panel.innerHTML =
  '<div class="ph-sec" id="ph-zd-sec"><div class="clabel"><span>Distance in glass z / L<sub>D</sub></span><b id="ph-zd-val"></b></div><div class="cline"><input type="range" id="ph-zd" min="0" max="5" step="0.05" aria-label="Propagation distance in dispersion lengths"></div></div>'+
  '<div class="ph-sec" id="ph-tau-sec"><div class="clabel"><span>Excited-state lifetime τ</span><b id="ph-tau-val"></b></div><div class="cline"><input type="range" id="ph-tau" min="0" max="2" step="0.02" aria-label="Lifetime in nanoseconds, logarithmic"></div><div class="cnote">Na-D 3p: 16.3 ns · Hα 3d: 15.6 ns</div></div>'+
  '<div class="ph-sec"><div class="clabel"><span>Brightness</span><b id="ph-br-val">1.0×</b></div><div class="cline"><input type="range" id="ph-br" min="-1" max="1" step="0.02" value="0" aria-label="Brightness"></div></div>'+
+ '<div class="ph-sec"><div class="clabel"><span>Cloud density</span><b id="ph-dm-val"></b></div><div class="cline"><input type="range" id="ph-dm" min="-2" max="2" step="0.05" value="0" aria-label="Cloud density multiplier"></div></div>'+
+ '<div class="ph-sec"><div class="clabel"><span>Sharpness</span><b id="ph-sh-val"></b></div><div class="cline"><input type="range" id="ph-sh" min="-1.5" max="1.5" step="0.05" value="0" aria-label="Cloud sharpness"></div></div>'+
  '<div class="ph-sec"><div class="clabel"><span>Particles</span></div><div class="ex-chips">'+DENS.map((d,i)=>'<button type="button" class="exchip" data-d="'+i+'">'+d.l+' · '+(d.n/1000|0)+'k</button>').join('')+'</div></div>'+
  '<div class="ph-sec"><div class="clabel"><span>Time speed</span><b id="ph-sp-val">1.0×</b></div><div class="cline"><input type="range" id="ph-sp" min="-1" max="1" step="0.02" value="0" aria-label="Time speed"><button class="cbtn" id="ph-pause" type="button" style="min-width:76px;font-size:.62rem;letter-spacing:.1em"></button></div></div>'+
  '<div class="ph-sec ph-read" id="ph-read"></div><div class="ph-sec ph-eq" id="ph-eq"></div>';
@@ -7330,6 +7337,9 @@ panel.addEventListener('click', e=>{ const b = e.target.closest('button'); if(!b
 $('ph-nm').addEventListener('input', e=>wl(+e.target.value));
 $('ph-ell').addEventListener('input', e=>{ S.ell=+e.target.value; uniforms(); sync(); later(build,140); });
 $('ph-br').addEventListener('input', e=>{ S.bright=Math.pow(4,+e.target.value); $('ph-br-val').textContent=S.bright.toFixed(1)+'×'; uniforms(); });
+function updDS(){ const n=PCOUNT(); $('ph-dm-val').textContent = S.dmul.toFixed(2)+'× · '+(n>=1e6?(n/1e6).toFixed(2)+'M':(n/1000|0)+'k'); $('ph-sh-val').textContent = S.sharp.toFixed(2)+'×'; }
+$('ph-dm').addEventListener('input', e=>{ S.dmul=Math.pow(2,+e.target.value); updDS(); later(build,140); });   // rebuilds the cloud (debounced)
+$('ph-sh').addEventListener('input', e=>{ S.sharp=Math.pow(2,+e.target.value); updDS(); uniforms(); });         // pure uniform change: instant
 $('ph-sp').addEventListener('input', e=>{ S.speed=Math.pow(4,+e.target.value); $('ph-sp-val').textContent=S.speed.toFixed(1)+'×'; });
 
 $('ph-w').addEventListener('input', e=>{ S.w0=+e.target.value; clearDet(); uniforms(); sync(); });
@@ -7353,10 +7363,10 @@ entChip.addEventListener('click', ()=>activate(true,true));
 ['mode-atoms','mode-molecules','mode-4d','mode-nd'].forEach(id=>{ const b=$(id); if(b) b.addEventListener('click', ()=>{ if(active) activate(false); }); });
 window.addEventListener('resize', ()=>{ if(active) fit(); });
 new MutationObserver(()=>{ if(active) fit(); }).observe(document.body,{attributes:true,attributeFilter:['class']});
-canvas.addEventListener('wheel', e=>{ e.preventDefault(); zoom=Math.max(.35,Math.min(2.6,zoom*Math.exp(Math.max(-300,Math.min(300,e.deltaY))*.0012))); },{passive:false});
+canvas.addEventListener('wheel', e=>{ e.preventDefault(); zoom=clampZoom(zoom*Math.exp(Math.max(-300,Math.min(300,e.deltaY))*.0012)); },{passive:false});
 let pinch=null; const pd = t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
 canvas.addEventListener('touchstart', e=>{ if(e.touches.length===2) pinch={d:pd(e.touches),z:zoom}; },{passive:true});
-canvas.addEventListener('touchmove', e=>{ if(e.touches.length===2&&pinch) zoom=Math.max(.35,Math.min(2.6,pinch.z*pinch.d/pd(e.touches))); },{passive:true});
+canvas.addEventListener('touchmove', e=>{ if(e.touches.length===2&&pinch) zoom=clampZoom(pinch.z*pinch.d/pd(e.touches)); },{passive:true});
 canvas.addEventListener('touchend', e=>{ if(e.touches.length<2) pinch=null; });
 /* touch / phone: touching the scene folds the control panel away so the photon gets the whole screen (re-open via the dock or the edge tab) */
 const mqNarrow = matchMedia('(max-width:900px)');
@@ -7372,7 +7382,7 @@ QA.renderLoop.push(dt=>{
   if(!active) return;
   if(!S.paused) S.t += dt*S.speed; U.uTime.value = S.t;
   drag.apply(dt);
-  camera.position.z += (fitD*zoom - camera.position.z)*Math.min(1,dt*8);
+  { const cz=camera.position.z, tz=fitD*clampZoom(zoom), lr=Math.log(tz/cz); camera.position.z = Math.abs(lr)<1e-4 ? tz : cz*Math.exp(lr*Math.min(1,dt*8)); }
   if(MODES[S.mode].real){ const LT=U.uLT.value, zc=(((S.t*U.uC.value)%LT)+LT)%LT-LH, tr=ZD-1.2;
     if(zcPrev!==null && zcPrev<tr && zc>=tr){ click(); sync(); } zcPrev=zc; }
   updLines(); hud(); renderer.render(scene, camera);
