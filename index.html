@@ -820,7 +820,17 @@ function makeCloudPoints(type, n, size, color, boost){
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(0x050302, 0.02);
   const camera = new THREE.PerspectiveCamera(50,1,0.1,200);
-  let camZ = 14; camera.position.set(0,0,camZ);
+  /* Responsive framing: the cloud (radius ~3 units) is sized to a fixed share of the
+     canvas' SHORTER side, so it looks equally large on phones, laptops and ultrawide. */
+  const HERO_R = 3.0, HERO_FILL = 0.88;
+  let baseZ = 14, zoom = 1, camZ = baseZ;
+  camera.position.set(0,0,camZ);
+  function frameHero(w,h){
+    const t = Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
+    baseZ = HERO_R*h / (t*HERO_FILL*Math.min(w,h));
+    baseZ = Math.max(5, Math.min(30, baseZ));
+    camZ = baseZ*zoom;
+  }
 
   const starGeo = new THREE.BufferGeometry();
   const sc=400, spos=new Float32Array(sc*3);
@@ -842,7 +852,8 @@ function makeCloudPoints(type, n, size, color, boost){
   },{passive:true});
   canvas.addEventListener('wheel', e=>{
     e.preventDefault();
-    camZ = Math.max(7, Math.min(24, camZ + e.deltaY*0.01));
+    zoom = Math.max(0.5, Math.min(1.7, zoom + e.deltaY*0.0007));
+    camZ = baseZ*zoom;
   },{passive:false});
 
   document.querySelectorAll('#orb-picker .orb-chip').forEach(btn=>{
@@ -855,8 +866,12 @@ function makeCloudPoints(type, n, size, color, boost){
     });
   });
 
-  function resize(){ fitCanvas(renderer, camera, canvas); }
+  function resize(){
+    fitCanvas(renderer, camera, canvas);
+    frameHero(canvas.parentElement.clientWidth, canvas.clientHeight || canvas.parentElement.clientHeight);
+  }
   window.addEventListener('resize', resize); resize();
+  camera.position.z = camZ;
 
   renderLoop.push(dt=>{
     drag.apply(dt);
