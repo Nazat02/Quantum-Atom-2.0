@@ -59,8 +59,10 @@ nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:60;he
 .nav-link-btn:hover{border-color:var(--cx-40);color:var(--hi);}
 .nav-link-btn .lbl-s{display:none;}
 .brand{white-space:nowrap;min-width:0;}
-@media(max-width:640px){nav{padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));} .ver-pill{display:none;} .nav-link-btn .lbl{display:none;} .nav-link-btn .lbl-s{display:inline;} .nav-link-btn{padding:0 10px;font-size:.62rem;} .nav-right{gap:6px;} .brand{font-size:.74rem;}}
-@media(max-width:360px){.nav-link-btn .arr{display:none;}}
+@media(max-width:640px){nav{padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));} .nav-link-btn .lbl{display:none;} .nav-link-btn .lbl-s{display:inline;} .nav-link-btn{padding:0 9px;font-size:.62rem;} .nav-right{gap:6px;} .brand{font-size:.7rem;letter-spacing:.09em;gap:7px;}
+  .ver-pill{display:inline-block;flex-shrink:0;font-size:.52rem;letter-spacing:.06em;line-height:1.5;padding:1px 6px;margin-left:-1px;}}   /* the 2.0 badge stays visible on phones */
+@media(max-width:430px){.nav-link-btn .arr{display:none;}}
+@media(max-width:340px){.brand{font-size:.64rem;letter-spacing:.05em;gap:5px;} .nav-link-btn{padding:0 7px;}}
 
 /* ============ APP SHELL ============ */
 #app{position:fixed;top:calc(env(safe-area-inset-top,0px) + 56px);left:0;right:0;bottom:0;}
@@ -657,6 +659,7 @@ body.m4d .ptab[data-tab="data"],body.mND .ptab[data-tab="data"],body.mph .ptab[d
 <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18"/></symbol>
 <symbol id="i-smooth" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c3-7 5-7 8 0s5 7 8 0c1-2 2-3 4-2"/></symbol>
 <symbol id="i-ultra" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></symbol>
+<symbol id="i-hard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M5 9.5c4 2 10 2 14 0M5 14.5c4-2 10-2 14 0"/></symbol>
 <symbol id="i-surface" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
 <symbol id="i-cube" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12v10M12 12L3 7"/></symbol>
 <symbol id="i-field" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 9V3M15 12h6M12 15v6M9 12H3"/></symbol><symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol><symbol id="i-rad" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><circle cx="12" cy="12" r="1.8"/><path id="i-rad-w" d="M12 10.2L7.5 4.2A9 9 0 0 1 16.5 4.2z"/><use href="#i-rad-w" transform="rotate(120 12 12)"/><use href="#i-rad-w" transform="rotate(240 12 12)"/></symbol>
@@ -735,6 +738,18 @@ body.m4d .ptab[data-tab="data"],body.mND .ptab[data-tab="data"],body.mph .ptab[d
     <button class="tbtn tg" id="btn-smooth" type="button"><svg class="ti" aria-hidden="true"><use href="#i-smooth"/></svg><span class="tl">Smooth orbitals</span><small class="td">Soft blended cloud</small><span class="dot"></span></button>
     <button class="tbtn tg" id="btn-ultra" type="button"><svg class="ti" aria-hidden="true"><use href="#i-ultra"/></svg><span class="tl">Ultra mode</span><small class="td">Mesh, high fidelity</small><span class="dot"></span></button>
     <button class="tbtn tg" id="btn-surface" type="button"><svg class="ti" aria-hidden="true"><use href="#i-surface"/></svg><span class="tl">Surface mode</span><small class="td">Draw orbital surfaces</small><span class="dot"></span></button>
+    <button class="tbtn tg" id="btn-hard" type="button"><svg class="ti" aria-hidden="true"><use href="#i-hard"/></svg><span class="tl">Hard mode</span><small class="td">Smooth heatmap surfaces</small><span class="dot"></span></button>
+    <div id="hard-picker" role="group" aria-label="Hard mode options" style="display:none;grid-column:1/-1;padding:2px 4px 8px">
+      <div class="cnote">Reveal</div>
+      <div class="ex-chips" data-g="view"><button type="button" class="exchip" data-k="0" aria-pressed="false">Solid</button><button type="button" class="exchip" data-k="1" aria-pressed="false">Cutaway</button><button type="button" class="exchip" data-k="2" aria-pressed="false">Half</button><button type="button" class="exchip on" data-k="3" aria-pressed="true">Glass</button></div>
+      <div class="cnote">Layers (tap to show / hide)</div>
+      <div class="ex-chips" id="hard-layers" data-g="layer"></div>
+      <div class="cnote">Shells shown: <b id="hard-peel-v">All</b></div>
+      <input type="range" id="hard-peel" min="1" max="7" step="1" value="7" style="width:100%;accent-color:var(--cx)" aria-label="Number of shells shown">
+      <div class="cnote">Colour theme</div>
+      <div class="ex-chips" data-g="theme"><button type="button" class="exchip on" data-k="prism" aria-pressed="true">Prism</button><button type="button" class="exchip" data-k="aurora" aria-pressed="false">Aurora</button><button type="button" class="exchip" data-k="sunset" aria-pressed="false">Sunset</button><button type="button" class="exchip" data-k="ocean" aria-pressed="false">Ocean</button><button type="button" class="exchip" data-k="candy" aria-pressed="false">Candy</button><button type="button" class="exchip" data-k="neon" aria-pressed="false">Neon</button><button type="button" class="exchip" data-k="galaxy" aria-pressed="false">Galaxy</button></div>
+      <div class="cnote">Glass shows every layer at once. Solid is opaque and hides inner shells; use the layer chips or Shells shown to peel layers away.</div>
+    </div>
     <button class="tbtn tg" id="btn-volumetric" type="button"><svg class="ti" aria-hidden="true"><use href="#i-cube"/></svg><span class="tl">Volumetric mode</span><small class="td">Volume-style render</small><span class="dot"></span></button>
     <div class="tg-h">Scene</div>
     <button class="tbtn tg" id="btn-antimatter" type="button"><svg class="ti" aria-hidden="true"><use href="#i-anti"/></svg><span class="tl">Antimatter</span><small class="td">Anti-particle palette</small><span class="dot"></span></button>
@@ -1923,26 +1938,39 @@ function sampleVolumePoints(n, l, count, orb){
 // Regular (theta,phi) grid surface for Ultra Mode meshes — same scale and
 // angularShape() as the point cloud. Grids are split per lobe (vertices
 // duplicated along lobe seams) so each lobe translates rigidly without tearing.
-function buildSubshellMesh(n, l, color, orb, surface){
+function buildSubshellMesh(n, l, color, orb, surface, opts){
   orb = orb || orbitalDefs(l)[0];
+  const hard = surface === 'hard';   // Hard mode: closed, hollow, smooth heat-mapped surface
+  opts = opts || {};
   const kind = orb.kind, map = orb.map, K = KINDS[kind];
   const baseR = subshellBodyRadius(n,l);
   const off = subshellRadialOffset(n,l), sh = [0,0,0];
-  const T = surface ? (l>=3 ? 36 : 26) : (l>=3 ? 72 : 40), P = surface ? (l>=3 ? 64 : 48) : (l>=3 ? 96 : 64), rowLen = P+1;
-  const minR = surface ? 0.004 : 0.06;   // surface mode pinches lobes to a point at the nodal plane → every lobe is a closed volume
-  const base = [], indices = [], positions = [], lines = [];
+  const T = hard ? (HARD_MOBILE ? (l>=3 ? 56 : 44) : (l>=3 ? 84 : 68)) : surface ? (l>=3 ? 36 : 26) : (l>=3 ? 72 : 40),
+        P = hard ? (HARD_MOBILE ? (l>=3 ? 112 : 88) : (l>=3 ? 168 : 136)) : surface ? (l>=3 ? 64 : 48) : (l>=3 ? 96 : 64), rowLen = P+1;   // Hard mode: high-resolution grid (smooth silhouettes, no faceting)
+  const minR = surface ? 0.004 : 0.06;   // (hard mode shares the pinched, closed-lobe profile)   // surface mode pinches lobes to a point at the nodal plane → every lobe is a closed volume
+  const base = [], indices = [], positions = [], lines = [], heat = [], baseHeat = [];
+  let maxShape = 1e-6;
+  if(hard) for(let ti=0; ti<=T; ti++){   // pre-pass: peak of the angular profile, to normalise the heat value
+    const th = Math.PI*ti/T, c = Math.cos(th), sn = Math.sin(th);
+    for(let pi=0; pi<=P; pi++){ const ph = TAU*pi/P; maxShape = Math.max(maxShape, angularShape(kind, sn*Math.cos(ph), c, sn*Math.sin(ph), sn, ph)); }
+  }
+  const shellK = Math.min(1, Math.max(0, opts.shellK || 0));
   for(let ti=0; ti<=T; ti++){
     const theta = Math.PI*ti/T;
     const ct = Math.cos(theta), st = Math.sin(theta);
     for(let pi=0; pi<=P; pi++){
       const phi = TAU*pi/P;
       const dx = st*Math.cos(phi), dz = st*Math.sin(phi);
-      const r = baseR*Math.max(angularShape(kind,dx,ct,dz,st,phi), minR);
+      const shp = angularShape(kind,dx,ct,dz,st,phi);
+      const r = baseR*Math.max(shp, minR);
       base.push(r*dx, r*ct, r*dz);
+      // heat: lobe strength (hot tips, cool nodes) + shell depth (inner cool -> outer hot) + a gentle pole-to-pole sweep so even a sphere is multi-coloured
+      if(hard) baseHeat.push(Math.max(0,shp)/maxShape);   // lobe strength 0..1 (hot tips, cool nodes); sweep + shell depth are composed after mapping, below
     }
   }
   const nBase = base.length/3;
-  const pushWorld = (x,y,z)=>{ const w = map(x,y,z); positions.push(w[0],w[1],w[2]); };
+  let curHeat = 0;
+  const pushWorld = (x,y,z)=>{ const w = map(x,y,z); positions.push(w[0],w[1],w[2]); if(hard) heat.push(curHeat); };
   const remap = new Map();
   const vert = (lobe, v)=>{
     if(off<=0) return v;
@@ -1952,12 +1980,13 @@ function buildSubshellMesh(n, l, color, orb, surface){
       const phi = TAU*(v%rowLen)/P;
       K.shift(lobe, phi, off, sh);
       id = positions.length/3;
+      curHeat = hard ? baseHeat[v] : 0;
       pushWorld(base[v*3]+sh[0], base[v*3+1]+sh[1], base[v*3+2]+sh[2]);
       remap.set(key, id);
     }
     return id;
   };
-  if(off<=0) for(let v=0; v<nBase; v++) pushWorld(base[v*3],base[v*3+1],base[v*3+2]);
+  if(off<=0) for(let v=0; v<nBase; v++){ curHeat = hard ? baseHeat[v] : 0; pushWorld(base[v*3],base[v*3+1],base[v*3+2]); }
   for(let ti=0; ti<T; ti++){
     const tc = Math.PI*(ti+0.5)/T, cy = Math.cos(tc), cs = Math.sin(tc);
     for(let pi=0; pi<P; pi++){
@@ -1966,13 +1995,37 @@ function buildSubshellMesh(n, l, color, orb, surface){
       if(off>0){ const pc = TAU*(pi+0.5)/P; lobe = K.lobe(cs*Math.cos(pc), cy, cs*Math.sin(pc)); }
       const va = vert(lobe,a), vb = vert(lobe,b), vc = vert(lobe,c), vd = vert(lobe,d);
       indices.push(va,vb,vc, vc,vb,vd);
-      if(surface){ lines.push(va,vc, va,vb); if(ti===T-1) lines.push(vb,vd); if(pi===P-1) lines.push(vc,vd); }
+      if(surface && !hard){ lines.push(va,vc, va,vb); if(ti===T-1) lines.push(vb,vd); if(pi===P-1) lines.push(vc,vd); }
     }
   }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
   geo.setIndex(indices);
   geo.computeVertexNormals();
+  if(hard){
+    // Weld normals across coincident vertices (the phi seam and lobe duplicates) so the surface shades smoothly with no visible creases.
+    const pa = geo.getAttribute('position'), na = geo.getAttribute('normal'), acc = new Map(), keys = new Array(pa.count);
+    const wq = 1/Math.max(1e-6, baseR*1e-4);   // weld tolerance relative to the orbital size (a fixed one failed for very small / very large shells)
+    for(let i=0;i<pa.count;i++){
+      const k = Math.round(pa.getX(i)*wq)+'_'+Math.round(pa.getY(i)*wq)+'_'+Math.round(pa.getZ(i)*wq);
+      keys[i] = k; let a = acc.get(k); if(!a){ a = [0,0,0]; acc.set(k,a); }
+      a[0]+=na.getX(i); a[1]+=na.getY(i); a[2]+=na.getZ(i);
+    }
+    for(let i=0;i<pa.count;i++){ const a = acc.get(keys[i]), il = 1/(Math.hypot(a[0],a[1],a[2])||1); na.setXYZ(i, a[0]*il, a[1]*il, a[2]*il); }
+    na.needsUpdate = true;
+    // Heat = world-space top-to-bottom sweep + lobe strength, normalised per surface so EVERY orbital spans its whole gradient,
+    // then lifted by shell depth (inner shells cool, outer shells hot). Previously the shell term was a constant that the
+    // min-max normalisation cancelled out, so shell depth never showed.
+    { const nv = pa.count, gg = new Float32Array(nv); let ylo=1e9, yhi=-1e9, glo=1e9, ghi=-1e9;
+      for(let i=0;i<nv;i++){ const y = pa.getY(i); if(y<ylo) ylo=y; if(y>yhi) yhi=y; }
+      const yk = 1/Math.max(1e-6, yhi-ylo);
+      for(let i=0;i<nv;i++){ const gv = 0.55*(pa.getY(i)-ylo)*yk + 0.45*heat[i]; gg[i] = gv; if(gv<glo) glo=gv; if(gv>ghi) ghi=gv; }
+      const gk = 1/Math.max(1e-6, ghi-glo);
+      for(let i=0;i<nv;i++) heat[i] = Math.min(1, Math.max(0, 0.10 + 0.64*(gg[i]-glo)*gk + 0.26*shellK));
+    }
+    geo.setAttribute('aHeat', new THREE.Float32BufferAttribute(heat,1));
+    return new THREE.Mesh(geo, hardMaterial(opts.hi, opts.pal|0, baseR));
+  }
   if(surface){
     // closed translucent body + the θ/φ grid drawn on it
     const grp = new THREE.Group();
@@ -2063,6 +2116,140 @@ function surfaceMaterial(color){
       }`,
     transparent:true, depthWrite:false, side:THREE.DoubleSide, blending:THREE.AdditiveBlending
   });
+}
+// Hard mode: glossy pearl-like gradient surfaces. Palettes run deep -> light; each theme holds several, one per subshell.
+const HARD_THEMES = {
+  prism:  { name:'Prism',  pals:[[0x2a1fd1,0x7a2df0,0xd24ee0,0xffc2e6],[0x7a0a2a,0xe2331f,0xff8a1f,0xffe2a8],[0x0b2a9c,0x0aa2d6,0x28e0b0,0xe4ffd8],[0x3a0f7a,0xc0267a,0xff7a45,0xffe27a],[0x0a5a4a,0x23b86a,0xa6e03a,0xfff3a0],[0x1a2a8a,0x5a6bff,0x9fb4ff,0xf0f4ff]] },
+  aurora: { name:'Aurora', pals:[[0x062a5a,0x0fa3b8,0x2de39a,0xe6ffe9],[0x1b0a5c,0x5a3df0,0x23c8e0,0xdffcff],[0x053b3b,0x1ec28b,0x9cf06a,0xfaffd0],[0x2a0a6a,0x8a3df0,0x35e6c0,0xe8fff6]] },
+  sunset: { name:'Sunset', pals:[[0x3a0a5a,0xc2255c,0xff6a3d,0xffe0a0],[0x5a0a2a,0xe0402a,0xff9a2a,0xfff0b8],[0x2a0f6a,0xa0309a,0xff6a8a,0xffd6c0],[0x7a1030,0xff4a50,0xffa04a,0xffeac8]] },
+  ocean:  { name:'Ocean',  pals:[[0x04163f,0x0a5fd6,0x14c8ee,0xe0fbff],[0x0a1f6a,0x2b6bf0,0x6fd0ff,0xf0fcff],[0x03303a,0x0a8f9e,0x40e0d0,0xe6fff8],[0x101a5a,0x3a4af0,0x7aa8ff,0xeaf0ff]] },
+  candy:  { name:'Candy',  pals:[[0xe0409a,0xff7ac8,0xffb6e0,0xfff0fa],[0x6a5af0,0xa89aff,0xd0c8ff,0xf8f6ff],[0x20c0a0,0x70e8c8,0xb0f8e0,0xf4fffa],[0xff8a6a,0xffb28a,0xffd6a8,0xfff6e6]] },
+  neon:   { name:'Neon',   pals:[[0x1a0050,0xe010ff,0xff4ad0,0xffe0ff],[0x001a50,0x00b4ff,0x00ffe0,0xe0ffff],[0x103000,0x40e000,0xd0ff20,0xfaffc0],[0x3a0030,0xff0a80,0xff7a1a,0xfff0b0]] },
+  galaxy: { name:'Galaxy', pals:[[0x0a0a4a,0x2a2ad8,0x8a3df0,0xff9ae0],[0x1a0a5a,0x5a2ae0,0xc23df0,0xffb8f0],[0x080a3a,0x2060e0,0x7a50f0,0xe0b0ff],[0x2a0a5a,0x9a2ae0,0xe04ac8,0xffd0ee]] }
+};
+const HARD_PRISM_ANTI = [HARD_THEMES.prism.pals[0], HARD_THEMES.prism.pals[5],[0x1a0f6a,0x6a2cf0,0xff3fc8,0xffd0f0],[0x2b0a5a,0x9a3cf5,0xff6aa8,0xffe0ee]];
+function hardSet(theme){ return (theme==='prism' && ANTIMATTER) ? HARD_PRISM_ANTI : (HARD_THEMES[theme]||HARD_THEMES.prism).pals; }
+/* Dye set for one surface: four different hues (taken from four neighbouring palettes of the theme, so every
+   surface mixes several colours, and each surface gets a different arrangement) plus a light and a deep accent. */
+function hardDyes(theme, idx){
+  const set = hardSet(theme), L = set.length, at = k => set[(((idx+k)%L)+L)%L];
+  return { d:[at(0)[1], at(1)[2], at(2)[1], at(3)[2]], light:at(0)[3], deep:at(0)[0] };
+}
+const HARD_T = { value:0 };   // dye flow clock, shared by every Hard surface
+const HARD_FLOW = !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+renderLoop.push(dt=>{ if(HARD_FLOW) HARD_T.value += dt*0.35; });
+const HARD_MOBILE = !!(window.matchMedia && matchMedia('(pointer:coarse)').matches);
+function hardMaterial(hi, palIdx, scale){
+  const Y = hardDyes('prism', palIdx), C = h => new THREE.Color(h);
+  const m = new THREE.ShaderMaterial({
+    uniforms:{
+      uOpacity:{value:1.0}, uMode:{value:0}, uBrK:BRU.uBrK, uTime:HARD_T, uOct:{value:HARD_MOBILE?2:3},
+      uScale:{value:1/Math.max(1e-3, (scale||1)*1.4)}, uSeed:{value:(palIdx|0)*3.71+0.5},
+      uD0:{value:C(Y.d[0])}, uD1:{value:C(Y.d[1])}, uD2:{value:C(Y.d[2])}, uD3:{value:C(Y.d[3])},
+      uLt:{value:C(Y.light)}, uDp:{value:C(Y.deep)},
+      uHi:{value:C(hi==null?0xffffff:hi)}, uHiK:{value:hi==null?0:0.6}
+    },
+    vertexShader:`
+      attribute float aHeat;
+      varying vec3 vNormal; varying vec3 vViewDir; varying float vHeat; varying vec3 vObj;
+      void main(){
+        vHeat = aHeat; vObj = position;
+        vNormal = normalize(normalMatrix*normal);
+        vec4 mv = modelViewMatrix*vec4(position,1.0);
+        vViewDir = normalize(-mv.xyz);
+        gl_Position = projectionMatrix*mv;
+      }`,
+    fragmentShader:`
+      uniform float uOpacity; uniform float uMode; uniform float uBrK; uniform float uTime; uniform float uOct; uniform float uScale; uniform float uSeed;
+      uniform vec3 uD0; uniform vec3 uD1; uniform vec3 uD2; uniform vec3 uD3; uniform vec3 uLt; uniform vec3 uDp; uniform vec3 uHi; uniform float uHiK;
+      varying vec3 vNormal; varying vec3 vViewDir; varying float vHeat; varying vec3 vObj;
+      float hash13(vec3 p){ p = fract(p*0.3183099+vec3(0.1,0.1,0.1)); p *= 17.0; return fract(p.x*p.y*p.z*(p.x+p.y+p.z)); }
+      float vnoise(vec3 x){
+        vec3 i = floor(x), f = fract(x); f = f*f*(3.0-2.0*f);
+        return mix(mix(mix(hash13(i),                     hash13(i+vec3(1.0,0.0,0.0)), f.x),
+                       mix(hash13(i+vec3(0.0,1.0,0.0)),   hash13(i+vec3(1.0,1.0,0.0)), f.x), f.y),
+                   mix(mix(hash13(i+vec3(0.0,0.0,1.0)),   hash13(i+vec3(1.0,0.0,1.0)), f.x),
+                       mix(hash13(i+vec3(0.0,1.0,1.0)),   hash13(i+vec3(1.0,1.0,1.0)), f.x), f.y), f.z);
+      }
+      float fbm(vec3 p){
+        float a = 0.5, s = 0.0, n = 0.0;
+        for(int i=0;i<3;i++){ if(float(i)>=uOct) break; s += a*vnoise(p); n += a; p = p*2.03+vec3(1.7,9.2,3.1); a *= 0.5; }
+        return s/n;
+      }
+      void main(){
+        // uMode: 0 solid, 1 cutaway wedge, 2 half section, 3 glass
+        if(uMode>0.5 && uMode<1.5 && vObj.x>0.0 && vObj.z>0.0) discard;
+        if(uMode>1.5 && uMode<2.5 && vObj.x>0.0) discard;
+        bool glass = uMode>2.5;
+        if(!glass && uOpacity<0.999){ float d = fract(52.9829189*fract(dot(gl_FragCoord.xy, vec2(0.06711056,0.00583715)))); if(d>uOpacity) discard; }
+
+        // ---- dye: domain-warped noise steers four hues so they swirl and bleed into each other ----
+        float tm = uTime;
+        vec3 q = vObj*uScale*1.7 + vec3(uSeed, uSeed*0.57, uSeed*1.31);
+        vec3 w = vec3(vnoise(q+vec3(tm*0.10,0.0,0.0)), vnoise(q+vec3(5.2,tm*0.12,1.3)), vnoise(q+vec3(9.7,2.1,tm*0.09)))*2.0-1.0;
+        float f1 = smoothstep(0.22,0.78, fbm(q + 1.9*w));
+        float f2 = smoothstep(0.22,0.78, fbm(q*1.4 + 2.5*w + vec3(7.1,3.3,5.9)));
+        vec3 dye = mix(mix(uD0,uD1,f1), mix(uD2,uD3,f1), f2);
+        float h = clamp(vHeat,0.0,1.0);
+        // paint: flowing marbled ink streaks swirl a second pair of hues through the dye
+        float mb = fbm(q*0.85 + 3.1*w + vec3(2.3,7.7,1.1));
+        float streak = 0.5+0.5*sin(6.2831853*(mb*2.6 + h*1.2 + tm*0.04));
+        dye = mix(dye, mix(uD3,uD1,streak), 0.38*smoothstep(0.15,0.85,mb));
+        float lum0 = dot(dye, vec3(0.299,0.587,0.114));
+        dye = clamp(mix(vec3(lum0), dye, 1.55), 0.0, 1.0);   // vivid, saturated pigment
+        // heat ramp: deep tone in the cool zones -> the dye -> the light accent in the hottest zones (a real heat map)
+        vec3 ramp = h<0.5 ? mix(uDp, dye, smoothstep(0.0,0.5,h)) : mix(dye, uLt, smoothstep(0.5,1.0,h)*0.7);
+        vec3 base = mix(dye, ramp, 0.55);
+        base = mix(base, uHi, uHiK);
+
+        vec3 N = normalize(vNormal), V = normalize(vViewDir);
+        if(dot(N,V)<0.0) N = -N;
+        vec3 L = normalize(vec3(-0.45,0.75,0.55));
+        float diff = max(dot(N,L),0.0);
+        float facing = max(dot(N,V),0.0);
+        float rim = pow(1.0-facing,3.0);
+        float hemi = 0.5+0.5*N.y;
+        // lighting runs in linear light (palette colours are authored in sRGB) and is encoded back: correct, richer shading
+        vec3 lin = pow(base, vec3(2.2))*(0.34 + 0.22*hemi + 0.95*diff);
+        lin += pow(uD1, vec3(2.2))*pow(max(dot(N,-L),0.0),2.0)*0.10;   // cool bounce from behind
+        lin += pow(uLt, vec3(2.2))*rim*0.40;                            // light-accent rim
+        float spec = pow(max(dot(N,normalize(L+V)),0.0),96.0);
+        lin += vec3(1.0)*(spec*0.55 + 0.10*pow(diff,6.0));              // crisp pearl highlight
+        vec3 col = pow(clamp(lin,0.0,1.0), vec3(1.0/2.2));
+        vec3 irid = 0.5+0.5*cos(6.2831853*(facing*0.85+vec3(0.0,0.33,0.67)));
+        col = mix(col, col*(0.65+0.7*irid), 0.14);
+        col = clamp(col*uBrK,0.0,1.0);
+        float dn = fract(52.9829189*fract(dot(gl_FragCoord.xy, vec2(0.06711056,0.00583715))));
+        col = clamp(col + (dn-0.5)/255.0, 0.0, 1.0);   // dither: no gradient banding
+        float a = 1.0;
+        if(glass){
+          // X-ray: faces stay faint so the shells behind them show through; rims, contour rings and highlights carry the form.
+          float ring = smoothstep(0.80, 1.0, 1.0-abs(fract(h*8.0)-0.5)*2.0) * 0.5;
+          col = col*0.92 + uLt*ring*0.55;
+          a = clamp((0.075 + 0.55*pow(1.0-facing,2.0) + ring*0.16 + spec*0.5)*uOpacity, 0.0, 0.85);
+        }
+        if(glass) col = clamp(col*1.45 + dye*0.18, 0.0, 1.0);   // keep the paint vivid even though the glass faces are faint
+        gl_FragColor = vec4(col*(glass ? clamp(a*1.7+0.07,0.0,1.0) : a), a);
+      }`,
+    transparent:false, depthWrite:true, depthTest:true, side:THREE.DoubleSide
+  });
+  m.userData.hard = true; m.userData.pal = palIdx|0;
+  return m;
+}
+/* Live restyle of every Hard-mode mesh (no rebuild): cfg = { view:0..3, theme, peel }.
+   view 0 solid, 1 cutaway wedge, 2 half section, 3 glass (all shells visible, order-independent blend). */
+function hardApply(meshes, cfg){
+  for(const m of meshes){
+    const mat = m.material, u = mat.uniforms, Y = hardDyes(cfg.theme, mat.userData.pal);
+    u.uD0.value.set(Y.d[0]); u.uD1.value.set(Y.d[1]); u.uD2.value.set(Y.d[2]); u.uD3.value.set(Y.d[3]);
+    u.uLt.value.set(Y.light); u.uDp.value.set(Y.deep);
+    u.uMode.value = cfg.view;
+    const glass = cfg.view === 3;
+    mat.transparent = glass; mat.depthWrite = !glass;
+    if(glass){ mat.blending = THREE.CustomBlending; mat.blendEquation = THREE.AddEquation; mat.blendSrc = THREE.OneFactor; mat.blendDst = THREE.OneMinusSrcColorFactor; }
+    else mat.blending = THREE.NormalBlending;
+    const n = m.userData.n; m.userData.hardShow = (n === undefined) || (n <= cfg.peel && !(cfg.off && cfg.off.has(n))); m.visible = m.userData.hardShow;
+  }
 }
 function fresnelMaterial(color){
   const c = new THREE.Color(color);
@@ -2521,7 +2708,7 @@ function buildNucleus(protons, neutrons, goldCore){
 window.__QA2 = { ELEMENTS, ELEMENT_BY_Z, computeConfig: QALicense.guard(computeConfig), configString, pal, PALETTE, SUBSHELL_CAP,
   makeGlowTexture, GLOW_TEX, GLOW_TEX_SOFT, GLOW_TEX_CORE, GLOW_TEX_HAZE,
   clock, renderLoop, addDragRotate,
-  subshellLayers, subshellRadiusScale, subshellOuterRadius, orbitalDefs, hundOccupancy, sampleSubshellPoints: QALicense.guard(sampleSubshellPoints), sampleVolumePoints, buildSubshellMesh, fresnelMaterial,
+  subshellLayers, subshellRadiusScale, subshellOuterRadius, orbitalDefs, hundOccupancy, sampleSubshellPoints: QALicense.guard(sampleSubshellPoints), sampleVolumePoints, buildSubshellMesh, fresnelMaterial, hardApply, HARD_THEMES,
   pointsForSubshell, subshellColor, realModeColor, buildNucleus: QALicense.guard(buildNucleus), CATEGORY_LABEL,
   NUCLEAR, NUCLEAR_SHAPES, nucleonLayout, nuclearProps, nuclearShape, validateNuclides, mulberry32, TAU,
   RAINBOW_TYPES, rainbowColors, rainbowShellColor, A_SCALE,
@@ -3042,6 +3229,7 @@ const state = {
   smooth:false,
   ultra:false,
   surface:false,
+  hard:false,         // Hard mode: smooth closed hollow heat-map surfaces
   volumetric:false,
   excited:false,
   excitedOrb:null,    // chosen specific target orbital index (null = Hund's default)
@@ -3388,10 +3576,10 @@ function buildAtom(Z){
       if(!e || !orbitalDefs(s.l)[oi]) return;
       const count = Math.max(Math.round(6000*dens), Math.round(total*e/s.count));
       plan.push({s, oi, count});
-      if(!(state.ultra||state.surface)) planned += count;
+      if(!(state.ultra||state.surface||state.hard)) planned += count;
     });
   });
-  const budgetScale = (state.ultra||state.surface) ? 1 : Math.min(1, pointBudget()/Math.max(1, planned));
+  const budgetScale = (state.ultra||state.surface||state.hard) ? 1 : Math.min(1, pointBudget()/Math.max(1, planned));
   state.densityScale = budgetScale;
   // Keep the cloud readable at any size/density: bigger atoms get slightly bigger
   // sprites; denser clouds get slightly lower opacity so additive blending doesn't blow out.
@@ -3430,6 +3618,11 @@ function buildAtom(Z){
     if(isExcitedSource) color = 0xff8a3d;   // amber: the orbital the electron is leaving
     if(isExcitedTarget) color = 0xffffff;   // white: the orbital the electron arrives in
     const orb = orbitalDefs(s.l)[oi];
+    if(state.hard){
+      const hi = isExcitedSource ? 0xff8a3d : isExcitedTarget ? 0xffffff : null;
+      g.add(tagShell(buildSubshellMesh(s.n, s.l, color, orb, 'hard', { shellK: subshellOuterRadius(s.n,s.l)/extent, hi, pal: shellOrder.findIndex(x=>x.n===s.n&&x.l===s.l) }), s.n));
+      return;
+    }
     if(state.surface){
       g.add(tagShell(buildSubshellMesh(s.n, s.l, color, orb, true), s.n));
       return;
@@ -3568,7 +3761,7 @@ function fdDisposeUnused(g){
 const fdIsShell = c => !!c.userData && c.userData.n !== undefined;       // orbital shells carry their principal quantum number (tagShell)
 function fdCloneMat(m){
   const n = m.clone();
-  if(m.isShaderMaterial) Object.assign(n.uniforms, brUniforms());          // clone() deep-copies uniforms: re-link the shared brightness ones
+  if(m.isShaderMaterial){ Object.assign(n.uniforms, brUniforms()); if(m.userData && m.userData.hard && m.uniforms.uTime) n.uniforms.uTime = m.uniforms.uTime; }   // hard surfaces: re-link the shared dye clock too (clone() froze it)          // clone() deep-copies uniforms: re-link the shared brightness ones
   else n.onBeforeCompile = m.onBeforeCompile;
   return n;
 }
@@ -3785,7 +3978,7 @@ function build4D(Z){
   FOURD.fitK = 1; FOURD.fade = []; FOURD.nucGhosts = []; FOURD.foamGhosts = []; FOURD.axisObjs = []; FOURD.vacObjs = [];
   // Thin clouds per slice keep every slice inside the GPU budget. Surface / Ultra shells share one geometry across all slices.
   // Continuous mode builds a live "now" atom plus one very thin shared cloud for the streaming past.
-  const sd = state.density, bf = Math.max(0.35, 1/Math.sqrt(ndLayout(state.dim).copies.length)), meshMode = !!(state.ultra || state.surface);   // Surface / Ultra / Volumetric / Smooth all work in 4D now
+  const sd = state.density, bf = Math.max(0.35, 1/Math.sqrt(ndLayout(state.dim).copies.length)), meshMode = !!(state.ultra || state.surface || state.hard);   // Surface / Ultra / Volumetric / Smooth all work in 4D now
   let res, trail = null;
   try{
     if(cont && !meshMode){ state.density = sd*bf*0.3*FD_N/FD_NC; trail = buildAtom(Z).group; }   // same total point count as discrete mode
@@ -3945,7 +4138,7 @@ function pageTex(soft){
   return _pgTex.get(k);
 }
 function pageOpacity(){ return Math.min(1, Math.max(0.3, PAGE.opacity * Math.min(1, Math.pow(Math.max(0.05, PAGE_RT.effDens), -PAGE.compExp)) * (state.volumetric ? 0.7 : 1))); }
-function isPageTheme(){ return state.realImage && state.mode==='atom' && !state.fourD && !state.ultra && !state.surface; }
+function isPageTheme(){ return state.realImage && state.mode==='atom' && !state.fourD && !state.ultra && !state.surface && !state.hard; }
 function densMax(){ return isPageTheme() ? 1000 : 10; }
 function pointBudget(){ return isPageTheme() ? PAGE.budgetM*1e6 : POINT_BUDGET; }
 function syncColourPipeline(){
@@ -4375,9 +4568,68 @@ toggleBtn('btn-antimatter', on=>{
 toggleBtn('btn-realimage', on=>{ state.realImage = on; state.density = Q.mode!=='custom' ? Q.densityFor() : (on && state.density<4 ? 4 : state.density); render(); });
 toggleBtn('btn-grid', on=>{ state.cartesianGrid = on; gridGroup.visible = on; });
 toggleBtn('btn-smooth', on=>{ state.smooth = on; render(); });
-toggleBtn('btn-ultra', on=>{ state.ultra = on; if(on){ state.surface = false; state.volumetric = false; $('btn-surface').classList.remove('on'); $('btn-volumetric').classList.remove('on'); } render(); });
-toggleBtn('btn-surface', on=>{ state.surface = on; if(on){ state.ultra = false; state.volumetric = false; $('btn-ultra').classList.remove('on'); $('btn-volumetric').classList.remove('on'); } render(); });
-toggleBtn('btn-volumetric', on=>{ state.volumetric = on; if(on){ state.ultra = false; state.surface = false; $('btn-ultra').classList.remove('on'); $('btn-surface').classList.remove('on'); } render(); });
+const STYLE_EXCL = { ultra:'btn-ultra', surface:'btn-surface', hard:'btn-hard', volumetric:'btn-volumetric' };   // mutually exclusive render styles
+/* Hard mode owns its colours, so Real Image mode is switched off and locked while Hard mode is on. */
+function syncHardUI(){
+  const hardOn = !!state.hard, ri = document.getElementById('btn-realimage');
+  $('hard-picker').style.display = (hardOn && state.mode!=='molecule') ? '' : 'none';
+  if(!ri) return;
+  ri.classList.toggle('disabled', hardOn); ri.setAttribute('aria-disabled', String(hardOn));
+  ri.title = hardOn ? 'Real image mode is unavailable while Hard mode is on' : '';
+  const td = ri.querySelector('.td');
+  if(td){ if(td.dataset.d===undefined) td.dataset.d = td.textContent; td.textContent = hardOn ? 'Off while Hard mode is on' : td.dataset.d; }
+}
+function styleToggle(key){
+  toggleBtn(STYLE_EXCL[key], on=>{
+    state[key] = on;
+    if(on) Object.keys(STYLE_EXCL).forEach(k=>{ if(k!==key){ state[k] = false; $(STYLE_EXCL[k]).classList.remove('on'); } });
+    if(key==='hard' && on && state.realImage){   // deactivate Real Image mode
+      state.realImage = false; $('btn-realimage').classList.remove('on');
+      if(Q.mode!=='custom') state.density = Q.densityFor();
+      updateRainbowUI();
+    }
+    syncHardUI();
+    render();
+  });
+}
+Object.keys(STYLE_EXCL).forEach(styleToggle);
+
+/* ---- Hard mode: reveal (solid / cutaway / half / glass), shell peel, colour theme. All live: no rebuild. ---- */
+const HC = { view:3, theme:'prism', peel:99, peelAll:true, ver:0, off:new Set() };   // default view 3 = Glass: every layer visible
+(function(){
+  const g = id => document.getElementById(id);   // local helper: the shared $ and store are declared further down the file
+  const pk = g('hard-picker'), peel = g('hard-peel'), peelV = g('hard-peel-v');
+  const syncChips = ()=>pk.querySelectorAll('.exchip').forEach(c=>{
+    const g = c.parentNode.dataset.g; if(g==='layer') return;
+    const on = g==='view' ? +c.dataset.k===HC.view : c.dataset.k===HC.theme;
+    c.classList.toggle('on', on); c.setAttribute('aria-pressed', String(on));
+  });
+  HC.sync = syncChips; syncChips();
+  pk.addEventListener('click', e=>{
+    const c = e.target.closest('.exchip'); if(!c) return;
+    if(c.parentNode.dataset.g==='layer'){ const n = +c.dataset.k; if(HC.off.has(n)) HC.off.delete(n); else HC.off.add(n); HC.ver++; c.classList.toggle('on', !HC.off.has(n)); c.setAttribute('aria-pressed', String(!HC.off.has(n))); return; }
+    if(c.parentNode.dataset.g==='view') HC.view = +c.dataset.k; else HC.theme = c.dataset.k;
+    HC.ver++; syncChips(); store.set({hard:{view:HC.view, theme:HC.theme, v:2}});
+  });
+  peel.addEventListener('input', ()=>{
+    HC.peel = +peel.value; HC.peelAll = HC.peel >= +peel.max; HC.ver++;
+    peelV.textContent = HC.peelAll ? 'All' : 'n ≤ '+HC.peel;
+  });
+  let sig = '', meshes = [];
+  renderLoop.push(()=>{
+    if(!state.hard){ if(meshes.length){ meshes = []; sig = ''; } return; }
+    const s2 = mainGroup.children.map(c=>c.uuid).join('|')+'#'+HC.ver;
+    if(s2===sig) return; sig = s2; meshes = [];
+    mainGroup.traverse(o=>{ if(o.isMesh && o.material && o.material.userData && o.material.userData.hard) meshes.push(o); });
+    let maxN = 1; meshes.forEach(m=>{ if(m.userData.n>maxN) maxN = m.userData.n; });
+    peel.max = maxN;
+    { const ns = [...new Set(meshes.map(m=>m.userData.n))].sort((a,b)=>a-b), box = g('hard-layers');
+      box.innerHTML = ns.map(n=>`<button type="button" class="exchip${HC.off.has(n)?'':' on'}" data-k="${n}" aria-pressed="${!HC.off.has(n)}">n=${n}</button>`).join(''); }
+    if(HC.peelAll || HC.peel>maxN){ HC.peel = maxN; HC.peelAll = true; }
+    peel.value = HC.peel; peelV.textContent = HC.peelAll ? 'All' : 'n ≤ '+HC.peel;
+    QA2.hardApply(meshes, HC);
+  });
+})();
 toggleBtn('btn-excited', on=>{ state.excited = on; render(); refreshExPicker(); });
 toggleBtn('btn-4d-blur', on=>{ FOURD.blur = on; });
 toggleBtn('btn-4d-play', on=>{ FOURD.running = on; document.querySelector('#btn-4d-play span').textContent = on ? 'TIME FLOWING' : 'TIME FROZEN'; if(FOURD.syncUI) FOURD.syncUI(); });
@@ -4428,14 +4680,14 @@ const PG_DMIN = 0.25, PG_DMAX = 1000;   // Page theme density range, log slider
 const densToEl = d => isPageTheme() ? 1000*Math.log(Math.max(PG_DMIN,d)/PG_DMIN)/Math.log(PG_DMAX/PG_DMIN) : d;
 const densFromEl = () => { const v = parseFloat(densEl.value); return isPageTheme() ? PG_DMIN*Math.pow(PG_DMAX/PG_DMIN, v/1000) : v; };
 function updateCtrlUI(){
-  const cloud = state.mode==='atom' && !state.ultra && !state.surface;
+  const cloud = state.mode==='atom' && !state.ultra && !state.surface && !state.hard;
   ctrlEl.classList.toggle('off-density', !cloud);
   densEl.disabled = !cloud;
   { const dl = isPageTheme(); densEl.min = dl?0:0.25; densEl.max = dl?1000:10; densEl.step = dl?1:0.05; }
   densEl.value = densToEl(state.density);
   { const pr = document.getElementById('pg-row'); if(pr) pr.style.display = isPageTheme() ? '' : 'none'; }
   densVal.textContent = state.density.toFixed(2)+'×';
-  if(!cloud) densNote.textContent = (state.ultra||state.surface) ? 'Point clouds only (mesh modes use surfaces)' : 'Atom point clouds only';
+  if(!cloud) densNote.textContent = (state.ultra||state.surface||state.hard) ? 'Point clouds only (mesh modes use surfaces)' : 'Atom point clouds only';
   else if(state.densityScale < 0.999) densNote.textContent = 'Capped at '+Math.round(state.densityScale*100)+'% of requested (GPU budget)';
   else densNote.textContent = '';
 }
@@ -4599,7 +4851,7 @@ const store = {
   get(){ try{ return JSON.parse(localStorage.getItem('qa2')||'{}'); }catch(e){ return {}; } },
   set(o){ try{ localStorage.setItem('qa2', JSON.stringify(Object.assign(store.get(), o))); }catch(e){} }
 };
-const TOGGLES = ['btn-antimatter','btn-realimage','btn-grid','btn-smooth','btn-ultra','btn-surface','btn-volumetric','btn-excited'];
+const TOGGLES = ['btn-antimatter','btn-realimage','btn-grid','btn-smooth','btn-ultra','btn-surface','btn-hard','btn-volumetric','btn-excited'];
 /* -- Real Image colour type (rainbow parameter) -- */
 const rbBtns = document.querySelectorAll('#rb-btns .cbtn'), rbVal = $('rb-val'), rbNote = $('rb-note');
 const RB_NOTES = {
@@ -4618,7 +4870,7 @@ function updateRainbowUI(){
   rbVal.textContent = RAINBOW_TYPES[state.rainbow];
   rbBtns.forEach(b=>{ b.disabled = !state.realImage; });
   $('rb-row').style.opacity = state.realImage ? '1' : '.55';
-  rbNote.textContent = !state.realImage ? 'Applies in Real Image Mode.' : ((state.ultra||state.surface) ? 'Mesh modes use one hue per shell.' : (state.mode!=='atom' ? 'Atom view only.' : RB_NOTES[state.rainbow]));
+  rbNote.textContent = state.hard ? 'Real Image is off in Hard mode — Hard uses its own gradient colours.' : !state.realImage ? 'Applies in Real Image Mode.' : ((state.ultra||state.surface) ? 'Mesh modes use one hue per shell.' : (state.mode!=='atom' ? 'Atom view only.' : RB_NOTES[state.rainbow]));
 }
 function setRainbow(t, save){
   if(!state.realImage || !RAINBOW_TYPES[t]) return;   // colour type is editable only in Real Image Mode
@@ -4628,7 +4880,7 @@ function setRainbow(t, save){
   if(state.realImage) render({keepView:true});
 }
 rbBtns.forEach(b=>b.addEventListener('click', ()=>setRainbow(b.dataset.rb)));
-document.addEventListener('click', e=>{ if(e.target.closest('#btn-realimage,#btn-ultra,#btn-surface,#mode-atoms,#mode-molecules,#mode-4d,#mode-nd')) setTimeout(updateRainbowUI,0); });
+document.addEventListener('click', e=>{ if(e.target.closest('#btn-realimage,#btn-ultra,#btn-surface,#btn-hard,#mode-atoms,#mode-molecules,#mode-4d,#mode-nd')) setTimeout(()=>{ updateRainbowUI(); syncHardUI(); },0); });
 { const sv = store.get(); if(sv.rainbow && RAINBOW_TYPES[sv.rainbow]) state.rainbow = sv.rainbow; updateRainbowUI(); }
 /* -- Page theme parameter panel -- */
 const PG_PARAMS = [
@@ -4981,7 +5233,7 @@ const Q = (function(){
 
   /* ---- 2. tune: measure real frame rate ---- */
   let last = performance.now(), acc = 0, frames = 0, settleUntil = last + 4000, smooth = 0, changes = 0;
-  const cloudNow = () => state.mode==='atom' && !state.ultra && !state.surface;
+  const cloudNow = () => state.mode==='atom' && !state.ultra && !state.surface && !state.hard;
   const resetWindow = ms => { acc = 0; frames = 0; settleUntil = Math.max(settleUntil, performance.now()+ms); };
   QHOOK.rebuilt = () => resetWindow(1500);          // a rebuild is a one-off long frame, not the steady rate
   QHOOK.failed  = () => {                           // out of memory: step down (render() already halves the budget)
@@ -5044,6 +5296,7 @@ function applyHash(){
 window.addEventListener('hashchange', applyHash);
 (function restore(){
   const sv = store.get();
+  { const h = sv.hard||{}; if(h.v===2 && [0,1,2,3].includes(h.view)) HC.view = h.view; if(QA2.HARD_THEMES[h.theme]) HC.theme = h.theme; HC.sync(); HC.ver++; }   // saved Hard-mode reveal + theme
   const d = Q.mode!=='custom' ? Q.densityFor() : (sv.density!=null ? sv.density : (isTouchy || (navigator.hardwareConcurrency||8)<=4 || (navigator.deviceMemory||8)<=4 ? 0.6 : 1));
   if(Q.mode!=='custom' || d!==1) setDensity(d, true);
   (sv.toggles||[]).forEach(id=>{ if($(id) && !$(id).classList.contains('on')) $(id).click(); });
@@ -5441,11 +5694,15 @@ renderLoop.push(dt=>{
   if(root && !state.fourD){
     root.children.forEach(o=>{
       if(NUC && o === NUC.group) return;
-      o.visible = fade > 0.004;
-      if(o.visible) o.traverse(x=>{ const m = x.material; if(!m || Array.isArray(m)) return; if(!cloudBase.has(m)) cloudBase.set(m, m.opacity); m.opacity = cloudBase.get(m)*fade; });
+      o.visible = fade > 0.004 && o.userData.hardShow !== false;   // Hard mode: shells hidden by peel / layer chips stay hidden
+      if(o.visible) o.traverse(x=>{ const m = x.material; if(!m || Array.isArray(m)) return; if(!cloudBase.has(m)) cloudBase.set(m, m.opacity); m.opacity = cloudBase.get(m)*fade; if(m.userData && m.userData.hard && m.uniforms && m.uniforms.uOpacity) m.uniforms.uOpacity.value = fade; });   // Hard shaders read uOpacity, not material.opacity
     });
   }
-  const near = Math.max(2e-6, Math.min(0.02, zc*0.05));
+  let near = Math.max(2e-6, Math.min(0.02, zc*0.05));
+  // Depth precision: with near fixed at <=0.02 and far >=1500, the depth buffer cannot separate overlapping surfaces once the camera is far
+  // away (resolution grows with distance squared) -> flickering patches / z-fighting on Hard-mode shells. While the camera is OUTSIDE the
+  // cloud, push the near plane out to just in front of it (the cloud radius is fitZ/(1.9*ATOM_BIG); 10 % margin).
+  if(state.mode==='atom' && !state.fourD){ const cloudR = fitZ/(1.9*ATOM_BIG)*1.1; near = Math.max(near, (zc-cloudR)*0.5); }
   if(Math.abs(near-nucLastNear) > nucLastNear*0.02){ camera.near = near; camera.updateProjectionMatrix(); nucLastNear = near; }
 });
 /* scale readout, deep canvas, dive button state */
