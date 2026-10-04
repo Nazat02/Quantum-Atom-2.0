@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  Quantum Atom — Copyright (c) 2026 Md. Shaikhul Hadis Nazat. All rights reserved.
+  Quantum Atom 2.0 — Copyright (c) 2026 Md. Shaikhul Hadis Nazat. All rights reserved.
   Source-available, non-commercial licence: see LICENSE.
   Copying, re-hosting, or commercial use without written permission is prohibited.
   Official: https://nazat02.github.io/Quantum-Atom-2.0/
@@ -564,7 +564,7 @@ body.mph{--inset-r:16px;}
 body.m4d .ptab[data-tab="data"],body.mND .ptab[data-tab="data"],body.mph .ptab[data-tab="data"]{display:none;}
 </style>
 <style id="qalic-css">
-/* ---------- QUANTUM ATOM · licence · glass ---------- */
+/* ---------- QUANTUM ATOM 2.0 · licence · glass ---------- */
 #qalic{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:max(18px,env(safe-area-inset-top,0px)) 18px max(18px,env(safe-area-inset-bottom,0px));overflow:hidden;
   background:radial-gradient(120% 90% at 50% 0%,rgba(255,85,0,.10),transparent 60%),rgba(6,4,3,.50);
   backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);animation:qalicFade .25s ease-out;}
@@ -672,7 +672,7 @@ body.m4d .ptab[data-tab="data"],body.mND .ptab[data-tab="data"],body.mph .ptab[d
 <div id="loading-overlay"><div class="load-ring"></div><div class="lt">Loading Quantum Atom 2.0…</div></div>
 
 <nav>
-  <a class="brand" href="index.html" aria-label="Quantum Atom home"><span class="brand-dot" id="brand-dot"></span>QUANTUM ATOM <span class="ver-pill" id="ver-pill">2.0</span></a>
+  <a class="brand" href="index.html" aria-label="Quantum Atom 2.0 home"><span class="brand-dot" id="brand-dot"></span>QUANTUM ATOM <span class="ver-pill" id="ver-pill">2.0</span></a>
   <div class="nav-right">
     <a class="nav-home" href="index.html">HOME</a>
     <a class="nav-link-btn nav-cta" id="btn-nucleus" href="nucleus_explorer.html" aria-label="Nucleus Explorer"><span class="lbl">NUCLEUS EXPLORER</span><span class="lbl-s">NUCLEUS</span> <span class="arr">▸</span></a>
@@ -886,12 +886,12 @@ body.m4d .ptab[data-tab="data"],body.mND .ptab[data-tab="data"],body.mph .ptab[d
 })();
 </script>
 <script type="text/plain" id="qa-license">
-QUANTUM ATOM — SOURCE-AVAILABLE NON-COMMERCIAL LICENSE
+QUANTUM ATOM 2.0 — SOURCE-AVAILABLE NON-COMMERCIAL LICENSE
 Version 1.0
 
 Copyright (c) 2026 Md. Shaikhul Hadis Nazat. All rights reserved.
 
-Project: Quantum Atom (Physicist AI)
+Project: Quantum Atom 2.0 (Physicist AI)
 Official source: https://github.com/nazat02/Quantum-Atom-2.0
 Official site:   https://nazat02.github.io/Quantum-Atom-2.0/
 
@@ -921,14 +921,15 @@ tables, shaders, styles, text, and visual design.
        the Software, or any substantial part of it, as Your own work;
    (d) remove, alter, or obscure any copyright notice, licence notice, or
        attribution contained in the Software;
-   (e) use the name "Quantum Atom", "Physicist AI", or the author's name to
-       imply endorsement of, or affiliation with, any other product or work;
+   (e) use the name "Quantum Atom", "Quantum Atom 2.0", "Physicist AI", or the
+       author's name to imply endorsement of, or affiliation with, any other
+       product or work;
    (f) use the Software, its data, or its outputs to train machine-learning
        models, or to build datasets, without written permission.
 
 3. ATTRIBUTION
    Any permitted use, including academic citation or educational display,
-   must credit: "Quantum Atom by Md. Shaikhul Hadis Nazat" and, where
+   must credit: "Quantum Atom 2.0 by Md. Shaikhul Hadis Nazat" and, where
    practical, link to the official site.
 
 4. THIRD-PARTY COMPONENTS
@@ -965,7 +966,7 @@ tables, shaders, styles, text, and visual design.
 </script>
 <script>
 /* ======================================================================
-   QUANTUM ATOM — LICENSE MODULE
+   QUANTUM ATOM 2.0 — LICENSE MODULE
    Embeds the licence text, verifies its integrity (SHA-256), shows the
    acceptance / viewer UI, and exposes window.QALicense. The core engine
    reads QALicense on every frame and on every physics entry point, so a
@@ -973,7 +974,7 @@ tables, shaders, styles, text, and visual design.
    ====================================================================== */
 (function(){
 'use strict';
-const EXPECT = '5be8a67ce9b34dc623d1aa7d65f514feae3b4bdeaf0e5bf256c3f99a481ecd4d';
+const EXPECT = 'ff51081c5082205ad92cd1987cbc31a1d5d1ed158fa0fa3f3ae365c441eb8650';
 /* ---- compact synchronous SHA-256 (works on file://, no secure context needed) ---- */
 const K = [], H0 = [];
 for(let n = 2, c = 0; c < 64; n++){
@@ -1008,7 +1009,7 @@ const cm = text.match(/Copyright \(c\) (\d{4}) (.+?)\. All rights reserved/), vm
 const sm = text.match(/Official site:\s+(\S+)/), gm = text.match(/Official source:\s+(\S+)/);
 const valid = !!(sha && sha === EXPECT && cm && vm && sm && gm);
 const info = valid ? { year: cm[1], author: cm[2], version: vm[1], site: sm[1], source: gm[1] } : { year: '', author: '', version: '', site: 'https://nazat02.github.io/Quantum-Atom-2.0/', source: 'https://github.com/nazat02/Quantum-Atom-2.0' };
-const credit = valid ? 'Quantum Atom by ' + info.author : 'Quantum Atom';
+const credit = valid ? 'Quantum Atom 2.0 by ' + info.author : 'Quantum Atom 2.0';
 const OK_HOSTS = ['', 'localhost', '127.0.0.1', '[::1]', 'nazat02.github.io'];
 const unofficial = /^https?:$/.test(location.protocol) && OK_HOSTS.indexOf(location.hostname) < 0;
 /* ---- acceptance (persisted per licence version + hash) ---- */
@@ -1072,13 +1073,13 @@ function build(){
 }
 function render(m){
   const bad = !valid, sub = bad ? 'Integrity check failed' : m === 'declined' ? 'Not accepted' : 'Licence · v' + esc(info.version);
-  const head = bad ? 'Licence invalid' : m === 'declined' ? 'Licence not accepted' : 'Quantum Atom';
+  const head = bad ? 'Licence invalid' : m === 'declined' ? 'Licence not accepted' : 'Quantum Atom 2.0';
   const badge = bad ? '<span class="qalic-badge bad">' + I.cross + 'NOT VERIFIED</span>' : '<span class="qalic-badge">' + I.check + 'VERIFIED · ' + esc(sha.slice(0, 8)) + '</span>';
   let body = '';
   if(bad){
     body = '<div class="qalic-lock">' + I.lock + '</div><p class="qalic-lead">This copy cannot run.</p><p class="qalic-p">The licence is part of the application. It is missing from this copy, or its text was changed, so the app will not start. Please use the official, unmodified version.</p>';
   } else if(m === 'declined'){
-    body = '<p class="qalic-lead">Quantum Atom only runs under its licence.</p><p class="qalic-p">You can review the terms again and accept to continue, or leave the page.</p>';
+    body = '<p class="qalic-lead">Quantum Atom 2.0 only runs under its licence.</p><p class="qalic-p">You can review the terms again and accept to continue, or leave the page.</p>';
   } else {
     body = '<div class="qalic-meta"><span>© ' + esc(info.year) + '</span><span>' + esc(info.author) + '</span><span class="hot">NON-COMMERCIAL</span><span>SOURCE-AVAILABLE</span></div>' +
       '<div class="qalic-cols"><section class="qalic-col ok"><h3><b>' + I.check + '</b>You may</h3><ul>' + CAN.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul></section>' +
