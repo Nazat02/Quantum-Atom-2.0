@@ -1,5 +1,7 @@
 # Quantum Atom 2.0
 
+**Quantum Atom 2.0 is the world’s first full 118-element 3D atom simulator, bringing all 118 chemical elements into one free, interactive platform.** Designed to run directly in a web browser across mobile devices and computers, it allows users to explore atomic structures, electron configurations, and quantum orbitals in an interactive 3D environment. From Hydrogen to Oganesson, the entire periodic table becomes explorable in a single simulator. ⚛️🌌
+
 **A real-time, browser-based 3D atom simulator and nucleus explorer.**
 Every element, drawn as a true orbital-shaped probability cloud, and a second tool that takes you inside the nucleus, down through protons and neutrons to quarks, and on to the Planck length.
 
@@ -10,6 +12,7 @@ No install. No build step. No accounts. Open a page and rotate an atom.
 - **Live site:** <https://nazat02.github.io/Quantum-Atom-2.0/>
 - **Repository:** <https://github.com/nazat02/Quantum-Atom-2.0>
 - **Author:** Md. Shaikhul Hadis Nazat
+- **Launch date:** 30 September 2026
 
 ---
 
