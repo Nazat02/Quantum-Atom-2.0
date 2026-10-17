@@ -37,6 +37,145 @@ nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:50;he
 .nav-cta{font-size:.63rem;letter-spacing:.1em;padding:9px 20px;border-radius:6px;border:1px solid var(--cx2);background:linear-gradient(135deg,var(--cx),#ff7a1a);color:#fff;text-decoration:none;box-shadow:0 4px 16px rgba(255,85,0,.35);white-space:nowrap;}
 @media(max-width:780px){.nav-links{display:none;}}
 
+
+/* VISION + SUPPORT */
+.story{max-width:680px;}
+.story p{font-size:.78rem;line-height:2;color:var(--mid);margin-bottom:22px;}
+.story p b{color:var(--hi);font-weight:400;}
+.story .pull{font-family:var(--display);font-weight:700;font-size:clamp(1.3rem,3vw,1.8rem);line-height:1.25;letter-spacing:.02em;color:var(--cx3);border-left:2px solid var(--cx);padding:2px 0 2px 20px;margin:34px 0;text-transform:none;}
+.promise{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:40px;}
+.promise .glass{padding:20px 22px;}
+.promise h3{font-family:var(--display);font-size:1.05rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;}
+.promise p{font-size:.66rem;line-height:1.85;color:var(--lo);}
+.support-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:8px;}
+.support-card{padding:26px;display:flex;flex-direction:column;gap:14px;}
+.support-card h3{font-family:var(--display);font-size:1.25rem;letter-spacing:.04em;text-transform:uppercase;}
+.support-card p{font-size:.68rem;line-height:1.9;color:var(--mid);}
+.addr-wrap{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap;}
+.addr{flex:1 1 240px;min-width:0;font-family:var(--mono);font-size:.7rem;word-break:break-all;line-height:1.6;padding:12px 14px;border:1px dashed var(--cx-40);border-radius:8px;background:var(--cx-08);color:var(--cx3);user-select:all;}
+.copy-btn{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;padding:0 18px;min-height:44px;border-radius:8px;border:1px solid var(--cx2);background:linear-gradient(135deg,var(--cx),#ff7a1a);color:#fff;cursor:pointer;}
+.copy-btn:focus-visible,.btn:focus-visible{outline:2px solid var(--cx3);outline-offset:3px;}
+.tiny{font-size:.58rem;line-height:1.8;color:var(--vlo);}
+
+
+.qr-tile{flex:0 0 auto;width:172px;padding:10px;background:#fff;border-radius:12px;box-shadow:0 0 0 1px rgba(255,85,0,.35),0 10px 30px rgba(255,85,0,.18);}
+.qr-svg{display:block;width:100%;height:auto;shape-rendering:crispEdges;}
+.donate-row{display:flex;gap:22px;align-items:center;flex-wrap:wrap;}
+.donate-info{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:12px;}
+.bal{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--glass-border);border-radius:10px;background:var(--glass-bg-hi);}
+.bal b{font-family:var(--display);font-size:1.5rem;letter-spacing:.03em;color:var(--hi);font-weight:700;}
+.bal span{font-size:.58rem;letter-spacing:.08em;color:var(--lo);}
+.link-row{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-sm{padding:11px 16px;font-size:.62rem;min-height:44px;}
+.stars{display:flex;gap:10px;flex-wrap:wrap;}
+.stars[hidden]{display:none;}
+.stat{flex:1 1 90px;padding:12px 14px;border:1px solid var(--glass-border);border-radius:10px;background:var(--glass-bg-hi);}
+.stat b{display:block;font-family:var(--display);font-size:1.6rem;line-height:1.1;font-weight:700;}
+.stat span{font-size:.56rem;letter-spacing:.08em;color:var(--lo);}
+.ways{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:16px;}
+.ways .glass{padding:16px 18px;}
+.ways h4{font-family:var(--display);font-size:.98rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px;}
+.ways p{font-size:.64rem;line-height:1.8;color:var(--lo);}
+.copy-btn:hover{filter:brightness(1.1);}
+
+.story-h{font-family:var(--display);font-weight:700;font-size:clamp(1.15rem,2.6vw,1.5rem);letter-spacing:.05em;text-transform:uppercase;color:var(--hi);margin:64px 0 18px;}
+.story-h:first-of-type{margin-top:36px;}
+.story-h small{display:block;font-family:var(--mono);font-weight:400;font-size:.58rem;letter-spacing:.2em;color:var(--cx);margin-bottom:8px;}
+.lead-in{font-size:.78rem;line-height:2;color:var(--mid);max-width:680px;margin-bottom:22px;}
+.lead-in b{color:var(--hi);font-weight:400;}
+.promise.three{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+.promise .glass .k{font-size:.56rem;letter-spacing:.16em;color:var(--cx);margin-bottom:8px;}
+.bridge{margin:70px 0 26px;padding:26px 28px;border-left:2px solid var(--cx);background:var(--cx-08);border-radius:0 12px 12px 0;max-width:820px;}
+.bridge h3{font-family:var(--display);font-size:clamp(1.2rem,3vw,1.7rem);letter-spacing:.03em;margin-bottom:10px;text-transform:uppercase;}
+.bridge p{font-size:.72rem;line-height:1.95;color:var(--mid);}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px;}
+.chips span{font-size:.6rem;letter-spacing:.08em;padding:7px 13px;border:1px solid var(--glass-border);border-radius:20px;background:var(--glass-bg);color:var(--mid);}
+.fcard{padding:20px 22px;}
+.fcard h3{font-family:var(--display);font-size:1.08rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;}
+.fcard p{font-size:.66rem;line-height:1.85;color:var(--lo);}
+.fcard .k{font-size:.56rem;letter-spacing:.16em;color:var(--cx);margin-bottom:8px;}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:6px;}
+.fgrid.sm{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;}
+.callout{margin:26px 0 8px;padding:22px 26px;border:1px solid var(--cx-40);border-radius:12px;background:var(--cx-08);max-width:860px;}
+.callout h3{font-family:var(--display);font-size:1.15rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;}
+.callout p{font-size:.7rem;line-height:1.95;color:var(--mid);margin-bottom:10px;}
+.callout p:last-child{margin-bottom:0;}
+
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin:20px 0 6px;}
+.vcard{padding:14px;display:flex;flex-direction:column;}
+.vcard canvas,.vcard svg.vsvg{width:100%;height:auto;display:block;border-radius:8px;background:radial-gradient(ellipse at 50% 40%,rgba(255,85,0,.10),rgba(0,0,0,.55));}
+.vcard h4{font-family:var(--display);font-size:.98rem;letter-spacing:.05em;text-transform:uppercase;margin:12px 0 4px;}
+.vcap{font-size:.63rem;line-height:1.85;color:var(--lo);}
+.vctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px;font-size:.6rem;letter-spacing:.08em;color:var(--mid);}
+.vctl input[type=range]{flex:1 1 140px;min-width:0;accent-color:var(--cx);}
+.vbtn{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;min-height:40px;padding:0 14px;border-radius:8px;border:1px solid var(--border);background:rgba(255,85,0,.06);color:var(--mid);cursor:pointer;}
+.vbtn.on,.vbtn:hover{border-color:var(--cx-40);color:var(--hi);background:var(--cx-18);}
+.vbtn:focus-visible,.vctl input:focus-visible{outline:2px solid var(--cx3);outline-offset:2px;}
+.vbars{display:grid;gap:7px;margin-top:12px;}
+.vbar{display:grid;grid-template-columns:78px 1fr 44px;gap:8px;align-items:center;font-size:.6rem;color:var(--mid);}
+.vbar i{display:block;height:10px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden;}
+.vbar i u{display:block;height:100%;background:linear-gradient(90deg,var(--cx),var(--cx2));border-radius:5px;transition:width .15s;}
+.vbar b{font-weight:400;text-align:right;color:var(--hi);}
+.axes-note{font-family:var(--display);font-size:1.15rem;letter-spacing:.04em;margin-top:10px;}
+.axes-note span{color:var(--cx2);}
+.lvl-e{animation:lvlJump 6s ease-in-out infinite;}
+.lvl-p{stroke-dasharray:320;stroke-dashoffset:320;opacity:0;animation:lvlPh 6s ease-in-out infinite;}
+.lvl-t{opacity:0;animation:lvlTx 6s ease-in-out infinite;}
+@keyframes lvlJump{0%,34%{transform:translateY(0)}42%,88%{transform:translateY(33px)}96%,100%{transform:translateY(0)}}
+@keyframes lvlPh{0%,41%{opacity:0;stroke-dashoffset:320}43%{opacity:1;stroke-dashoffset:320}72%{opacity:1;stroke-dashoffset:0}86%,100%{opacity:0;stroke-dashoffset:0}}
+@keyframes lvlTx{0%,50%{opacity:0}62%,80%{opacity:1}90%,100%{opacity:0}}
+.ring-pulse{animation:rp 2.4s ease-in-out infinite;transform-origin:center;transform-box:fill-box;}
+@keyframes rp{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
+@media(prefers-reduced-motion:reduce){.lvl-e,.lvl-p,.lvl-t,.ring-pulse{animation:none;}.lvl-p,.lvl-t{opacity:1;stroke-dashoffset:0;}}
+
+
+/* JUMP MENU (three-dot) */
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.nav-menu{position:relative;width:44px;height:44px;border-radius:12px;border:1px solid var(--glass-border);background:var(--glass-bg);color:var(--mid);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent;transition:border-color .2s,background .2s,color .2s,box-shadow .2s,transform .15s;}
+.nav-menu:hover{border-color:var(--cx-40);background:var(--cx-08);color:var(--hi);}
+.nav-menu:active{transform:scale(.94);}
+.nav-menu[aria-expanded="true"]{border-color:var(--cx2);background:var(--cx-18);color:#fff;box-shadow:0 0 0 3px rgba(255,85,0,.14),0 4px 16px rgba(255,85,0,.25);}
+.nav-menu:focus-visible,#jump-menu a:focus-visible{outline:2px solid var(--cx3);outline-offset:2px;}
+.nav-menu svg{width:22px;height:22px;overflow:visible;}
+.nav-menu .ic-bars line{stroke:currentColor;stroke-width:2;stroke-linecap:round;transform-box:view-box;transform-origin:12px 12px;transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .18s;}
+.nav-menu[aria-expanded="true"] .ic-bars .b1{transform:translateY(6px) rotate(45deg);}
+.nav-menu[aria-expanded="true"] .ic-bars .b2{opacity:0;transform:scaleX(.2);}
+.nav-menu[aria-expanded="true"] .ic-bars .b3{transform:translateY(-6px) rotate(-45deg);}
+#jump-backdrop{position:fixed;inset:0;z-index:59;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);animation:jmFade .2s ease-out;}
+#jump-backdrop[hidden],#jump-menu[hidden]{display:none;}
+@keyframes jmFade{from{opacity:0}to{opacity:1}}
+#jump-menu{counter-reset:jm;position:fixed;z-index:60;top:calc(env(safe-area-inset-top,0px) + 68px);right:12px;width:min(360px,calc(100vw - 24px));max-height:calc(100vh - env(safe-area-inset-top,0px) - 84px);max-height:calc(100dvh - env(safe-area-inset-top,0px) - 84px);overflow-y:auto;overscroll-behavior:contain;padding:14px 10px 10px;border:1px solid var(--glass-border);border-radius:18px;background:radial-gradient(120% 70% at 100% 0%,rgba(255,85,0,.14),transparent 60%),rgba(12,7,4,.94);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);box-shadow:0 24px 60px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.08);transform-origin:top right;animation:jmIn .22s cubic-bezier(.2,.8,.2,1);scrollbar-width:thin;scrollbar-color:var(--cx-40) transparent;}
+@keyframes jmIn{from{opacity:0;transform:translateY(-8px) scale(.97)}to{opacity:1;transform:none}}
+#jump-menu .jm-head{display:flex;align-items:center;justify-content:space-between;padding:0 8px 12px;font-size:.54rem;letter-spacing:.2em;color:var(--lo);}
+#jump-menu .jm-head kbd{font-family:var(--mono);font-size:.54rem;letter-spacing:.08em;padding:3px 8px;border:1px solid var(--glass-border);border-radius:5px;color:var(--vlo);background:rgba(255,255,255,.03);}
+#jump-menu .jm-launch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;}
+#jump-menu .jm-launch a{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:12px;border-radius:12px;border:1px solid var(--glass-border);background:var(--glass-bg);color:var(--hi);text-decoration:none;transition:border-color .2s,background .2s,transform .15s;}
+#jump-menu .jm-launch a:hover{border-color:var(--cx-40);background:var(--cx-08);transform:translateY(-1px);}
+#jump-menu .jm-launch a:first-child{border-color:var(--cx-40);background:linear-gradient(150deg,rgba(255,85,0,.26),rgba(255,85,0,.06));}
+#jump-menu .jm-ic{width:30px;height:30px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,85,0,.16);color:var(--cx2);}
+#jump-menu .jm-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;}
+#jump-menu .jm-launch b{display:block;font-family:var(--display);font-weight:700;font-size:.95rem;letter-spacing:.05em;text-transform:uppercase;line-height:1.1;}
+#jump-menu .jm-launch i{display:block;font-style:normal;font-size:.54rem;letter-spacing:.06em;color:var(--lo);margin-top:3px;}
+#jump-menu .jm-g{display:flex;align-items:center;gap:10px;font-size:.52rem;letter-spacing:.22em;color:var(--cx);padding:16px 8px 6px;}
+#jump-menu .jm-g::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--cx-40),transparent);}
+#jump-menu .jm-list a{counter-increment:jm;position:relative;display:flex;align-items:center;gap:12px;min-height:44px;padding:9px 12px 9px 10px;border-radius:10px;color:var(--mid);text-decoration:none;font-size:.7rem;letter-spacing:.03em;line-height:1.35;transition:background .15s,color .15s,padding .15s;}
+#jump-menu .jm-list a::before{content:counter(jm,decimal-leading-zero);flex:0 0 auto;font-size:.54rem;letter-spacing:.08em;color:var(--vlo);min-width:18px;transition:color .15s;}
+#jump-menu .jm-list a::after{content:'';margin-left:auto;width:6px;height:6px;border-top:1.5px solid currentColor;border-right:1.5px solid currentColor;transform:rotate(45deg);opacity:0;transition:opacity .15s,transform .15s;}
+#jump-menu .jm-list a:hover{background:var(--glass-bg-hi);color:var(--hi);}
+#jump-menu .jm-list a:hover::before{color:var(--cx2);}
+#jump-menu .jm-list a:hover::after{opacity:.7;transform:translateX(2px) rotate(45deg);}
+#jump-menu .jm-list a[aria-current="location"]{background:linear-gradient(90deg,rgba(255,85,0,.2),rgba(255,85,0,.04));color:#fff;}
+#jump-menu .jm-list a[aria-current="location"]::before{color:var(--cx2);}
+#jump-menu .jm-list a[aria-current="location"]::after{content:'';width:7px;height:7px;border:0;border-radius:50%;background:var(--cx);box-shadow:0 0 10px var(--cx);transform:none;opacity:1;margin-right:2px;}
+section[id]{scroll-margin-top:-44px;}
+#hero{scroll-margin-top:0;}
+@media(max-width:1180px){.nav-links{display:none;}}
+@media(max-width:560px){nav{padding:0 12px;}.nav-right{gap:8px;}.brand{font-size:.72rem;gap:8px;}.nav-cta{padding:9px 12px;}#jump-menu{top:auto;right:0;left:0;bottom:0;width:auto;max-height:80vh;max-height:80dvh;border-radius:22px 22px 0 0;border-bottom:0;padding:22px 12px calc(env(safe-area-inset-bottom,0px) + 14px);transform-origin:bottom center;animation:jmUp .28s cubic-bezier(.2,.8,.2,1);}#jump-menu::before{content:"";display:block;width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,.22);margin:-12px auto 14px;}#jump-menu .jm-head kbd{display:none;}}
+@keyframes jmUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){#jump-menu,#jump-backdrop{animation:none;}.nav-menu *{transition:none !important;}}
+@media(max-width:370px){.ver-pill{display:none;}.brand{letter-spacing:.08em;}}
+
 /* HERO */
 #hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:110px 24px 40px;overflow:hidden;}
 #hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;cursor:grab;}
@@ -326,9 +465,32 @@ table.tbl{width:100%;min-width:760px;border-collapse:separate;border-spacing:0;f
     <a href="#minds">SCIENTISTS</a>
     <a href="#elements">ELEMENTS</a>
     <a href="#inside">WHAT'S INSIDE</a>
+    <a href="#features">FEATURES</a>
+    <a href="#support">CONTRIBUTE</a>
   </div>
-  <a href="simulation.html" class="nav-cta">LAUNCH →</a>
+  <div class="nav-right">
+    <a href="simulation.html" class="nav-cta">LAUNCH →</a>
+    <button type="button" class="nav-menu" id="jump-btn" aria-label="Jump to a section" aria-haspopup="true" aria-expanded="false" aria-controls="jump-menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><g class="ic-bars"><line class="b1" x1="4" y1="6" x2="20" y2="6"/><line class="b2" x1="4" y1="12" x2="20" y2="12"/><line class="b3" x1="4" y1="18" x2="20" y2="18"/></g></svg>
+    </button>
+  </div>
 </nav>
+<div id="jump-backdrop" hidden></div>
+<div id="jump-menu" role="navigation" aria-label="Jump to a section" hidden>
+  <div class="jm-head"><span>JUMP TO</span><kbd>ESC</kbd></div>
+  <div class="jm-launch">
+    <a href="simulation.html"><span class="jm-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></svg></span><span><b>Atom Simulator</b><i>Electron clouds</i></span></a>
+    <a href="nucleus_explorer.html"><span class="jm-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="10" r="4"/><circle cx="15" cy="10" r="4"/><circle cx="12" cy="15.5" r="4"/></svg></span><span><b>Nucleus Explorer</b><i>Protons to Planck</i></span></a>
+  </div>
+  <div class="jm-g">START</div>
+  <div class="jm-list"><a href="#hero">Top of the page</a></div>
+  <div class="jm-g">THE SCIENCE</div>
+  <div class="jm-list"><a href="#shape">The real shape of matter</a><a href="#compare">Bohr vs quantum</a><a href="#orbitals">How to read an orbital</a></div>
+  <div class="jm-g">THE STORY</div>
+  <div class="jm-list"><a href="#years">2,400 years of history</a><a href="#models">Seven pictures of the atom</a><a href="#scale">How small is small</a><a href="#minds">The scientists</a><a href="#voices">In their own words</a></div>
+  <div class="jm-g">THE PROJECT</div>
+  <div class="jm-list"><a href="#elements">All 118 elements</a><a href="#inside">What is inside</a><a href="#features">Features</a><a href="#new">What is new in 2.0</a><a href="#faq">Questions</a><a href="#support">Contribute and support</a><a href="#cta">Launch the simulator</a></div>
+</div>
 
 <section id="hero">
   <canvas id="hero-canvas"></canvas>
@@ -572,6 +734,63 @@ table.tbl{width:100%;min-width:760px;border-collapse:separate;border-spacing:0;f
   </div>
 </section>
 
+<section id="features" class="section">
+  <div class="eyebrow2">FEATURES</div>
+  <h2>Not just an atom viewer.<br>A whole physics lab.</h2>
+  <p class="lead">Most atom tools stop at a pretty cloud. Quantum Atom keeps going: through time, through extra dimensions, into light itself, and into the strange link between entangled particles. All of it runs in one free browser tab.</p>
+
+  <div class="story-h"><small>SIX WAYS TO LOOK</small>Pick a lens, then dive in</div>
+  <div class="fgrid"><div class="glass fcard"><div class="k">ATOMS</div><h3>Every element, 1 to 118</h3><p>Real orbital clouds for hydrogen to oganesson, five render styles, a data tab and electron configurations.</p></div><div class="glass fcard"><div class="k">SPACETIME</div><h3>4D mode</h3><p>Adds time as a fourth axis. Watch discrete snapshots, or one continuous worldtube streaming through time, with play, pause, speed, reverse and motion blur.</p></div><div class="glass fcard"><div class="k">HIGHER DIMENSIONS</div><h3>N-D mode</h3><p>Extends the atom from 3D up to 10D. Each extra dimension beyond time becomes a new labelled axis you can explore. An exploratory visualisation, not a claim about the physical universe.</p></div><div class="glass fcard"><div class="k">LIGHT</div><h3>Photon mode</h3><p>Thirteen scenes that show what light actually is: waves, wave packets, twisted beams, atomic emission and more.</p></div><div class="glass fcard"><div class="k">QUANTUM LINKS</div><h3>Entangle mode</h3><p>Type-II down-conversion rings and Bell pairs, with the polarisation correlations and the CHSH test worked out live.</p></div><div class="glass fcard"><div class="k">ZOOM</div><h3>Atom to Planck length</h3><p>Scroll from the electron cloud into the nucleus, past the quarks and gluons, down to the Planck-scale vacuum, with a live scale ruler.</p></div></div>
+
+  <div class="story-h"><small>LIGHT</small>Photon mode: what a photon really is</div>
+  <p class="lead-in">Light is not a stream of tiny bullets, and it is not only a wave. A photon is a packet of the electromagnetic field whose arrival at a detector follows probability. Photon mode shows that directly, with thirteen scenes, each with live numbers such as wavelength, energy in eV, and momentum.</p>
+  <div class="fgrid sm"><div class="glass fcard"><h3>Yin-yang cloud</h3><p>Photon energy drawn as particles. One half is the electric field, the other the magnetic field, twisting with spin.</p></div><div class="glass fcard"><h3>Linear wave</h3><p>A transverse wave: E and B in phase, perpendicular to each other and to the direction of travel.</p></div><div class="glass fcard"><h3>Circular wave</h3><p>The field rotates once per wavelength, tracing a helix. Each photon carries spin angular momentum of ±ħ.</p></div><div class="glass fcard"><h3>Wave packets</h3><p>Gaussian, sech², atomic and dispersive-glass pulses side by side.</p></div><div class="glass fcard"><h3>Real photon</h3><p>A photon is never a tiny ball. A detector absorbs it at one random point, and many clicks rebuild the beam spot.</p></div><div class="glass fcard"><h3>OAM vortex</h3><p>Twisted light: Laguerre–Gauss beams with a helicoid phase front and intertwined arms.</p></div><div class="glass fcard"><h3>Atom emission</h3><p>The photon an excited atom releases radiates like an oscillating dipole: a doughnut pattern with nothing along the axis.</p></div><div class="glass fcard"><h3>Atomic photon</h3><p>Spontaneous emission: a sharp leading edge and an exponential tail.</p></div><div class="glass fcard"><h3>Gaussian pulse</h3><p>Fourier-limited, no dispersion, so the shape never changes in vacuum.</p></div><div class="glass fcard"><h3>Sech² pulse</h3><p>The envelope of a mode-locked laser or a fibre soliton.</p></div><div class="glass fcard"><h3>Pulse in glass</h3><p>Dispersion and chirp in fused silica: red leads, blue lags, and the pulse broadens as it travels.</p></div><div class="glass fcard"><h3>SPDC rings</h3><p>One pump photon splits in a crystal into two. Two interlocking rings form, as in long-exposure photographs.</p></div><div class="glass fcard"><h3>Bell pair</h3><p>An entangled yin-yang pair with polariser angles you can set, and the CHSH test beside it.</p></div></div>
+  <div class="vgrid"><div class="glass vcard"><canvas id="v-wave" width="640" height="340" role="img" aria-label="Animated electromagnetic wave: electric field in orange, magnetic field in cyan, perpendicular to each other"></canvas><h4>Light is a wave of two fields</h4><div class="vcap"><b style="color:#ff9944;font-weight:400">Electric field E</b> and <b style="color:#4fd8ff;font-weight:400">magnetic field B</b> oscillate in phase, at right angles to each other and to the direction of travel. This is the linear wave scene in Photon mode.</div></div><div class="glass vcard"><canvas id="v-helix" width="640" height="340" role="img" aria-label="Animated circularly polarised light: the field vector traces a helix"></canvas><h4>Spin: the field that corkscrews</h4><div class="vcap">In circular polarisation the field rotates once per wavelength and traces a helix. Each photon carries spin angular momentum of ±ħ.</div></div></div><div class="chips" style="margin-top:14px"><span>wavelength</span><span>energy (eV)</span><span>helicity</span><span>spin ±ħ</span><span>orbital angular momentum</span><span>Gouy phase</span><span>dispersion</span></div>
+
+  <div class="story-h"><small>ENTANGLEMENT</small>Two particles, one shared state</div>
+  <div class="callout">
+    <h3>The idea in plain words</h3>
+    <p>Two entangled particles share one quantum state. Measure one, and the outcomes you get from the other are correlated more strongly than any classical rule could explain, no matter how far apart they are. It does not send a message faster than light, but it is real, tested, and the basis of quantum cryptography and quantum computing. The 2022 Nobel Prize in Physics honoured the experiments that proved it.</p>
+    <p><b style="color:var(--hi);font-weight:400">What Entangle mode shows.</b> A pump photon splits inside a BBO crystal into a signal and an idler photon, drawn as the two interlocking rings seen in long-exposure photographs. Where the rings cross, a photon cannot be labelled horizontal or vertical, so each pair is polarisation-entangled. The Bell-pair scene lets you set the polariser angles and reads out the correlations, the probabilities P(++), P(+−) and the CHSH value, where classical physics caps the result at 2 and quantum mechanics reaches up to 2√2.</p>
+  </div>
+
+  <div class="vgrid"><div class="glass vcard"><svg class="vsvg" viewBox="0 0 640 340" role="img" aria-label="Two interlocking rings from type-II down-conversion; entangled photon pairs where the rings cross">
+<defs><radialGradient id="gO"><stop offset="0" stop-color="#ffcf9e"/><stop offset="1" stop-color="#ff5500" stop-opacity="0"/></radialGradient></defs>
+<circle cx="268" cy="170" r="112" fill="none" stroke="#ff9944" stroke-width="3" opacity=".9"/>
+<circle cx="372" cy="170" r="112" fill="none" stroke="#4fd8ff" stroke-width="3" opacity=".9"/>
+<g fill="#ffcf9e"><circle class="ring-pulse" cx="320" cy="76" r="9" fill="url(#gO)"/><circle class="ring-pulse" cx="320" cy="264" r="9" fill="url(#gO)"/><circle cx="320" cy="76" r="4"/><circle cx="320" cy="264" r="4"/></g>
+<text x="150" y="176" fill="#ff9944" font-family="monospace" font-size="15" text-anchor="middle">H photons</text>
+<text x="490" y="176" fill="#4fd8ff" font-family="monospace" font-size="15" text-anchor="middle">V photons</text>
+<text x="320" y="56" fill="#ffcf9e" font-family="monospace" font-size="14" text-anchor="middle">entangled</text>
+<text x="320" y="294" fill="#ffcf9e" font-family="monospace" font-size="14" text-anchor="middle">entangled</text>
+<text x="320" y="176" fill="rgba(255,255,255,.55)" font-family="monospace" font-size="13" text-anchor="middle">1 pump photon → 2</text>
+</svg><h4>One photon in, an entangled pair out</h4><div class="vcap">A pump photon splits in a crystal into a signal and an idler. Horizontal photons leave on one cone, vertical on the other. Where the rings cross, a photon cannot be labelled H or V, so each pair is <b>polarisation-entangled</b>.</div></div><div class="glass vcard"><svg class="vsvg" viewBox="0 0 640 200" role="img" aria-label="Two polarisers a and b with an entangled pair between them"><line x1="80" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,.2)" stroke-dasharray="4 6"/><circle cx="320" cy="100" r="14" fill="#ffcf9e"/><circle cx="320" cy="100" r="30" fill="none" stroke="#ff5500" opacity=".6"/><g id="pa" transform="translate(110 100)"><circle r="46" fill="none" stroke="#ff9944" stroke-width="2"/><line id="pa-l" x1="-40" y1="0" x2="40" y2="0" stroke="#ff9944" stroke-width="5" stroke-linecap="round"/><text y="72" fill="#ff9944" font-family="monospace" font-size="14" text-anchor="middle">polariser a</text></g><g id="pb" transform="translate(530 100)"><circle r="46" fill="none" stroke="#4fd8ff" stroke-width="2"/><line id="pb-l" x1="-40" y1="0" x2="40" y2="0" stroke="#4fd8ff" stroke-width="5" stroke-linecap="round"/><text y="72" fill="#4fd8ff" font-family="monospace" font-size="14" text-anchor="middle">polariser b</text></g></svg><h4>Feel the entanglement</h4><div class="vcap">For a Φ⁺ pair, the match between the two results depends only on the angle between the polarisers. Drag it and watch the probabilities change instantly.</div><div class="vctl"><label for="bell-d">ANGLE a − b</label><input id="bell-d" type="range" min="0" max="180" value="0"><span id="bell-dv" style="min-width:42px;text-align:right;color:var(--hi)">0°</span></div>
+<div class="vbars"><div class="vbar"><span>E(a,b)</span><i><u id="bb-e"></u></i><b id="bt-e"></b></div><div class="vbar"><span>P(++) = P(−−)</span><i><u id="bb-s"></u></i><b id="bt-s"></b></div><div class="vbar"><span>P(+−) = P(−+)</span><i><u id="bb-d"></u></i><b id="bt-d"></b></div></div>
+<div class="vctl"><button type="button" class="vbtn" id="bell-best">SET CHSH-BEST ANGLES</button><span id="bell-chsh" style="color:var(--cx3)">Classical limit 2 · quantum up to 2.83</span></div></div></div><div class="story-h"><small>DIMENSIONS</small>Time, and beyond</div>
+  <p class="lead-in"><b>4D mode</b> adds time as a fourth axis, so the atom becomes a worldtube: a shape stretched through time instead of a frozen snapshot. <b>N-D mode</b> goes further, from 3D to 10D, adding a labelled axis for each extra dimension. These are exploratory visualisations meant to build intuition, and they are labelled as such.</p>
+
+  <div class="vgrid"><div class="glass vcard"><canvas id="v-tube" width="640" height="340" role="img" aria-label="An atom drawn through time: separate snapshots or one continuous tube"></canvas><h4>A worldtube through time</h4><div class="vcap">4D mode adds time as a fourth axis. Show <b>discrete</b> snapshots of the atom at distinct moments, or one <b>continuous</b> worldtube streaming through time.</div><div class="vctl"><button type="button" class="vbtn on" id="tube-c" aria-pressed="true">CONTINUOUS</button><button type="button" class="vbtn" id="tube-d" aria-pressed="false">DISCRETE</button></div></div><div class="glass vcard"><svg class="vsvg" id="v-nd" viewBox="0 0 640 340" role="img" aria-label="Axes of an N-dimensional atom radiating from a centre"></svg><h4>From 3D to 10D</h4><div class="vcap">Space gives three axes, time the fourth, and every dimension beyond adds a new labelled axis. An exploratory visualisation, not a claim about the physical universe.</div><div class="vctl"><label for="nd-r">DIMENSIONS</label><input id="nd-r" type="range" min="3" max="10" value="5"><span id="nd-v" style="min-width:34px;text-align:right;color:var(--hi)">5D</span></div><div class="axes-note" id="nd-note"></div></div></div><div class="story-h"><small>THE TOOLBOX</small>Everything you can switch on</div>
+  <div class="fgrid"><div class="glass fcard"><div class="k">EXCITED STATE</div><h3>Watch an electron jump</h3><p>Promote an electron to a higher orbital and pick which transition to show. Selection rules are respected: a single photon cannot reach states like hydrogen 2s, which are metastable.</p></div><div class="glass fcard"><div class="k">FIELDS</div><h3>Electric and magnetic field</h3><p>Switch on the E and B field of a single atom and see the lines in the atom’s own space.</p></div><div class="glass fcard"><div class="k">NUCLEAR</div><h3>Radioactive decay chains</h3><p>Step a radioactive element down its decay chain and watch the nucleus change. Rare modes such as cluster and double-beta decay are left out, and the page says so.</p></div><div class="glass fcard"><div class="k">MIRROR WORLD</div><h3>Antimatter mode</h3><p>Flips the whole scene to a mirror palette and relabels protons and neutrons as antiprotons and antineutrons.</p></div><div class="glass fcard"><div class="k">RENDERING</div><h3>Five ways to draw an orbital</h3><p>Smooth, Ultra (mesh), Surface, Volumetric and Hard modes, plus Real Image Mode with nine colour types.</p></div><div class="glass fcard"><div class="k">CLOUD</div><h3>Density up to 1000×</h3><p>A log-scale density control, jitter shimmer, and adaptive quality that thins the cloud if your frame rate drops.</p></div></div>
+
+  <div class="vgrid"><div class="glass vcard"><svg class="vsvg" viewBox="0 0 640 340" role="img" aria-label="Hydrogen energy levels: an electron falls from n=3 to n=2 and emits a red photon of 656 nanometres">
+<g stroke="rgba(255,255,255,.4)" stroke-width="2"><line x1="70" x2="300" y1="300" y2="300"/><line x1="70" x2="300" y1="100" y2="100"/><line x1="70" x2="300" y1="66" y2="66"/><line x1="70" x2="300" y1="55" y2="55"/></g>
+<g fill="rgba(255,255,255,.65)" font-family="monospace" font-size="13"><text x="308" y="304">n = 1  (−13.6 eV)</text><text x="308" y="104">n = 2  (−3.40 eV)</text><text x="308" y="70" fill="#ffcf9e">n = 3  (−1.51 eV)</text><text x="308" y="52">n = 4</text></g>
+<g class="lvl-e"><circle cx="185" cy="66" r="18" fill="none" stroke="#ff9944" opacity=".5"/><circle cx="185" cy="66" r="9" fill="#ffcf9e"/></g>
+<g transform="translate(200 112) rotate(38)"><path class="lvl-p" d="M0 0 q 10 -15 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0 t 20 0" fill="none" stroke="#ff4030" stroke-width="3" stroke-linecap="round"/></g>
+<text class="lvl-t" x="470" y="236" fill="#ff7060" font-family="monospace" font-size="15" text-anchor="middle">photon · 656 nm · 1.89 eV</text>
+</svg><h4>The electron falls. A photon leaves.</h4><div class="vcap">Hydrogen drops from n = 3 to n = 2 and releases exactly the energy difference as one red photon, the H-alpha line. Excited-state mode shows these jumps, and respects the selection rules.</div></div><div class="glass vcard"><svg class="vsvg" viewBox="0 0 640 340" role="img" aria-label="Dipole radiation pattern: a doughnut shape with no emission along the dipole axis">
+<defs><radialGradient id="gD" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#ffcf9e" stop-opacity=".9"/><stop offset="1" stop-color="#ff5500" stop-opacity=".25"/></radialGradient></defs>
+<line x1="320" y1="20" x2="320" y2="320" stroke="rgba(255,255,255,.4)" stroke-dasharray="5 6"/>
+<path d="M320.0 170.0 L320.1 168.7 L321.1 164.9 L323.5 159.1 L328.1 151.9 L335.0 144.0 L344.4 136.5 L356.0 130.1 L369.2 125.7 L383.5 123.8 L397.9 125.0 L411.5 129.3 L423.2 136.5 L432.3 146.1 L438.0 157.6 L440.0 170.0 L438.0 182.4 L432.3 193.9 L423.2 203.5 L411.5 210.7 L397.9 215.0 L383.5 216.2 L369.2 214.3 L356.0 209.9 L344.4 203.5 L335.0 196.0 L328.1 188.1 L323.5 180.9 L321.1 175.1 L320.1 171.3 L320.0 170.0 L319.9 171.3 L318.9 175.1 L316.5 180.9 L311.9 188.1 L305.0 196.0 L295.6 203.5 L284.0 209.9 L270.8 214.3 L256.5 216.2 L242.1 215.0 L228.5 210.7 L216.8 203.5 L207.7 193.9 L202.0 182.4 L200.0 170.0 L202.0 157.6 L207.7 146.1 L216.8 136.5 L228.5 129.3 L242.1 125.0 L256.5 123.8 L270.8 125.7 L284.0 130.1 L295.6 136.5 L305.0 144.0 L311.9 151.9 L316.5 159.1 L318.9 164.9 L319.9 168.7 L320.0 170.0 Z" fill="url(#gD)" stroke="#ff9944" stroke-width="2.5"/>
+<path d="M320.0 170.0 L320.1 168.7 L321.1 164.9 L323.5 159.1 L328.1 151.9 L335.0 144.0 L344.4 136.5 L356.0 130.1 L369.2 125.7 L383.5 123.8 L397.9 125.0 L411.5 129.3 L423.2 136.5 L432.3 146.1 L438.0 157.6 L440.0 170.0 L438.0 182.4 L432.3 193.9 L423.2 203.5 L411.5 210.7 L397.9 215.0 L383.5 216.2 L369.2 214.3 L356.0 209.9 L344.4 203.5 L335.0 196.0 L328.1 188.1 L323.5 180.9 L321.1 175.1 L320.1 171.3 L320.0 170.0 L319.9 171.3 L318.9 175.1 L316.5 180.9 L311.9 188.1 L305.0 196.0 L295.6 203.5 L284.0 209.9 L270.8 214.3 L256.5 216.2 L242.1 215.0 L228.5 210.7 L216.8 203.5 L207.7 193.9 L202.0 182.4 L200.0 170.0 L202.0 157.6 L207.7 146.1 L216.8 136.5 L228.5 129.3 L242.1 125.0 L256.5 123.8 L270.8 125.7 L284.0 130.1 L295.6 136.5 L305.0 144.0 L311.9 151.9 L316.5 159.1 L318.9 164.9 L319.9 168.7 L320.0 170.0 Z" fill="none" stroke="#ffcf9e" stroke-width="1" transform="translate(320 170) scale(.6) translate(-320 -170)" opacity=".5"/>
+<circle cx="320" cy="170" r="6" fill="#fff"/>
+<text x="332" y="32" fill="rgba(255,255,255,.7)" font-family="monospace" font-size="13">dipole axis: no emission</text>
+<text x="500" y="176" fill="#ffcf9e" font-family="monospace" font-size="13">strongest here</text>
+</svg><h4>How an atom lights up space</h4><div class="vcap">An excited atom radiates like a tiny oscillating antenna. The light leaves in a doughnut pattern: strongest sideways, and none at all along the axis. This is the Atom Emission scene in Photon mode.</div></div></div><div class="story-h"><small>DEPTH AND REACH</small>Down to the core, out to everyone</div>
+  <div class="fgrid"><div class="glass fcard"><div class="k">NUCLEUS</div><h3>Live quarks, gluons and pions</h3><p>The nucleus is built from the element’s real proton and neutron counts, with quark content, gluon flux, pions and nucleon motion drawn in.</p></div><div class="glass fcard"><div class="k">DATA</div><h3>A deep data sheet per element</h3><p>Discoverer and year, name origin, uses, abundance in the crust and sea, melting and boiling points, density, heats, conductivity, electronegativity, radii, crystal lattice, oxidation states, ionisation energies and isotopes.</p></div><div class="glass fcard"><div class="k">EVERYWHERE</div><h3>Built for any device</h3><p>Phone-friendly bottom sheets, share links to any element, keyboard shortcuts, reduced-motion support and screen-reader labels.</p></div></div>
+  <p class="sec-note">Computed views come from orbital and field mathematics. Nucleon, quark, higher-dimensional and Planck-scale views are illustrative, and the simulator says which is which.</p>
+</section>
+
 <section id="new" class="section">
   <div class="eyebrow2">CHANGELOG</div>
   <h2>Built for 2.0</h2>
@@ -596,6 +815,86 @@ table.tbl{width:100%;min-width:760px;border-collapse:separate;border-spacing:0;f
     <details class="glass"><summary>Can I share a link to one element?</summary><p>Yes. Add the symbol to the address: <b>simulation.html#el=Fe</b> opens the simulator on iron, and the Nucleus Explorer accepts the same form.</p></details>
     <details class="glass"><summary>Is it free?</summary><p>Yes. It runs in the browser with nothing to install.</p></details>
   </div>
+</section>
+
+<section id="support" class="section">
+  <div class="eyebrow2">CONTRIBUTE</div>
+  <h2>Everyone was taught the atom.<br>Almost no one was shown it.</h2>
+
+  <div class="story-h"><small>THE PICTURE WE ALL CARRY</small>A century-old drawing is still in our heads</div>
+  <p class="lead-in">Close your eyes and picture an atom. A nucleus in the middle, tiny electrons circling it like planets. Almost everyone sees the same thing, because almost everyone was taught the same thing. That model is from 1913. It is useful, and it is <b>wrong about the one thing chemistry depends on: shape.</b></p>
+  <p class="lead-in">The real atom is a cloud of probability. A 1s orbital is a sphere, a 2p is a dumbbell, a 3d branches into lobes. Why bonds form, why metals conduct, why gold is yellow: it all follows from those shapes. Yet most people only ever meet them as flat ink on a textbook page, memorise them for an exam, and quietly decide that quantum physics is not for them.</p>
+  <p class="lead-in">That is the real loss. Not a wrong diagram, but millions of curious people who walked away from physics because nobody let them look at it.</p>
+
+  <div class="story-h"><small>THE PROBLEM</small>Three walls between people and the real atom</div>
+  <div class="promise three">
+    <div class="glass"><div class="k">WALL 1</div><h3>A wrong mental picture</h3><p>The planetary atom sticks for life, and it hides the cloud-like reality that modern chemistry is built on.</p></div>
+    <div class="glass"><div class="k">WALL 2</div><h3>Flat teaching tools</h3><p>Orbitals are 3D objects. A page or a slide cannot be rotated, zoomed or walked around, so intuition never forms.</p></div>
+    <div class="glass"><div class="k">WALL 3</div><h3>Access</h3><p>Good visualisers often need installs, accounts, subscriptions or powerful hardware. The people who need them most are the ones locked out.</p></div>
+  </div>
+
+  <div class="story-h"><small>WHAT QUANTUM ATOM DOES ABOUT IT</small>Tear down all three, in one browser tab</div>
+  <p class="lead-in">Quantum Atom draws each of the <b>118 elements</b> from its real orbital mathematics, so what you rotate is the shape a chemistry textbook describes, not an artist's guess. Then it lets you keep going: past the electrons, into the nucleus, down to quarks, and on to the Planck length.</p>
+  <div class="promise three">
+    <div class="glass"><div class="k">UNDERSTAND</div><h3>See the real shape</h3><p>Orbitals sampled from true probability distributions. Drag, spin and zoom until the idea clicks.</p></div>
+    <div class="glass"><div class="k">EXPLORE</div><h3>Every element, every scale</h3><p>Hydrogen to oganesson, then nucleus, nucleons, quarks and the vacuum. One continuous journey.</p></div>
+    <div class="glass"><div class="k">REACH</div><h3>Free and everywhere</h3><p>No install, no account, no paywall. It runs on a phone, and any element has a shareable link, such as simulation.html#el=Fe.</p></div>
+    <div class="glass"><div class="k">TRUST</div><h3>Honest by design</h3><p>We say plainly which views come from real physics and which are illustrative, because trust is what makes a teaching tool worth using.</p></div>
+  </div>
+
+  <div class="story-h"><small>WHO IT IS FOR</small>The student, the teacher and the curious</div>
+  <p class="lead-in">A student can finally see what a d orbital is before the exam, not after. A teacher can put a live atom on the classroom screen and send the class a link to iron or gold. And anyone who simply wonders what the world is made of can fall into it on their phone, on a bus, for free.</p>
+
+  <div class="bridge">
+    <h3>This is only the first chapter</h3>
+    <p>Quantum Atom is the first step of a long-term mission: to make physics something you explore rather than something you are told about. Atoms come first. The ambition is a place where more of how the universe works can be seen, touched and understood by anyone, anywhere.</p>
+  </div>
+
+  <div class="story-h"><small>WHY YOUR HELP MATTERS</small>A free tool only stays free if people carry it</div>
+  <p class="lead-in">Keeping this free for everyone takes real work: development time, performance and mobile polish, accessibility, and building the next layers of physics. Your support goes straight into that work. <b>If you can give, thank you. If you cannot, a star and a share do almost as much.</b> Choose whatever fits below.</p>
+
+  <div class="support-grid">
+    <div class="glass support-card">
+      <h3>Donate with crypto</h3>
+      <div class="donate-row">
+        <div class="qr-tile"><svg class="qr-svg" role="img" aria-label="QR code of the donation wallet address" viewBox="0 0 33 33"><path fill="#fff" d="M0 0h33v33h-33z"/><path class="qrline" stroke="#0b0604" d="M2 2.5h7m1 0h1m4 0h1m1 0h1m2 0h1m3 0h7m-29 1h1m5 0h1m3 0h2m1 0h1m2 0h4m2 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m2 0h1m1 0h2m1 0h1m2 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m4 0h4m5 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h3m2 0h4m2 0h1m2 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m1 0h1m1 0h1m2 0h2m2 0h1m1 0h2m1 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-21 1h2m4 0h2m1 0h4m-21 1h1m3 0h1m1 0h7m1 0h1m1 0h2m1 0h1m1 0h5m2 0h1m-26 1h1m5 0h1m3 0h1m1 0h1m2 0h1m1 0h1m2 0h4m1 0h1m-29 1h2m2 0h1m1 0h1m3 0h1m2 0h4m5 0h1m1 0h1m1 0h1m1 0h1m-29 1h1m1 0h1m1 0h1m2 0h1m4 0h1m1 0h1m1 0h2m2 0h2m1 0h1m4 0h1m-29 1h4m2 0h1m2 0h1m1 0h2m1 0h1m1 0h5m2 0h1m4 0h1m-29 1h2m1 0h1m1 0h1m3 0h2m1 0h2m1 0h1m3 0h1m1 0h2m1 0h1m1 0h3m-26 1h1m2 0h4m3 0h4m5 0h7m-29 1h1m2 0h2m2 0h3m2 0h1m4 0h2m1 0h4m3 0h2m-29 1h1m1 0h1m2 0h3m1 0h3m1 0h1m2 0h5m3 0h1m3 0h1m-29 1h4m1 0h1m1 0h3m1 0h1m1 0h3m3 0h1m1 0h5m1 0h2m-26 1h8m3 0h3m4 0h3m1 0h1m2 0h1m-27 1h3m2 0h5m3 0h1m1 0h1m5 0h2m2 0h2m-29 1h2m3 0h3m2 0h1m2 0h1m6 0h5m-17 1h7m1 0h1m1 0h1m1 0h1m3 0h2m1 0h2m-29 1h7m1 0h1m1 0h2m2 0h3m2 0h2m1 0h1m1 0h2m1 0h2m-29 1h1m5 0h1m2 0h2m6 0h2m1 0h1m3 0h1m2 0h1m-28 1h1m1 0h3m1 0h1m1 0h3m1 0h3m2 0h8m3 0h1m-29 1h1m1 0h3m1 0h1m6 0h2m1 0h1m3 0h2m1 0h1m1 0h2m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h4m2 0h3m2 0h2m1 0h1m2 0h3m-29 1h1m5 0h1m3 0h1m1 0h1m2 0h3m1 0h4m4 0h2m-29 1h7m1 0h1m1 0h1m1 0h3m1 0h7m1 0h1m2 0h1"/></svg></div>
+        <div class="donate-info">
+          <p>Scan with your wallet app, or copy the address. Funds pay for development time and keep every tool free.</p>
+          <div class="addr-wrap">
+            <code class="addr" id="wallet-addr">0x9b799218B3F43c98DD6Eb7b32C00FD624e5a76DD</code>
+            <button type="button" class="copy-btn" id="copy-addr" aria-label="Copy wallet address">COPY</button>
+          </div>
+        </div>
+      </div>
+      <div class="bal" aria-live="polite"><b id="bal-eth">—</b><span id="bal-label">ETH · LIVE BALANCE ON ETHEREUM MAINNET</span></div>
+      <div class="link-row">
+        <a class="btn btn-s btn-sm" href="https://etherscan.io/address/0x9b799218B3F43c98DD6Eb7b32C00FD624e5a76DD" target="_blank" rel="noopener noreferrer">VERIFY ON ETHERSCAN ↗</a>
+        <a class="btn btn-s btn-sm" href="https://eth.blockscout.com/address/0x9b799218B3F43c98DD6Eb7b32C00FD624e5a76DD" target="_blank" rel="noopener noreferrer">BLOCKSCOUT ↗</a>
+      </div>
+      <p class="tiny" id="copy-status" role="status" aria-live="polite">Nothing here is typed by us: the balance is read straight from the public Ethereum blockchain, and the links show every incoming transfer. Check the first and last characters after pasting, and send a small test amount first. Transfers cannot be reversed.</p>
+    </div>
+    <div class="glass support-card">
+      <h3>Star &amp; contribute on GitHub</h3>
+      <p>No budget? A star is the best free gift you can give. It lifts the project in GitHub search so more students and teachers find it.</p>
+      <div class="stars" id="gh-stats" hidden>
+        <div class="stat"><b id="gh-stars">—</b><span>STARS</span></div>
+        <div class="stat"><b id="gh-forks">—</b><span>FORKS</span></div>
+      </div>
+      <div class="link-row">
+        <a class="btn btn-p btn-sm" href="https://github.com/nazat02/Quantum-Atom-2.0" target="_blank" rel="noopener noreferrer">★ STAR ON GITHUB</a>
+        <a class="btn btn-s btn-sm" href="https://github.com/nazat02/Quantum-Atom-2.0/issues" target="_blank" rel="noopener noreferrer">REPORT A BUG</a>
+        <button type="button" class="btn btn-s btn-sm" id="share-btn">SHARE ↗</button>
+      </div>
+      <p class="tiny" id="share-status" role="status" aria-live="polite">Before proposing code changes, please open an issue to agree on scope. The source is free to read; see the licence for reuse terms.</p>
+    </div>
+  </div>
+  <div class="ways">
+    <div class="glass"><h4>Star it</h4><p>One click, ten seconds, zero cost. The single biggest boost for discovery.</p></div>
+    <div class="glass"><h4>Tell one person</h4><p>Send the link to a teacher, a student, or anyone who once loved physics.</p></div>
+    <div class="glass"><h4>Report what breaks</h4><p>Name the browser, the device and the element. Good bug reports make it better for everyone.</p></div>
+    <div class="glass"><h4>Fund the next build</h4><p>Donations buy time to add more physics, more scales and more of the universe.</p></div>
+  </div>
+  <p class="sec-note">Donations are voluntary gifts to support the project, not a purchase of goods or services. The balance shown is the current balance on Ethereum mainnet only, not a total of all gifts ever received.</p>
 </section>
 
 <section id="cta">
@@ -1181,6 +1480,233 @@ const ART = {
   h += '<div class="rpin r" style="left:100%"><b>Quark · electron</b><i>below 10⁻¹⁸ m</i></div>';
   r.innerHTML = h; r.parentElement.style.paddingBottom = '4px';
 })();
+})();
+</script>
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i);};
+  var ADDR=($('wallet-addr')||{}).textContent;
+  if(!ADDR) return; ADDR=ADDR.trim();
+  var REPO='nazat02/Quantum-Atom-2.0';
+
+  /* copy: Clipboard API -> execCommand fallback -> manual select */
+  var cb=$('copy-addr'), note=$('copy-status'), cbLabel=cb.textContent, noteOrig=note.textContent, timer=null;
+  function flash(btn,label,txt,msg){
+    clearTimeout(timer);
+    btn.textContent=label;
+    if(msg) note.textContent=msg;
+    timer=setTimeout(function(){btn.textContent=cbLabel;note.textContent=noteOrig;},2600);
+  }
+  function legacyCopy(text){
+    var ta=document.createElement('textarea'), ok=false;
+    ta.value=text; ta.setAttribute('readonly','');
+    ta.style.cssText='position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px;';
+    document.body.appendChild(ta);
+    try{ta.focus();ta.select();ta.setSelectionRange(0,text.length);ok=document.execCommand('copy');}catch(e){ok=false;}
+    document.body.removeChild(ta);
+    try{cb.focus();}catch(e){}
+    return ok;
+  }
+  function selectAddr(){
+    try{var r=document.createRange();r.selectNodeContents($('wallet-addr'));var sl=getSelection();sl.removeAllRanges();sl.addRange(r);}catch(e){}
+  }
+  function copied(){flash(cb,'COPIED ✓',null,'Address copied. Paste it into your wallet and verify the first and last characters.');}
+  function manual(){selectAddr();flash(cb,'COPY',null,'Your browser blocked automatic copy. The address is selected: press and hold it, then tap Copy.');}
+  cb.addEventListener('click',function(){
+    function fallback(){if(legacyCopy(ADDR)){copied();}else{manual();}}
+    if(navigator.clipboard&&navigator.clipboard.writeText&&window.isSecureContext){
+      navigator.clipboard.writeText(ADDR).then(copied,fallback);
+    }else{fallback();}
+  });
+
+  /* fetch with timeout */
+  function tfetch(url,opt,ms){
+    var c=typeof AbortController!=='undefined'?new AbortController():null;
+    var t=setTimeout(function(){if(c)c.abort();},ms||6000);
+    opt=opt||{}; if(c)opt.signal=c.signal;
+    return fetch(url,opt).then(function(r){clearTimeout(t);if(!r.ok)throw new Error('http '+r.status);return r.json();},function(e){clearTimeout(t);throw e;});
+  }
+
+  /* live ETH balance, trying public RPCs in order */
+  var RPCS=['https://ethereum-rpc.publicnode.com','https://eth.llamarpc.com','https://cloudflare-eth.com'];
+  function fmt(hex){
+    var v=BigInt(hex), D=10n**18n, whole=v/D, frac=(v%D).toString().padStart(18,'0').slice(0,5);
+    return whole.toLocaleString('en-US')+'.'+frac;
+  }
+  function getBal(i){
+    if(i>=RPCS.length) return Promise.reject(new Error('no rpc'));
+    return tfetch(RPCS[i],{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({jsonrpc:'2.0',id:1,method:'eth_getBalance',params:[ADDR,'latest']})})
+      .then(function(j){if(!j||typeof j.result!=='string')throw new Error('bad');return j.result;})
+      .catch(function(){return getBal(i+1);});
+  }
+  try{
+    if(typeof BigInt==='function'){
+      getBal(0).then(function(h){$('bal-eth').textContent=fmt(h);},
+        function(){$('bal-eth').textContent='See Etherscan';$('bal-label').textContent='LIVE BALANCE UNAVAILABLE RIGHT NOW · USE THE VERIFY LINK';});
+    }
+  }catch(e){}
+
+  /* GitHub stars / forks */
+  try{
+    tfetch('https://api.github.com/repos/'+REPO,{headers:{'Accept':'application/vnd.github+json'}}).then(function(d){
+      if(typeof d.stargazers_count!=='number') return;
+      $('gh-stars').textContent=d.stargazers_count.toLocaleString('en-US');
+      $('gh-forks').textContent=(d.forks_count||0).toLocaleString('en-US');
+      $('gh-stats').hidden=false;
+    }).catch(function(){});
+  }catch(e){}
+
+  /* share */
+  var sb=$('share-btn'), sbLabel=sb.textContent, sbTimer=null;
+  sb.addEventListener('click',function(){
+    var data={title:'Quantum Atom 2.0',text:'Explore all 118 elements as real 3D orbital clouds, free in your browser.',url:'https://nazat02.github.io/Quantum-Atom-2.0/'};
+    function flashShare(t){clearTimeout(sbTimer);sb.textContent=t;sbTimer=setTimeout(function(){sb.textContent=sbLabel;},2200);}
+    if(navigator.share){navigator.share(data).catch(function(){});return;}
+    function tail(){
+      var ta=document.createElement('textarea');ta.value=data.url;ta.setAttribute('readonly','');
+      ta.style.cssText='position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px;';
+      document.body.appendChild(ta);var ok=false;
+      try{ta.focus();ta.select();ta.setSelectionRange(0,data.url.length);ok=document.execCommand('copy');}catch(e){}
+      document.body.removeChild(ta);try{sb.focus();}catch(e){}
+      flashShare(ok?'LINK COPIED ✓':'COPY: nazat02.github.io/Quantum-Atom-2.0');
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText&&window.isSecureContext){
+      navigator.clipboard.writeText(data.url).then(function(){flashShare('LINK COPIED ✓');},tail);
+    }else{tail();}
+  });
+})();
+</script>
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i);};
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var O='#ff9944',C='#4fd8ff',CR='#ffcf9e';
+  function prep(c){var d=Math.min(window.devicePixelRatio||1,2),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.scale(d,d);return {x:x,w:w,h:h};}
+  function line(x,pts,col,lw){x.beginPath();pts.forEach(function(p,i){i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1]);});x.strokeStyle=col;x.lineWidth=lw;x.lineJoin='round';x.stroke();}
+  function txt(x,t,px,py,col){x.fillStyle=col;x.font='13px monospace';x.fillText(t,px,py);}
+
+  var waveCtx=prep($('v-wave')), helixCtx=prep($('v-helix')), tubeCtx=prep($('v-tube')), tubeMode='c';
+  function drawWave(t){
+    var g=waveCtx,x=g.x,N=140,x0=40,x1=600,cy=175,A=78,k=0.2;
+    x.clearRect(0,0,g.w,g.h);
+    line(x,[[x0,cy],[x1,cy]],'rgba(255,255,255,.35)',1.2);
+    var E=[],B=[];
+    for(var i=0;i<=N;i++){var px=x0+i*(x1-x0)/N,ph=k*i-t,e=Math.sin(ph)*A;E.push([px,cy-e]);B.push([px-e*0.62,cy+e*0.42]);
+      if(i%6===0){line(x,[[px,cy],[px,cy-e]],'rgba(255,153,68,.35)',1);line(x,[[px,cy],[px-e*0.62,cy+e*0.42]],'rgba(79,216,255,.35)',1);}}
+    line(x,B,C,2.6);line(x,E,O,2.6);
+    txt(x,'E',20,cy-A-6,O);txt(x,'B',x0-34,cy+A*0.5+22,C);txt(x,'direction of travel →',x1-150,g.h-14,'rgba(255,255,255,.6)');
+  }
+  function drawHelix(t){
+    var g=helixCtx,x=g.x,N=170,x0=40,x1=590,cy=170,R=72,k=0.19,pts=[];
+    x.clearRect(0,0,g.w,g.h);
+    line(x,[[x0,cy],[x1,cy]],'rgba(255,255,255,.3)',1.2);
+    for(var i=0;i<=N;i++){var px=x0+i*(x1-x0)/N,ph=k*i-t;pts.push([px+Math.sin(ph)*R*0.45,cy-Math.cos(ph)*R]);
+      if(i%10===0)line(x,[[px,cy],[pts[i][0],pts[i][1]]],'rgba(255,207,158,.28)',1);}
+    line(x,pts,O,2.8);
+    var l=pts[pts.length-1];x.beginPath();x.arc(l[0],l[1],5,0,7);x.fillStyle=CR;x.fill();
+    txt(x,'field vector rotates once per wavelength',x0,g.h-18,'rgba(255,255,255,.6)');
+  }
+  function drawTube(t){
+    var g=tubeCtx,x=g.x,x0=50,x1=590,cy=170,R=62;x.clearRect(0,0,g.w,g.h);
+    line(x,[[x0,cy+R+30],[x1,cy+R+30]],'rgba(255,255,255,.35)',1.2);txt(x,'time →',x1-52,cy+R+50,'rgba(255,255,255,.6)');
+    if(tubeMode==='c'){
+      for(var s=0;s<4;s++){var pts=[];for(var i=0;i<=120;i++){var px=x0+i*(x1-x0)/120,ph=i*0.11-t+s*1.57;pts.push([px,cy+Math.sin(ph)*R*(0.55+0.45*Math.cos(i*0.05+s))]);}
+        line(x,pts,s%2?O:C,2.2);}
+      line(x,[[x0,cy-R],[x1,cy-R]],'rgba(255,207,158,.35)',1);line(x,[[x0,cy+R],[x1,cy+R]],'rgba(255,207,158,.35)',1);
+    }else{
+      var n=6,gap=(x1-x0)/n,off=(t*14)%gap;
+      for(var j=-1;j<=n;j++){var px=x0+gap*(j+0.5)-off+gap*0.5,a=Math.max(0,1-Math.abs(px-(x0+x1)/2)/300)*0.9+0.1;
+        if(px<x0-10||px>x1+10)continue;x.save();x.globalAlpha=a;x.beginPath();x.ellipse(px,cy,16,R,0,0,7);x.strokeStyle=CR;x.lineWidth=2;x.stroke();
+        for(var m=0;m<9;m++){var ang=m*0.7+j+t*0.5;x.beginPath();x.arc(px+Math.cos(ang)*8,cy+Math.sin(ang)*R*0.92,2.6,0,7);x.fillStyle=m%2?O:C;x.fill();}x.restore();}
+    }
+  }
+  var vis={w:true,h:true,t:true};
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){vis[e.target.dataset.k]=e.isIntersecting;});});
+    [['v-wave','w'],['v-helix','h'],['v-tube','t']].forEach(function(a){var el=$(a[0]);el.dataset.k=a[1];io.observe(el);});}
+  var t0=performance.now();
+  function frame(now){var t=(now-t0)/1000*2.2;
+    if(vis.w)drawWave(t);if(vis.h)drawHelix(t);if(vis.t)drawTube(t);
+    if(!reduce)requestAnimationFrame(frame);}
+  if(reduce){drawWave(0.4);drawHelix(0.4);drawTube(0.4);}else{requestAnimationFrame(frame);}
+  function setTube(m){tubeMode=m;$('tube-c').classList.toggle('on',m==='c');$('tube-d').classList.toggle('on',m==='d');$('tube-c').setAttribute('aria-pressed',m==='c');$('tube-d').setAttribute('aria-pressed',m==='d');if(reduce)drawTube(0.4);}
+  $('tube-c').addEventListener('click',function(){setTube('c');});$('tube-d').addEventListener('click',function(){setTube('d');});
+
+  /* Bell pair: E = cos(2(a-b)); P(++)=P(--)=(1+E)/4; P(+-)=P(-+)=(1-E)/4 */
+  var bd=$('bell-d'),ba=0;
+  function bell(){
+    var d=+bd.value,r=d*Math.PI/180,E=Math.cos(2*r);
+    $('bell-dv').textContent=d+'°';
+    $('pb-l').setAttribute('transform','rotate('+(-d)+')');
+    $('bb-e').style.width=((E+1)/2*100)+'%';$('bt-e').textContent=E.toFixed(2);
+    $('bb-s').style.width=((1+E)/4*200)+'%';$('bt-s').textContent=((1+E)/4).toFixed(2);
+    $('bb-d').style.width=((1-E)/4*200)+'%';$('bt-d').textContent=((1-E)/4).toFixed(2);
+    $('bell-chsh').textContent=(d===22.5||d===23)?'Near the best CHSH angle: quantum 2.83 beats the classical limit of 2':'Classical limit 2 · quantum up to 2.83';
+  }
+  bd.addEventListener('input',bell);
+  $('bell-best').addEventListener('click',function(){bd.value=23;bell();$('bell-chsh').textContent='Best CHSH angles (a 0° and 45°, b 22.5° and 67.5°) give 2.83, beating the classical limit of 2';});
+  bell();
+
+  /* N-D axes */
+  var ndr=$('nd-r'),svg=$('v-nd'),NS='http://www.w3.org/2000/svg';
+  function nd(){
+    var d=+ndr.value,cx=320,cy=170,L=135,h='';
+    for(var i=0;i<d;i++){
+      var a=-Math.PI/2+i*2*Math.PI/d,x2=cx+Math.cos(a)*L,y2=cy+Math.sin(a)*L*0.95,lx=cx+Math.cos(a)*(L+22),ly=cy+Math.sin(a)*(L+20)*0.95+4;
+      var lab=i<3?['x','y','z'][i]:(i===3?'t':'w'+(i-3)),col=i<3?'#ffcf9e':(i===3?'#4fd8ff':'#ff7a1a');
+      h+='<line x1="'+cx+'" y1="'+cy+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)+'" stroke="'+col+'" stroke-width="2.4" stroke-linecap="round"/><circle cx="'+x2.toFixed(1)+'" cy="'+y2.toFixed(1)+'" r="4.5" fill="'+col+'"/><text x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" fill="'+col+'" font-family="monospace" font-size="15" text-anchor="middle">'+lab+'</text>';
+    }
+    h+='<circle cx="'+cx+'" cy="'+cy+'" r="9" fill="#ff5500"/><circle cx="'+cx+'" cy="'+cy+'" r="22" fill="none" stroke="#ff5500" opacity=".5"/>';
+    svg.innerHTML=h;$('nd-v').textContent=d+'D';
+    $('nd-note').innerHTML=d===3?'<span>3</span> space axes':'<span>3</span> space + <span>1</span> time'+(d>4?' + <span>'+(d-4)+'</span> extra':'');
+  }
+  ndr.addEventListener('input',nd);nd();
+})();
+</script>
+<script>
+(function(){
+  var btn=document.getElementById('jump-btn'),menu=document.getElementById('jump-menu'),back=document.getElementById('jump-backdrop');
+  if(!btn||!menu||!back) return;
+  var links=[].slice.call(menu.querySelectorAll('a'));
+  var sectionLinks=links.filter(function(a){return a.getAttribute('href').charAt(0)==='#';});
+  function isOpen(){return !menu.hidden;}
+  function open(){
+    menu.hidden=false;back.hidden=false;btn.setAttribute('aria-expanded','true');
+    var cur=menu.querySelector('[aria-current="location"]')||links[0];
+    try{cur.scrollIntoView({block:'nearest'});}catch(e){}
+    cur.focus({preventScroll:true});
+  }
+  function close(returnFocus){
+    menu.hidden=true;back.hidden=true;btn.setAttribute('aria-expanded','false');
+    if(returnFocus)btn.focus();
+  }
+  btn.addEventListener('click',function(){isOpen()?close(false):open();});
+  back.addEventListener('click',function(){close(false);});
+  links.forEach(function(a){a.addEventListener('click',function(){close(false);});});
+  document.addEventListener('keydown',function(e){
+    if(!isOpen())return;
+    if(e.key==='Escape'){e.preventDefault();close(true);return;}
+    if(e.key==='Tab'){
+      var f=links.concat([btn]),first=f[0],last=f[f.length-1];
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    }
+  });
+  /* highlight the section currently in view */
+  var map={};sectionLinks.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+  var ids=Object.keys(map),vis={};
+  function mark(){
+    var best=null;
+    ids.forEach(function(id){if(vis[id]&&(best===null))best=id;});
+    sectionLinks.forEach(function(a){a.removeAttribute('aria-current');});
+    if(best&&map[best])map[best].setAttribute('aria-current','location');
+  }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){vis[e.target.id]=e.isIntersecting;});mark();
+    },{rootMargin:'-35% 0px -55% 0px'});
+    ids.forEach(function(id){var el=document.getElementById(id);if(el)io.observe(el);});
+  }
 })();
 </script>
 </body>
