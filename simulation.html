@@ -7982,5 +7982,96 @@ sync();
   const fix=()=>{ if(hide() && document.querySelector('#tab-data.active')){ const e=document.querySelector('.ptab[data-tab="explore"]'); if(e) e.click(); } };
   new MutationObserver(fix).observe(b,{attributes:true,attributeFilter:['class']}); fix(); })();
 </script>
+<style id="smart-ui-css">
+/* scroll-safe touch behaviour */
+html,body{overscroll-behavior:none;}
+#stage,#deep,#photon-stage{touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;}
+#left-panel,#toolbar,#data-content,.panel-body{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:manipulation;}
+button,summary,.tbtn,.chip,.exchip,.dn-chip,.cbtn,[role=button]{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+.tbtn,.chip,.exchip,.cbtn{-webkit-user-select:none;user-select:none;}
+input[type=range]{touch-action:pan-y;}
+/* small laptops: narrower panels so the scene keeps room and nothing overlaps */
+@media(min-width:901px) and (max-width:1279px){
+  body{--inset-l:320px;--inset-r:284px;}
+  body.panel-collapsed{--inset-l:60px;}
+  body.toolbar-collapsed{--inset-r:140px;}
+  #left-panel{width:288px;}
+  #toolbar{width:252px;}
+}
+/* short laptop screens: drop the decorative hint, keep room for the HUD */
+@media(min-width:901px) and (max-height:700px){#hint{display:none;}}
+</style>
+<style id="smart-ui-css-sim">
+/* centre the floating overlays in the FREE area between the two panels */
+@media(min-width:901px){
+  #hint{left:calc(var(--inset-l,16px) + (100% - var(--inset-l,16px) - var(--inset-r,16px))/2);max-width:calc(100% - var(--inset-l,16px) - var(--inset-r,16px) - 16px);}
+  #scale-hud{left:calc(var(--inset-l,16px) + (100% - var(--inset-l,16px) - var(--inset-r,16px))/2);width:min(600px,calc(100% - var(--inset-l,16px) - var(--inset-r,16px) - 16px));}
+  #em-legend{left:calc(var(--inset-l,16px) + (100vw - var(--inset-l,16px) - var(--inset-r,16px))/2);max-width:min(420px,calc(100vw - var(--inset-l,16px) - var(--inset-r,16px) - 16px));}
+}
+</style>
+<script id="smart-ui">
+/* Smart UI layer: tap-outside-to-collapse, one-panel-at-a-time on small laptops,
+   scroll-safe taps, [ and ] shortcuts. Pure UI; touches no render or physics code. */
+(function(){'use strict';
+var $=function(i){return document.getElementById(i);};
+var lp=$('left-panel'),tb=$('toolbar'),pt=$('panel-toggle'),tt=$('toolbar-toggle');
+if(!lp||!tb||!pt||!tt)return;
+var isCol=function(e){return e.classList.contains('collapsed');};
+var closeLP=function(){if(!isCol(lp))pt.click();};
+var closeTB=function(){if(!isCol(tb))tt.click();};
+var MOVE=8,TAP_MS=450,STAGES={stage:1,deep:1,'photon-stage':1};
+var active={},nActive=0,down=null,lastMoved=false;
+
+document.addEventListener('pointerdown',function(e){
+  if(!active[e.pointerId]){active[e.pointerId]=1;nActive++;}
+  if(nActive>1){down=null;lastMoved=true;return;}      /* multi-touch (pinch) is never a tap */
+  lastMoved=false;
+  down={x:e.clientX,y:e.clientY,t:performance.now(),id:e.pointerId};
+},true);
+document.addEventListener('pointermove',function(e){
+  if(down&&e.pointerId===down.id&&Math.hypot(e.clientX-down.x,e.clientY-down.y)>MOVE){lastMoved=true;down=null;}
+},true);
+function release(e){if(active[e.pointerId]){delete active[e.pointerId];nActive=Math.max(0,nActive-1);}}
+document.addEventListener('pointercancel',function(e){release(e);down=null;lastMoved=true;},true); /* browser took over = scroll */
+document.addEventListener('pointerup',function(e){
+  release(e);
+  var d=down;down=null;
+  if(!d||e.pointerId!==d.id||nActive)return;
+  if(performance.now()-d.t>TAP_MS)return;               /* long press / hold is not a tap */
+  if(!e.target||!STAGES[e.target.id])return;            /* only a tap on the scene itself */
+  closeLP();closeTB();
+},true);
+
+/* A click that follows a drag or scroll gesture is accidental: swallow it. Keyboard and
+   programmatic clicks (detail 0) and slider/canvas interactions are never touched. */
+document.addEventListener('click',function(e){
+  if(!lastMoved||e.detail===0)return;
+  var t=e.target;if(t&&t.closest&&t.closest('input[type=range],canvas'))return;
+  e.preventDefault();e.stopImmediatePropagation();lastMoved=false;
+},true);
+
+/* Small laptops: only one side panel open at a time. */
+var mqLap=matchMedia('(min-width:901px) and (max-width:1279px)');
+var prev={l:isCol(lp),t:isCol(tb)};
+var mo=new MutationObserver(function(){
+  var l=isCol(lp),t=isCol(tb);
+  if(mqLap.matches&&!l&&!t){if(prev.l&&!l)closeTB();else if(prev.t&&!t)closeLP();}
+  prev={l:l,t:t};
+});
+mo.observe(lp,{attributes:true,attributeFilter:['class']});
+mo.observe(tb,{attributes:true,attributeFilter:['class']});
+if(mqLap.matches)closeTB();                              /* start uncluttered */
+
+/* [ toggles elements panel, ] toggles tools; ignored while typing. */
+document.addEventListener('keydown',function(e){
+  if(e.ctrlKey||e.metaKey||e.altKey||e.defaultPrevented)return;
+  var a=document.activeElement;
+  if(a&&(/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)||a.isContentEditable))return;
+  if(e.key==='['){e.preventDefault();pt.click();}
+  else if(e.key===']'){e.preventDefault();tt.click();}
+});
+})();
+</script>
+
 </body>
 </html>
